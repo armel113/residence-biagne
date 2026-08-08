@@ -9,21 +9,36 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--blue:#1a3a5c;--blue2:#2563a8;--orange:#e07b1a;--orange2:#f59e2a;--bg:#f0f4f8;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#d1dae6;--ok:#16a34a;--err:#dc2626;--r:14px}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+:root{--navy:#122642;--blue:#1a3a5c;--blue2:#2563a8;--sky:#38bdf8;--orange:#e07b1a;--orange2:#f59e2a;--amber:#fbbf24;--bg:#f0f4f8;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#d1dae6;--ok:#16a34a;--err:#dc2626;--r:16px;--font-display:'Outfit',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 .hidden{display:none!important}
 /* LOGIN */
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--blue),var(--blue2))}
-.login-card{background:#fff;border-radius:20px;padding:30px 24px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
-.login-logo{width:56px;height:56px;background:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;margin:0 auto 14px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--navy),var(--blue2))}
+.login-card{background:#fff;border-radius:22px;padding:30px 24px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.3);animation:card-in .5s cubic-bezier(.16,1,.3,1)}
+@keyframes card-in{0%{opacity:0;transform:translateY(14px)}100%{opacity:1;transform:translateY(0)}}
 .login-err{display:none;background:#fee2e2;color:var(--err);font-size:12px;font-weight:600;padding:10px 12px;border-radius:8px;margin-bottom:12px}
 .login-hint{text-align:center;font-size:11px;color:var(--muted);margin-top:16px}
+/* LOGO — signature pulse-ring, echoing the brand's own WiFi-arc mark */
+.logo-wrap{position:relative;flex-shrink:0}
+.logo-wrap.sm{width:42px;height:42px;border-radius:10px}
+.logo-wrap.sm::before,.logo-wrap.sm::after{animation-iteration-count:3}
+.logo-wrap.lg{width:56px;height:56px;border-radius:14px;margin:0 auto 14px}
+.logo-wrap::before,.logo-wrap::after{content:'';position:absolute;inset:0;border-radius:inherit;border:2px solid var(--amber);opacity:0;animation:pulse-ring 2.6s cubic-bezier(.4,0,.2,1) infinite;pointer-events:none}
+.logo-wrap::after{animation-delay:1.3s;border-color:var(--orange2)}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+.logo,.login-logo{width:100%;height:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:inherit;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 10px rgba(224,123,26,.4)}
+.logo img,.login-logo img{width:100%;height:100%;object-fit:cover}
 /* HEADER */
-.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue2) 75%,var(--sky) 145%);color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
 .hi{display:flex;align-items:center;gap:12px;padding:14px 16px}
-.logo{width:42px;height:42px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
 .header h1{font-size:16px;font-weight:700;line-height:1.2}
 .header p{font-size:11px;opacity:.7;margin-top:2px}
 .user-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(0,0,0,.15)}
@@ -35,7 +50,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .ti{font-size:17px;display:block;margin-bottom:2px}
 .page{display:none;padding:16px}
 .page.active{display:block}
-.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(18,38,66,.06),0 6px 20px rgba(18,38,66,.05)}
 .ct{font-size:13px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
@@ -81,7 +96,8 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .otag{background:rgba(255,255,255,.18);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}
 /* BOUTONS */
 .btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 14px rgba(224,123,26,.4)}
+.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 6px 18px rgba(224,123,26,.4);transition:transform .15s,box-shadow .15s}
+.btn-p:not(:disabled):hover{box-shadow:0 8px 22px rgba(224,123,26,.5)}
 .btn-p:active{transform:scale(.97)}
 .btn-p:disabled{opacity:.55;cursor:not-allowed}
 .btn-s{background:var(--blue);color:#fff}
@@ -144,6 +160,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .kok{color:var(--ok);font-size:12px;font-weight:600;margin-top:6px}
 .kno{color:var(--muted);font-size:12px;font-weight:600;margin-top:6px}
 .bottom-safe{height:16px}
+.app-footer{text-align:center;padding:22px 16px 30px;border-top:1px solid var(--border)}
+.app-footer .ft-name{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--blue2)}
+.app-footer .ft-contact{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.2px}
+.ft-credit{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.ft-credit img{width:20px;height:20px;object-fit:contain}
+.ft-credit span{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.2px}
 </style>
 </head>
 <body>
@@ -151,7 +173,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 <!-- LOGIN -->
 <div class="login-wrap" id="loginScreen">
   <div class="login-card">
-    <div class="login-logo">RB</div>
+    <div class="logo-wrap lg"><div class="login-logo"><img src="icon-512.png" alt="Résidence Biagné"></div></div>
     <h1 style="text-align:center;font-size:18px;margin-bottom:4px">Résidence Biagné</h1>
     <p style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px">Connexion à l'espace clients</p>
     <form id="loginForm">
@@ -161,6 +183,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
       <button type="submit" class="btn btn-p" id="li_btn">Se connecter</button>
     </form>
     <p class="login-hint">Compte créé par votre administrateur</p>
+    <p class="login-hint" style="margin-top:4px">📞 +225 07 16 30 00 00 · +225 08 48 03 59</p>
   </div>
 </div>
 
@@ -168,7 +191,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 <div id="appShell" class="hidden">
 <div class="header">
   <div class="hi">
-    <div class="logo">RB</div>
+    <div class="logo-wrap sm"><div class="logo"><img src="icon-512.png" alt="Résidence Biagné"></div></div>
     <div><h1>Résidence Biagné</h1><p>Enregistrement des clients</p></div>
   </div>
   <div class="user-bar">
@@ -265,8 +288,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
   <div class="card">
     <div class="ct"><span>💳</span>Paiement</div>
     <div class="fr">
-      <div class="field"><label>Mode</label><select id="f_pay"><option value="">—</option><option>Espèces</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
+      <div class="field"><label>Mode</label><select id="f_pay" onchange="refreshQrPaiementUI()"><option value="">—</option><option>Espèces</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
       <div class="field"><label>Statut</label><select id="f_spay"><option value="">—</option><option>Payé</option><option>Avance versée</option><option>Non payé</option></select></div>
+    </div>
+    <div id="payQrBox" style="display:none;background:var(--bg);border-radius:10px;padding:14px;margin-top:4px;margin-bottom:4px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:8px">📱 Le client peut scanner ce QR pour payer :</div>
+      <div style="text-align:center;margin-bottom:12px"><img id="payQrImg" style="max-width:160px;border-radius:8px" src=""></div>
+      <div class="pz" id="preuveZone" style="max-width:220px;margin:0 auto">
+        <input type="file" id="preuveInput" accept="image/*" onchange="chargerPreuve(this)">
+        <div id="preuveDisplay"><div style="font-size:28px;margin-bottom:6px">🧾</div><div style="font-size:12px;color:var(--muted)">Ajouter la preuve de paiement</div></div>
+      </div>
     </div>
     <div class="field"><label>Observations</label><textarea id="f_obs" placeholder="Notes, remarques…"></textarea></div>
   </div>
@@ -357,6 +388,16 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
     <button class="btn btn-o" onclick="copierLien()">📋 Copier le lien</button>
   </div>
   <div class="card">
+    <div class="ct"><span>💳</span>QR code de paiement</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Affiché au client (auto-enregistrement) et au gérant lors d'un paiement Mobile Money/Wave/etc., avec demande de preuve de paiement.</p>
+    <div class="pz" id="qrPayZone" style="max-width:220px;margin:0 auto 12px">
+      <input type="file" id="qrPayInput" accept="image/*" onchange="chargerQrPaiement(this)">
+      <div id="qrPayDisplay"><div style="font-size:32px;margin-bottom:6px">💳</div><div style="font-size:13px;color:var(--muted)">Appuyer pour ajouter le QR</div></div>
+    </div>
+    <button class="btn btn-p" onclick="saveQrPaiement()">💾 Sauvegarder le QR</button>
+    <button class="btn btn-o" style="margin-top:10px" onclick="delQrPaiement()">🗑️ Retirer le QR</button>
+  </div>
+  <div class="card">
     <div class="ct"><span>🔑</span>Clé API Anthropic</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Nécessaire pour le scan automatique des CNI. Une seule clé, partagée par toute l'équipe.</p>
     <div class="field">
@@ -387,6 +428,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
   <div class="bottom-safe"></div>
 </div>
 
+<footer class="app-footer">
+  <div class="ft-name">Résidence Biagné</div>
+  <div class="ft-contact">📞 +225 07 16 30 00 00 · +225 08 48 03 59</div>
+  <div class="ft-credit"><img src="logo-it.png" alt="Biagné Service Informatique"><span>Conçu par Biagné Service Informatique</span></div>
+</footer>
+
 <!-- MODAL DÉTAIL -->
 <div class="mo" id="mo" onclick="closeMo(event)"><div class="modal" id="moContent"></div></div>
 <!-- TOAST -->
@@ -416,8 +463,9 @@ let usersCache = [];
 let depensesCache = [];
 let anthropicKey = '';
 let filtreStatut = '';
-let photoB64 = null, rectoB64 = null, versoB64 = null;
-let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubDepenses = null;
+let photoB64 = null, rectoB64 = null, versoB64 = null, preuvePaiementB64 = null;
+let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubConfigPublic = null, unsubDepenses = null;
+let qrPaiementUrl = '', qrPaiementStagedB64 = null;
 
 // ───────────────────────── AUTH ─────────────────────────
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -496,6 +544,7 @@ function cleanupListeners(){
   if (unsubClients) { unsubClients(); unsubClients = null; }
   if (unsubUsers) { unsubUsers(); unsubUsers = null; }
   if (unsubConfig) { unsubConfig(); unsubConfig = null; }
+  if (unsubConfigPublic) { unsubConfigPublic(); unsubConfigPublic = null; }
   if (unsubDepenses) { unsubDepenses(); unsubDepenses = null; }
 }
 
@@ -509,6 +558,11 @@ function startListeners(){
   unsubConfig = onSnapshot(doc(db, 'config', 'settings'), (snap) => {
     anthropicKey = snap.exists() ? (snap.data().anthropicApiKey || '') : '';
     showKeyStatus();
+  });
+
+  unsubConfigPublic = onSnapshot(doc(db, 'config', 'public'), (snap) => {
+    qrPaiementUrl = snap.exists() ? (snap.data().qrPaiement || '') : '';
+    refreshQrPaiementUI();
   });
 
   unsubDepenses = onSnapshot(collection(db, 'depenses'), (snap) => {
@@ -643,6 +697,83 @@ function step(n, s){
   const ic = { 1: '📤', 2: '🧠', 3: '✍️' }, dn = { 1: '✅', 2: '✅', 3: '✅' };
   el.querySelector('.sstep-ic').innerHTML = s === 'done' ? dn[n] : s === 'active' ? '<span class="spin">⚙️</span>' : ic[n];
 }
+
+// ─────────────── SCAN CNI — écran de validation (arrivée du client) ───────────────
+let valRectoB64 = '', valVersoB64 = '';
+window.chargerFaceValidation = async function(inp, face){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    const b = await compressImage(f, 900, 0.6);
+    if (face === 'recto') {
+      valRectoB64 = b;
+      document.getElementById('val-recto-preview').innerHTML = `<img class="sthumb" src="${b}"><div class="sl" style="color:var(--orange2)">✓ RECTO</div><div class="st" style="color:var(--orange2)">Chargé</div>`;
+      document.getElementById('val-side-recto').classList.add('loaded');
+    } else {
+      valVersoB64 = b;
+      document.getElementById('val-verso-preview').innerHTML = `<img class="sthumb" src="${b}"><div class="sl" style="color:var(--orange2)">✓ VERSO</div><div class="st" style="color:var(--orange2)">Chargé</div>`;
+      document.getElementById('val-side-verso').classList.add('loaded');
+    }
+    document.getElementById('valBtnScan').disabled = !valRectoB64;
+  } catch (err) { showToast('❌ Erreur photo', 'er'); }
+};
+function stepVal(n, s){
+  const el = document.getElementById('valStep' + n);
+  el.className = 'sstep' + (s ? ' ' + s : '');
+  const ic = { 1: '📤', 2: '🧠', 3: '✍️' }, dn = { 1: '✅', 2: '✅', 3: '✅' };
+  el.querySelector('.sstep-ic').innerHTML = s === 'done' ? dn[n] : s === 'active' ? '<span class="spin">⚙️</span>' : ic[n];
+}
+window.lancerOCRValidation = async function(){
+  if (!anthropicKey) { showToast("⚙️ L'administrateur doit configurer la clé API", 'er'); showPage('config'); return; }
+  const prog = document.getElementById('valScanProg');
+  prog.classList.add('on');
+  document.getElementById('valBtnScan').disabled = true;
+  document.getElementById('valOcrBanner').classList.remove('on');
+  stepVal(1, 'active'); stepVal(2, ''); stepVal(3, '');
+  const content = [];
+  const rd = valRectoB64.split(',')[1], rm = valRectoB64.split(';')[0].split(':')[1];
+  content.push({ type: 'image', source: { type: 'base64', media_type: rm, data: rd } });
+  content.push({ type: 'text', text: "Ceci est le RECTO de la pièce d'identité." });
+  if (valVersoB64) {
+    const vd = valVersoB64.split(',')[1], vm = valVersoB64.split(';')[0].split(':')[1];
+    content.push({ type: 'image', source: { type: 'base64', media_type: vm, data: vd } });
+    content.push({ type: 'text', text: 'Ceci est le VERSO de la pièce d\'identité.' });
+  }
+  content.push({ type: 'text', text: `Tu es expert en lecture de pièces d'identité africaines (CNI Côte d'Ivoire, passeports CEDEAO, etc.).\nAnalyse ces images et extrais TOUTES les informations visibles.\nRéponds UNIQUEMENT en JSON valide, sans texte autour:\n{"nom_complet":"","sexe":"Masculin ou Féminin","date_naissance":"JJ/MM/AAAA","lieu_naissance":"","nationalite":"","numero_piece":"","adresse":"","profession":"","type_document":"CNI ou Passeport"}\nSi un champ est illisible mets "". Ne jamais inventer.` });
+  try {
+    stepVal(1, 'done'); stepVal(2, 'active');
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages: [{ role: 'user', content }] })
+    });
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error?.message || 'Erreur API ' + resp.status); }
+    const data = await resp.json();
+    const txt = data.content.map(b => b.text || '').join('');
+    stepVal(2, 'done'); stepVal(3, 'active');
+    let info;
+    try { const m = txt.match(/\{[\s\S]*\}/); info = JSON.parse(m ? m[0] : txt); }
+    catch (e) { throw new Error('Réponse IA invalide'); }
+    const ok = [];
+    if (info.nom_complet) { set('val_nom', info.nom_complet); ok.push('Nom'); }
+    if (info.sexe) { set('val_sexe', normSexe(info.sexe)); ok.push('Sexe'); }
+    if (info.nationalite) { set('val_nationalite', info.nationalite); ok.push('Nationalité'); }
+    if (info.numero_piece) { set('val_piece', info.numero_piece); ok.push('N° Pièce'); }
+    if (info.date_naissance) { set('val_ddn', info.date_naissance); ok.push('Date naiss.'); }
+    if (info.lieu_naissance) { set('val_lieu', info.lieu_naissance); ok.push('Lieu naiss.'); }
+    if (info.profession) { set('val_prof', info.profession); ok.push('Profession'); }
+    if (info.adresse) { set('val_adr', info.adresse); ok.push('Adresse'); }
+    stepVal(3, 'done');
+    const b = document.getElementById('valOcrBanner');
+    b.innerHTML = `<div>✅ ${ok.length} champ(s) vérifié(s)/corrigé(s)</div><div class="ocr-tags">${ok.map(x => `<span class="otag">✓ ${x}</span>`).join('')}</div>${ok.length === 0 ? '<div style="margin-top:6px;font-size:12px;opacity:.8">Aucune info lisible — vérifiez la qualité des photos</div>' : ''}`;
+    b.classList.add('on');
+    showToast(`🎉 Identité vérifiée — ${ok.length} champ(s) mis à jour`, 'ok');
+  } catch (err) {
+    stepVal(1, ''); stepVal(2, ''); stepVal(3, '');
+    prog.classList.remove('on');
+    showToast('❌ ' + (err.message || 'Erreur scan'), 'er');
+  }
+  document.getElementById('valBtnScan').disabled = false;
+};
 function set(id, val){ const e = document.getElementById(id); if (e && val) e.value = val; }
 function hl(id){ const e = document.getElementById(id); if (!e) return; e.classList.add('autofilled'); setTimeout(() => e.classList.remove('autofilled'), 4000); }
 function normSexe(s){ if (!s) return ''; const l = s.toLowerCase(); if (l.includes('f')) return 'Féminin'; if (l.includes('m')) return 'Masculin'; return ''; }
@@ -654,6 +785,13 @@ window.handlePhoto = async function(inp){
     photoB64 = await compressImage(f, 500, 0.6);
     document.getElementById('photoDisplay').innerHTML = `<img class="pp" src="${photoB64}"><div style="font-size:13px;color:var(--ok);font-weight:600">✓ Photo ajoutée</div>`;
   } catch (err) { showToast('❌ Erreur photo', 'er'); }
+};
+window.chargerPreuve = async function(inp){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    preuvePaiementB64 = await compressImage(f, 700, 0.65);
+    document.getElementById('preuveDisplay').innerHTML = `<img class="pp" src="${preuvePaiementB64}"><div style="font-size:12px;color:var(--ok);font-weight:600">✓ Preuve ajoutée</div>`;
+  } catch (err) { showToast('❌ Erreur image', 'er'); }
 };
 
 // ───────────────────────── CIE (électricité, 1000 FCFA/jour) ─────────────────────────
@@ -682,7 +820,7 @@ window.enregistrerClient = async function(){
   const dep = v('f_dep');
   try {
     const ref = await addDoc(collection(db, 'clients'), {
-      photo: photoB64, cni_recto: rectoB64, cni_verso: versoB64,
+      photo: photoB64, cni_recto: rectoB64, cni_verso: versoB64, preuvePaiement: preuvePaiementB64,
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
       ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: v('f_adr'), prov: v('f_prov'),
       chambre: ch, tch: v('f_tch'), arrivee: arr, depart: dep, duree: v('f_dur'),
@@ -720,6 +858,10 @@ function reinit(){
   document.getElementById('btnScan').disabled = true;
   document.getElementById('scanProg').classList.remove('on');
   document.getElementById('ocrBanner').classList.remove('on');
+  preuvePaiementB64 = null;
+  document.getElementById('preuveDisplay').innerHTML = '<div style="font-size:28px;margin-bottom:6px">🧾</div><div style="font-size:12px;color:var(--muted)">Ajouter la preuve de paiement</div>';
+  document.getElementById('preuveInput').value = '';
+  refreshQrPaiementUI();
   document.getElementById('cieApercu').textContent = '⚡ CIE : 1 000 FCFA/jour — sera ajoutée automatiquement (1 jour par défaut)';
 }
 window.reinit = reinit;
@@ -743,6 +885,7 @@ window.filtrer = function(){
 };
 window.filtreS = function(s){ filtreStatut = s; filtrer(); };
 function ini(n){ return n.split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase() || '?'; }
+function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
 // ───────────────────────── DÉTAIL ─────────────────────────
 window.detail = function(id){
@@ -772,13 +915,57 @@ window.detail = function(id){
       <div class="ii"><div class="iil">Départ</div><div class="iiv">${c.depart || '—'}</div></div>
       <div class="ii"><div class="iil">Tarif</div><div class="iiv">💰 ${Number(c.tarif).toLocaleString()} FCFA</div></div>
       <div class="ii"><div class="iil">Paiement</div><div class="iiv">${c.spay || '—'}</div></div>
-      <div class="ii"><div class="iil">Nationalité</div><div class="iiv">${c.nationalite || '—'}</div></div>
+      ${!pending ? `<div class="ii"><div class="iil">Nationalité</div><div class="iiv">${c.nationalite || '—'}</div></div>
       <div class="ii"><div class="iil">Naissance</div><div class="iiv">${c.ddn || '—'}</div></div>
       ${c.prof ? `<div class="ii"><div class="iil">Profession</div><div class="iiv">${c.prof}</div></div>` : ''}
-      ${c.lieu ? `<div class="ii"><div class="iil">Lieu naiss.</div><div class="iiv">${c.lieu}</div></div>` : ''}
+      ${c.lieu ? `<div class="ii"><div class="iil">Lieu naiss.</div><div class="iiv">${c.lieu}</div></div>` : ''}` : ''}
     </div>
-    ${c.piece ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">N° Pièce</div><div style="font-size:15px;font-weight:700;font-family:monospace;margin-top:3px">${c.piece}</div></div>` : ''}
-    ${c.adr ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">Adresse</div><div style="font-size:14px;margin-top:3px">${c.adr}</div></div>` : ''}
+    ${!pending && c.piece ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">N° Pièce</div><div style="font-size:15px;font-weight:700;font-family:monospace;margin-top:3px">${c.piece}</div></div>` : ''}
+    ${!pending && c.adr ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">Adresse</div><div style="font-size:14px;margin-top:3px">${c.adr}</div></div>` : ''}
+    ${pending ? `
+    <div style="margin-top:14px">
+      <div class="ct" style="margin-bottom:6px"><span>🪪</span>Vérifier l'identité (à l'arrivée)</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Le client a rempli ces infos en ligne. Scannez sa vraie pièce en main pour vérifier — les champs ci-dessous se corrigent automatiquement.</p>
+      <div class="scan-card" style="padding:14px">
+        <div class="scan-sides">
+          <div class="ss" id="val-side-recto">
+            <input type="file" accept="image/*" capture="environment" onchange="chargerFaceValidation(this,'recto')" onclick="event.stopPropagation()">
+            <div id="val-recto-preview"><div class="si">🖼️</div><div class="sl">RECTO</div><div class="st">Photographier</div></div>
+          </div>
+          <div class="ss" id="val-side-verso">
+            <input type="file" accept="image/*" capture="environment" onchange="chargerFaceValidation(this,'verso')" onclick="event.stopPropagation()">
+            <div id="val-verso-preview"><div class="si">🔄</div><div class="sl">VERSO</div><div class="st">Photographier</div></div>
+          </div>
+        </div>
+        <button class="btn-scan" id="valBtnScan" onclick="lancerOCRValidation()" disabled>🔍 Scanner et vérifier</button>
+        <div class="sp" id="valScanProg">
+          <div class="sstep" id="valStep1"><span class="sstep-ic">📤</span>Envoi des images…</div>
+          <div class="sstep" id="valStep2"><span class="sstep-ic">🧠</span>Lecture par l'IA…</div>
+          <div class="sstep" id="valStep3"><span class="sstep-ic">✍️</span>Correction des champs…</div>
+        </div>
+        <div class="ocr-banner" id="valOcrBanner"></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Nom complet</label><input type="text" id="val_nom" value="${escAttr(c.nom || '')}"></div>
+      <div class="fr">
+        <div class="field"><label>Sexe</label><select id="val_sexe"><option value="">—</option><option ${c.sexe === 'Masculin' ? 'selected' : ''}>Masculin</option><option ${c.sexe === 'Féminin' ? 'selected' : ''}>Féminin</option></select></div>
+        <div class="field"><label>Nationalité</label><input type="text" id="val_nationalite" value="${escAttr(c.nationalite || '')}"></div>
+      </div>
+      <div class="fr">
+        <div class="field"><label>N° Pièce</label><input type="text" id="val_piece" value="${escAttr(c.piece || '')}"></div>
+        <div class="field"><label>Date naissance</label><input type="text" id="val_ddn" value="${escAttr(c.ddn || '')}"></div>
+      </div>
+      <div class="fr">
+        <div class="field"><label>Lieu naissance</label><input type="text" id="val_lieu" value="${escAttr(c.lieu || '')}"></div>
+        <div class="field"><label>Profession</label><input type="text" id="val_prof" value="${escAttr(c.prof || '')}"></div>
+      </div>
+      <div class="field"><label>Adresse</label><input type="text" id="val_adr" value="${escAttr(c.adr || '')}"></div>
+    </div>` : ''}
+    ${pending && c.pay && c.preuvePaiement ? `
+    <div style="background:#ecfdf5;border:1.5px solid var(--ok);border-radius:9px;padding:12px;margin-top:10px">
+      <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">💳 Dépôt déclaré en ligne — ${c.pay}</div>
+      <img src="${c.preuvePaiement}" style="max-width:100%;border-radius:8px;display:block">
+      <div style="font-size:12px;color:#065f46;margin-top:6px">Vérifiez cette preuve avant de valider.</div>
+    </div>` : ''}
     ${(c.cni_recto || c.cni_verso) ? `<div class="iil" style="margin-bottom:6px">📎 Photos CNI</div><div class="cni-imgs">${c.cni_recto ? `<div class="cni-box"><img src="${c.cni_recto}"><div class="cni-lbl">Recto</div></div>` : ''} ${c.cni_verso ? `<div class="cni-box"><img src="${c.cni_verso}"><div class="cni-lbl">Verso</div></div>` : ''}</div>` : ''}
     ${c.obs ? `<div style="background:#fffbeb;border-radius:9px;padding:10px 12px;margin-top:10px;font-size:13px">📝 ${c.obs}</div>` : ''}
     ${!pending ? `
@@ -808,7 +995,7 @@ window.detail = function(id){
         <input type="number" id="val_tarif" placeholder="Tarif (FCFA)" inputmode="numeric" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
         <input type="date" id="val_dep" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
       </div>
-      <select id="val_pay" style="width:100%;margin-top:8px;padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px"><option value="">Mode de paiement —</option><option>Espèces</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select>
+      <select id="val_pay" style="width:100%;margin-top:8px;padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px"><option value="">Mode de paiement —</option><option ${c.pay === 'Espèces' ? 'selected' : ''}>Espèces</option><option ${c.pay === 'Mobile Money' ? 'selected' : ''}>Mobile Money</option><option ${c.pay === 'Orange Money' ? 'selected' : ''}>Orange Money</option><option ${c.pay === 'Wave' ? 'selected' : ''}>Wave</option><option ${c.pay === 'Virement' ? 'selected' : ''}>Virement</option></select>
       <button class="btn btn-p" style="margin-top:10px" onclick="confirmerValidation('${c.id}')">✅ Valider et activer le séjour</button>
       <button class="btn btn-d" style="margin-top:8px" onclick="delClient('${c.id}')">🗑️ Rejeter la demande</button>
     </div>` : `
@@ -880,6 +1067,8 @@ window.confirmerValidation = async function(id){
   const ch = document.getElementById('val_chambre').value;
   const tarif = document.getElementById('val_tarif').value || '0';
   if (!ch) { showToast('⚠️ Choisissez une chambre', 'er'); return; }
+  const nom = document.getElementById('val_nom').value.trim();
+  if (!nom) { showToast('⚠️ Le nom du client est requis', 'er'); return; }
   const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
   if (occ) { showToast(`❌ ${ch} déjà occupée par ${occ.nom}`, 'er'); return; }
   const c = clientsCache.find(x => x.id === id); if (!c) return;
@@ -888,6 +1077,13 @@ window.confirmerValidation = async function(id){
     await updateDoc(doc(db, 'clients', id), {
       statut: 'Actif', chambre: ch, tch: document.getElementById('val_tch').value,
       tarif, depart: dep, pay: document.getElementById('val_pay').value,
+      nom, sexe: document.getElementById('val_sexe').value,
+      nationalite: document.getElementById('val_nationalite').value.trim(),
+      piece: document.getElementById('val_piece').value.trim(),
+      ddn: document.getElementById('val_ddn').value.trim(),
+      lieu: document.getElementById('val_lieu').value.trim(),
+      prof: document.getElementById('val_prof').value.trim(),
+      adr: document.getElementById('val_adr').value.trim(),
       updatedAt: serverTimestamp(),
       history: arrayUnion({ action: 'validation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() })
     });
@@ -1039,6 +1235,45 @@ window.toggleKey = function(){
   const i = document.getElementById('apiKey'), b = document.querySelector('.kt');
   i.type = i.type === 'password' ? 'text' : 'password'; b.textContent = i.type === 'password' ? 'Afficher' : 'Masquer';
 };
+
+// ─────────────── QR CODE DE PAIEMENT ───────────────
+window.chargerQrPaiement = async function(inp){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    qrPaiementStagedB64 = await compressImage(f, 500, 0.7);
+    document.getElementById('qrPayDisplay').innerHTML = `<img class="pp" src="${qrPaiementStagedB64}"><div style="font-size:13px;color:var(--ok);font-weight:600">✓ Prêt — cliquez Sauvegarder</div>`;
+  } catch (e) { showToast('❌ Erreur image', 'er'); }
+};
+window.saveQrPaiement = async function(){
+  if (!qrPaiementStagedB64) { showToast('⚠️ Choisissez d\'abord une image', 'er'); return; }
+  try {
+    await setDoc(doc(db, 'config', 'public'), { qrPaiement: qrPaiementStagedB64, updatedBy: currentUser.uid, updatedAt: serverTimestamp() }, { merge: true });
+    qrPaiementStagedB64 = null;
+    showToast('✅ QR de paiement sauvegardé !', 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.delQrPaiement = async function(){
+  try {
+    await setDoc(doc(db, 'config', 'public'), { qrPaiement: '' }, { merge: true });
+    qrPaiementStagedB64 = null;
+    document.getElementById('qrPayInput').value = '';
+    showToast('🗑️ QR retiré', 'er');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+function refreshQrPaiementUI(){
+  const d = document.getElementById('qrPayDisplay');
+  if (d && !qrPaiementStagedB64) {
+    d.innerHTML = qrPaiementUrl ? `<img class="pp" src="${qrPaiementUrl}">` : '<div style="font-size:32px;margin-bottom:6px">💳</div><div style="font-size:13px;color:var(--muted)">Appuyer pour ajouter le QR</div>';
+  }
+  // Affiche/masque le bloc QR + preuve dans le formulaire d'enregistrement
+  const box = document.getElementById('payQrBox');
+  if (box) {
+    const modeActuel = document.getElementById('f_pay')?.value || '';
+    box.style.display = (modeActuel && modeActuel !== 'Espèces' && qrPaiementUrl) ? '' : 'none';
+    const img = document.getElementById('payQrImg');
+    if (img) img.src = qrPaiementUrl;
+  }
+}
 
 // ───────────────────────── CONFIG : COMPTES ─────────────────────────
 function renderUsers(){

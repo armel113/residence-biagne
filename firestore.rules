@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function userRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    function isAdmin() {
+      return isSignedIn() && userRole() == 'admin';
+    }
+
+    // Un gérant peut mettre à jour un client (statut, chambre/tarif lors
+    // d'une validation, départ...) mais ne peut pas réécrire les
+    // informations d'identité déjà enregistrées — seul l'admin le peut.
+    // Exception : au moment précis où une demande en ligne ("En attente")
+    // est validée sur place ("Actif"), le gérant PEUT corriger l'identité,
+    // car c'est là qu'il vérifie la vraie pièce du client en main.
+    function identityFieldsUnchanged() {
+      let changed = request.resource.data.diff(resource.data).affectedKeys();
+      return !changed.hasAny(['nom','tel','sexe','nationalite','piece','ddn','lieu','prof','adr','prov']);
+    }
+    function isValidatingPendingRequest() {
+      return resource.data.statut == 'En attente' && request.resource.data.statut == 'Actif';
+    }
+
+    // Un client non-connecté (auto-enregistrement via lien/QR code) ne peut
+    // créer qu'une demande "En attente", sans chambre, sans tarif, sans
+    // paiement, et sans pouvoir se faire passer pour un membre du personnel.
+    // Le personnel doit ensuite "valider" la demande depuis l'app.
+    function isValidGuestSubmission() {
+      let d = request.resource.data;
+      return d.statut == 'En attente'
+        && d.chambre == ''
+        && d.tarif == '0'
+        && d.spay == ''
+        && (d.pay == '' || (d.pay is string && d.preuvePaiement is string && d.preuvePaiement.size() > 0))
+        && d.nom is string && d.nom.size() > 0
+        && d.tel is string && d.tel.size() > 0
+        && (!('createdBy' in d) || d.createdBy == null);
+    }
+
+    // Comptes et rôles : uniquement l'admin peut créer/modifier/supprimer
+    // des fiches utilisateur (donc uniquement l'admin peut nommer un
+    // nouvel admin ou un gérant). Tout utilisateur connecté peut lire
+    // la liste (nécessaire pour afficher "ajouté par").
+    match /users/{uid} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Clients : admin et gérant peuvent créer/lire/modifier (usage
+    // quotidien). Un client non-connecté peut créer une demande via le lien
+    // d'auto-enregistrement (voir isValidGuestSubmission). Le gérant ne
+    // peut pas modifier l'identité d'un client déjà enregistré (réservé à
+    // l'admin, voir identityFieldsUnchanged). Seul l'admin peut supprimer.
+    match /clients/{clientId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() || isValidGuestSubmission();
+      allow update: if isAdmin() || (isSignedIn() && identityFieldsUnchanged()) || (isSignedIn() && isValidatingPendingRequest());
+      allow delete: if isAdmin();
+    }
+
+    // Dépenses (CIE, draps/pressing, Canal+, Internet, imprévus…) : admin et
+    // gérant peuvent en ajouter. Seul l'admin peut modifier ou supprimer une
+    // ligne de dépense.
+    match /depenses/{depId} {
+      allow read, create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // Config partagée : le document "public" (ex. QR code de paiement) est
+    // lisible par tous, y compris un client non-connecté qui s'auto-
+    // enregistre — il ne contient rien de sensible. Les autres documents
+    // (ex. "settings", qui contient la clé API Anthropic) restent réservés
+    // à l'équipe connectée. Écriture réservée à l'admin dans tous les cas.
+    match /config/{docId} {
+      allow read: if docId == 'public' || isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Tout le reste : bloqué par défaut.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

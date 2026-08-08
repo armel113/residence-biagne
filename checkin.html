@@ -6,17 +6,31 @@
 <meta name="theme-color" content="#1a3a5c">
 <title>Résidence Biagné – Enregistrement</title>
 <link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--blue:#1a3a5c;--blue2:#2563a8;--orange:#e07b1a;--orange2:#f59e2a;--bg:#f0f4f8;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#d1dae6;--ok:#16a34a;--err:#dc2626;--r:14px}
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+:root{--navy:#122642;--blue:#1a3a5c;--blue2:#2563a8;--sky:#38bdf8;--orange:#e07b1a;--orange2:#f59e2a;--amber:#fbbf24;--bg:#faf6f0;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#e4ddd0;--ok:#16a34a;--err:#dc2626;--r:16px;--font-display:'Outfit',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+h1,h2,.ct,.confirm h2{font-family:var(--font-display)}
+:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 .hidden{display:none!important}
-.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:22px 16px;text-align:center}
-.logo{width:52px;height:52px;background:var(--orange);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;margin:0 auto 10px}
-.header h1{font-size:17px}
+.header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue2) 75%,var(--sky) 145%);color:#fff;padding:26px 16px 24px;text-align:center}
+.logo-wrap{position:relative;width:56px;height:56px;border-radius:14px;margin:0 auto 10px}
+.logo-wrap::before,.logo-wrap::after{content:'';position:absolute;inset:0;border-radius:inherit;border:2px solid var(--amber);opacity:0;animation:pulse-ring 2.6s cubic-bezier(.4,0,.2,1) infinite;pointer-events:none}
+.logo-wrap::after{animation-delay:1.3s;border-color:var(--orange2)}
+@keyframes pulse-ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+.logo{width:100%;height:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:inherit;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 10px rgba(224,123,26,.4)}
+.logo img{width:100%;height:100%;object-fit:cover}
+.header h1{font-size:18px;font-weight:700}
 .header p{font-size:12px;opacity:.75;margin-top:4px}
 .page{padding:16px}
-.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(18,38,66,.06),0 6px 20px rgba(18,38,66,.05);animation:card-in .5s cubic-bezier(.16,1,.3,1) backwards}
+.card:nth-of-type(2){animation-delay:.08s}
+.card:nth-of-type(3){animation-delay:.16s}
+@keyframes card-in{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 .ct{font-size:13px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
 .field{margin-bottom:14px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
@@ -31,6 +45,12 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 .btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 14px rgba(224,123,26,.4)}
 .btn-p:disabled{opacity:.5}
+.app-footer{text-align:center;padding:8px 16px 30px}
+.app-footer .ft-name{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--blue2)}
+.app-footer .ft-contact{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.2px}
+.ft-credit{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.ft-credit img{width:20px;height:20px;object-fit:contain}
+.ft-credit span{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.2px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;max-width:90vw}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.er{background:var(--err)}
@@ -42,7 +62,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 </head>
 <body>
 <div class="header">
-  <div class="logo">RB</div>
+  <div class="logo-wrap"><div class="logo"><img src="icon-512.png" alt="Résidence Biagné"></div></div>
   <h1>Résidence Biagné</h1>
   <p>Enregistrement à votre arrivée</p>
 </div>
@@ -76,6 +96,19 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
   </div>
 
   <div class="card">
+    <div class="ct">💳 Paiement (optionnel)</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Vous pouvez payer un dépôt maintenant par Mobile Money, ou régler sur place à l'arrivée.</p>
+    <div class="field"><label>Mode de paiement</label><select id="f_pay" onchange="toggleQrBox()"><option value="">Je paierai sur place (espèces)</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
+    <div id="payQrBox" class="hidden">
+      <div style="text-align:center;margin:10px 0"><img id="payQrImg" style="max-width:170px;border-radius:8px" src=""></div>
+      <div class="pz" id="preuveZone" style="max-width:220px;margin:0 auto">
+        <input type="file" id="preuveInput" accept="image/*" onchange="chargerPreuve(this)">
+        <div id="preuveDisplay"><div style="font-size:28px;margin-bottom:6px">🧾</div><div style="font-size:12px;color:var(--muted)">Ajouter la preuve de paiement <span class="rs">*</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="ct">🏨 Votre séjour</div>
     <div class="fr">
       <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr"></div>
@@ -97,14 +130,38 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--te
 
 <div class="toast" id="toast"></div>
 
+<footer class="app-footer">
+  <div class="ft-name">Résidence Biagné</div>
+  <div class="ft-contact">📞 +225 07 16 30 00 00 · +225 08 48 03 59</div>
+  <div class="ft-credit"><img src="logo-it.png" alt="Biagné Service Informatique"><span>Conçu par Biagné Service Informatique</span></div>
+</footer>
+
 <script type="module">
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-let photoB64 = null;
+let photoB64 = null, preuvePaiementB64 = null, qrPaiementUrl = '';
+
+getDoc(doc(db, 'config', 'public')).then(snap => {
+  qrPaiementUrl = snap.exists() ? (snap.data().qrPaiement || '') : '';
+  const img = document.getElementById('payQrImg'); if (img) img.src = qrPaiementUrl;
+}).catch(() => {});
+
+window.toggleQrBox = function(){
+  const mode = document.getElementById('f_pay').value;
+  const box = document.getElementById('payQrBox');
+  box.classList.toggle('hidden', !mode || !qrPaiementUrl);
+};
+window.chargerPreuve = async function(inp){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    preuvePaiementB64 = await compressImage(f, 700, 0.65);
+    document.getElementById('preuveDisplay').innerHTML = `<img class="pp" src="${preuvePaiementB64}"><div style="font-size:12px;color:var(--ok);font-weight:600">✓ Preuve ajoutée</div>`;
+  } catch (e) { showToast('❌ Erreur image', 'er'); }
+};
 
 document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
 
@@ -146,6 +203,8 @@ function showToast(msg, type=''){
 window.envoyer = async function(){
   const nom = v('f_nom'), tel = v('f_tel'), arr = v('f_arr');
   if (!nom || !tel || !arr) { showToast('⚠️ Nom, téléphone et date d\'arrivée obligatoires', 'er'); return; }
+  const payMode = v('f_pay');
+  if (payMode && !preuvePaiementB64) { showToast('⚠️ Ajoutez la preuve de votre paiement, ou laissez "Je paierai sur place"', 'er'); return; }
   const btn = document.getElementById('btnEnvoyer');
   btn.disabled = true; btn.textContent = 'Envoi…';
   try {
@@ -154,7 +213,7 @@ window.envoyer = async function(){
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
       ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: '', prov: v('f_prov'),
       chambre: '', tch: '', arrivee: arr, depart: '', duree: v('f_dur'),
-      tarif: '0', motif: v('f_motif'), pay: '', spay: '',
+      tarif: '0', motif: v('f_motif'), pay: payMode, spay: '', preuvePaiement: payMode ? preuvePaiementB64 : null,
       obs: v('f_obs'), statut: 'En attente',
       createdByNom: 'Auto-enregistrement (client)',
       createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
