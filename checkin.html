@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a3a5c">
+<title>Résidence Biagné – Enregistrement</title>
+<link rel="icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--blue:#1a3a5c;--blue2:#2563a8;--orange:#e07b1a;--orange2:#f59e2a;--bg:#f0f4f8;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#d1dae6;--ok:#16a34a;--err:#dc2626;--r:14px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+.hidden{display:none!important}
+.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;padding:22px 16px;text-align:center}
+.logo{width:52px;height:52px;background:var(--orange);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;margin:0 auto 10px}
+.header h1{font-size:17px}
+.header p{font-size:12px;opacity:.75;margin-top:4px}
+.page{padding:16px}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.ct{font-size:13px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;color:var(--text);background:#fafbfd;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue2);background:#fff}
+.field textarea{height:70px;resize:none}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rs{color:var(--orange)}
+.pz{border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative}
+.pz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pp{width:70px;height:70px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block;border:3px solid var(--blue2)}
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 14px rgba(224,123,26,.4)}
+.btn-p:disabled{opacity:.5}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.er{background:var(--err)}
+.confirm{text-align:center;padding:50px 24px}
+.confirm .ic{font-size:56px;margin-bottom:16px}
+.confirm h2{font-size:19px;margin-bottom:10px}
+.confirm p{font-size:14px;color:var(--muted);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">RB</div>
+  <h1>Résidence Biagné</h1>
+  <p>Enregistrement à votre arrivée</p>
+</div>
+
+<div class="page" id="formPage">
+  <div class="card">
+    <div class="ct">📷 Votre photo (optionnel)</div>
+    <div class="pz" id="photoZone">
+      <input type="file" id="photoInput" accept="image/*" capture="user" onchange="handlePhoto(this)">
+      <div id="photoDisplay"><div style="font-size:28px;margin-bottom:6px">🧑</div><div style="font-size:13px;color:var(--muted)">Appuyer pour prendre une photo</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">🪪 Vos informations</div>
+    <div class="field"><label>Nom complet <span class="rs">*</span></label><input type="text" id="f_nom" placeholder="Ex: Kouassi Jean-Pierre"></div>
+    <div class="fr">
+      <div class="field"><label>Sexe</label><select id="f_sexe"><option value="">—</option><option>Masculin</option><option>Féminin</option></select></div>
+      <div class="field"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
+    </div>
+    <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
+    <div class="fr">
+      <div class="field"><label>N° Pièce d'identité</label><input type="text" id="f_piece" placeholder="CNI / Passeport"></div>
+      <div class="field"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
+      <div class="field"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
+    </div>
+    <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
+  </div>
+
+  <div class="card">
+    <div class="ct">🏨 Votre séjour</div>
+    <div class="fr">
+      <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr"></div>
+      <div class="field"><label>Durée prévue</label><select id="f_dur"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+    </div>
+    <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
+    <div class="field"><label>Remarques (allergies, heure d'arrivée prévue…)</label><textarea id="f_obs"></textarea></div>
+  </div>
+
+  <button class="btn btn-p" id="btnEnvoyer" onclick="envoyer()">✅ Envoyer ma demande</button>
+  <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px">Un membre du personnel vous attribuera une chambre à votre arrivée.</p>
+</div>
+
+<div class="page confirm hidden" id="confirmPage">
+  <div class="ic">✅</div>
+  <h2>Demande envoyée !</h2>
+  <p>Merci ! Votre demande a bien été transmise à la réception.<br>Présentez-vous à l'accueil, une chambre vous sera attribuée.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { firebaseConfig } from './firebase-config.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let photoB64 = null;
+
+document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
+
+function compressImage(file, maxWidth, quality){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * (maxWidth / w)); w = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => reject(new Error('Image invalide'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Lecture échouée'));
+    reader.readAsDataURL(file);
+  });
+}
+window.handlePhoto = async function(inp){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    photoB64 = await compressImage(f, 500, 0.6);
+    document.getElementById('photoDisplay').innerHTML = `<img class="pp" src="${photoB64}"><div style="font-size:13px;color:var(--ok);font-weight:600">✓ Photo ajoutée</div>`;
+  } catch (e) { showToast('❌ Erreur photo', 'er'); }
+};
+
+function v(id){ const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+window.envoyer = async function(){
+  const nom = v('f_nom'), tel = v('f_tel'), arr = v('f_arr');
+  if (!nom || !tel || !arr) { showToast('⚠️ Nom, téléphone et date d\'arrivée obligatoires', 'er'); return; }
+  const btn = document.getElementById('btnEnvoyer');
+  btn.disabled = true; btn.textContent = 'Envoi…';
+  try {
+    await addDoc(collection(db, 'clients'), {
+      photo: photoB64, cni_recto: null, cni_verso: null,
+      nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
+      ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: '', prov: v('f_prov'),
+      chambre: '', tch: '', arrivee: arr, depart: '', duree: v('f_dur'),
+      tarif: '0', motif: v('f_motif'), pay: '', spay: '',
+      obs: v('f_obs'), statut: 'En attente',
+      createdByNom: 'Auto-enregistrement (client)',
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      history: [{ action: 'creation', by: null, nom: 'Auto-enregistrement (client)', at: Date.now() }]
+    });
+    document.getElementById('formPage').classList.add('hidden');
+    document.getElementById('confirmPage').classList.remove('hidden');
+  } catch (err) {
+    showToast('❌ Erreur : ' + (err.message || 'échec'), 'er');
+    btn.disabled = false; btn.textContent = '✅ Envoyer ma demande';
+  }
+};
+</script>
+</body>
+</html>

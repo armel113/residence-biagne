@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a3a5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Résidence Biagné – Clients</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--blue:#1a3a5c;--blue2:#2563a8;--orange:#e07b1a;--orange2:#f59e2a;--bg:#f0f4f8;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#d1dae6;--ok:#16a34a;--err:#dc2626;--r:14px}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+.hidden{display:none!important}
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,var(--blue),var(--blue2))}
+.login-card{background:#fff;border-radius:20px;padding:30px 24px;width:100%;max-width:360px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.login-logo{width:56px;height:56px;background:var(--orange);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#fff;margin:0 auto 14px}
+.login-err{display:none;background:#fee2e2;color:var(--err);font-size:12px;font-weight:600;padding:10px 12px;border-radius:8px;margin-bottom:12px}
+.login-hint{text-align:center;font-size:11px;color:var(--muted);margin-top:16px}
+/* HEADER */
+.header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.hi{display:flex;align-items:center;gap:12px;padding:14px 16px}
+.logo{width:42px;height:42px;background:var(--orange);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
+.header h1{font-size:16px;font-weight:700;line-height:1.2}
+.header p{font-size:11px;opacity:.7;margin-top:2px}
+.user-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:rgba(0,0,0,.15)}
+.role-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.18);color:#fff}
+.btn-logout{background:none;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;opacity:.85;padding:4px}
+.tabs{display:flex;background:var(--blue);border-top:1px solid rgba(255,255,255,.1)}
+.tab{flex:1;text-align:center;padding:9px 2px;font-size:10px;font-weight:600;color:rgba(255,255,255,.55);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s}
+.tab.active{color:var(--orange2);border-bottom-color:var(--orange2)}
+.ti{font-size:17px;display:block;margin-bottom:2px}
+.page{display:none;padding:16px}
+.page.active{display:block}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.ct{font-size:13px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;color:var(--text);background:#fafbfd;transition:border-color .2s;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue2);background:#fff}
+.field.autofilled input,.field.autofilled select{border-color:var(--ok)!important;background:#f0fdf4!important}
+.field textarea{height:80px;resize:none}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rs{color:var(--orange)}
+/* PHOTO */
+.pz{border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.pz:hover{border-color:var(--blue2);background:#f0f6ff}
+.pz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pp{width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block;border:3px solid var(--blue2)}
+/* SCAN CNI */
+.scan-card{background:linear-gradient(135deg,#0f2744,#1a3a5c);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 4px 16px rgba(26,58,92,.35)}
+.scan-title{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.scan-sub{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:14px;line-height:1.5}
+.scan-sides{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ss{border:2px dashed rgba(255,255,255,.25);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .2s;position:relative;background:rgba(255,255,255,.05)}
+.ss:hover{border-color:var(--orange2);background:rgba(255,255,255,.1)}
+.ss input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.si{font-size:28px;margin-bottom:6px}
+.sl{font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.5px}
+.st{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px}
+.ss.loaded{border-color:var(--orange2);background:rgba(240,159,40,.12)}
+.ss.loaded .st{color:var(--orange2)}
+.sthumb{width:100%;height:50px;object-fit:cover;border-radius:6px;margin-bottom:6px}
+.btn-scan{width:100%;padding:14px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(224,123,26,.5);transition:all .15s}
+.btn-scan:disabled{opacity:.45;cursor:not-allowed}
+.btn-scan:not(:disabled):active{transform:scale(.97)}
+.sp{display:none;background:rgba(255,255,255,.08);border-radius:10px;padding:14px;margin-top:12px}
+.sp.on{display:block}
+.sstep{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:rgba(255,255,255,.45);transition:color .3s}
+.sstep.done{color:#4ade80}
+.sstep.active{color:#fff;font-weight:600}
+.sstep-ic{font-size:16px;width:20px;flex-shrink:0}
+.spin{display:inline-block;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ocr-banner{display:none;background:linear-gradient(135deg,#14532d,#16a34a);border-radius:10px;padding:12px 14px;margin-top:12px;color:#fff;font-size:13px;font-weight:600}
+.ocr-banner.on{display:block}
+.ocr-tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.otag{background:rgba(255,255,255,.18);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700}
+/* BOUTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 14px rgba(224,123,26,.4)}
+.btn-p:active{transform:scale(.97)}
+.btn-p:disabled{opacity:.55;cursor:not-allowed}
+.btn-s{background:var(--blue);color:#fff}
+.btn-o{background:#fff;color:var(--blue2);border:2px solid var(--blue2)}
+.btn-d{background:var(--err);color:#fff;width:auto;padding:7px 14px;font-size:13px}
+.btn+.btn{margin-top:10px}
+/* STATS */
+.sr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sb{background:var(--card);border-radius:10px;padding:12px 8px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.06)}
+.sn{font-size:22px;font-weight:800;color:var(--blue2)}
+.slb{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase}
+/* LISTE */
+.search-bar{background:var(--card);border-radius:10px;padding:10px 13px;margin-bottom:12px;display:flex;align-items:center;gap:8px;border:1.5px solid var(--border)}
+.search-bar input{border:none;outline:none;width:100%;font-size:15px;background:transparent}
+.cc{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px;cursor:pointer}
+.av{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--orange));display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;flex-shrink:0;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.ci{flex:1;min-width:0}
+.cn{font-size:15px;font-weight:700}
+.cm{font-size:12px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbg{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;flex-shrink:0}
+.ba{background:#dcfce7;color:var(--ok)}
+.bs{background:#fee2e2;color:var(--err)}
+.bw{background:#fef3c7;color:#92400e}
+.chtag{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:4px}
+.added-by{font-size:11px;color:var(--muted);margin-top:3px}
+/* DETAIL */
+.dh{background:linear-gradient(135deg,var(--blue),var(--blue2));border-radius:var(--r);padding:20px;margin-bottom:14px;text-align:center;color:#fff}
+.da{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;margin:0 auto 10px;overflow:hidden;border:3px solid rgba(255,255,255,.4)}
+.da img{width:100%;height:100%;object-fit:cover}
+.ig{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.ii{background:var(--card);border-radius:9px;padding:10px 12px}
+.iil{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase}
+.iiv{font-size:14px;font-weight:700;margin-top:2px}
+.cni-imgs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cni-box{border-radius:8px;overflow:hidden;background:var(--bg)}
+.cni-box img{width:100%;height:70px;object-fit:cover;display:block}
+.cni-lbl{font-size:10px;color:var(--muted);font-weight:600;text-align:center;padding:4px;text-transform:uppercase}
+/* USERS */
+.user-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.role-pill{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.role-pill.admin{background:#dbeafe;color:#1d4ed8}
+.role-pill.gerant{background:#fef3c7;color:#b45309}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;max-width:90vw}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{background:var(--ok)}
+.toast.er{background:var(--err)}
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:flex-end;justify-content:center}
+.mo.open{display:flex}
+.modal{background:#fff;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow-y:auto}
+.mh{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .ei{font-size:48px;margin-bottom:12px}
+/* CONFIG */
+.kw{position:relative}
+.kw input{padding-right:80px;font-family:monospace;font-size:13px}
+.kt{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--blue2);font-weight:700;cursor:pointer;background:none;border:none}
+.kok{color:var(--ok);font-size:12px;font-weight:600;margin-top:6px}
+.kno{color:var(--muted);font-size:12px;font-weight:600;margin-top:6px}
+.bottom-safe{height:16px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">RB</div>
+    <h1 style="text-align:center;font-size:18px;margin-bottom:4px">Résidence Biagné</h1>
+    <p style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:20px">Connexion à l'espace clients</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="li_email" required autocomplete="username"></div>
+      <div class="field"><label>Mot de passe</label><input type="password" id="li_pass" required autocomplete="current-password"></div>
+      <div class="login-err" id="loginError"></div>
+      <button type="submit" class="btn btn-p" id="li_btn">Se connecter</button>
+    </form>
+    <p class="login-hint">Compte créé par votre administrateur</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appShell" class="hidden">
+<div class="header">
+  <div class="hi">
+    <div class="logo">RB</div>
+    <div><h1>Résidence Biagné</h1><p>Enregistrement des clients</p></div>
+  </div>
+  <div class="user-bar">
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px">
+      <span id="userNom" style="font-weight:700"></span>
+      <span id="userRole" class="role-badge"></span>
+    </div>
+    <button class="btn-logout" id="btnLogout">Déconnexion ↪</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showPage('enregistrer')" id="tab-enregistrer"><span class="ti">✍️</span>Enregistrer</div>
+    <div class="tab" onclick="showPage('clients')" id="tab-clients"><span class="ti">👥</span>Clients</div>
+    <div class="tab" onclick="showPage('depenses')" id="tab-depenses"><span class="ti">💸</span>Dépenses</div>
+    <div class="tab" onclick="showPage('stats')" id="tab-stats"><span class="ti">📊</span>Résumé</div>
+    <div class="tab" onclick="showPage('config')" id="tab-config"><span class="ti">⚙️</span>Config</div>
+  </div>
+</div>
+
+<!-- PAGE ENREGISTRER -->
+<div class="page active" id="page-enregistrer">
+  <!-- SCAN CNI -->
+  <div class="scan-card">
+    <div class="scan-title">🪪 Scan automatique CNI / Passeport</div>
+    <div class="scan-sub">Photographiez le recto ET le verso — l'IA lit et remplit le formulaire automatiquement</div>
+    <div class="scan-sides">
+      <div class="ss" id="side-recto">
+        <input type="file" accept="image/*" capture="environment" onchange="chargerFace(this,'recto')" onclick="event.stopPropagation()">
+        <div id="recto-preview"><div class="si">🖼️</div><div class="sl">RECTO</div><div class="st">Photographier</div></div>
+      </div>
+      <div class="ss" id="side-verso">
+        <input type="file" accept="image/*" capture="environment" onchange="chargerFace(this,'verso')" onclick="event.stopPropagation()">
+        <div id="verso-preview"><div class="si">🔄</div><div class="sl">VERSO</div><div class="st">Photographier</div></div>
+      </div>
+    </div>
+    <button class="btn-scan" id="btnScan" onclick="lancerOCR()" disabled>🔍 Analyser la pièce d'identité</button>
+    <div class="sp" id="scanProg">
+      <div class="sstep" id="step1"><span class="sstep-ic">📤</span>Envoi des images…</div>
+      <div class="sstep" id="step2"><span class="sstep-ic">🧠</span>Lecture par l'IA…</div>
+      <div class="sstep" id="step3"><span class="sstep-ic">✍️</span>Remplissage du formulaire…</div>
+    </div>
+    <div class="ocr-banner" id="ocrBanner"></div>
+  </div>
+
+  <!-- Photo portrait -->
+  <div class="card">
+    <div class="ct"><span>📷</span>Photo du client (portrait)</div>
+    <div class="pz" id="photoZone">
+      <input type="file" id="photoInput" accept="image/*" capture="user" onchange="handlePhoto(this)">
+      <div id="photoDisplay"><div style="font-size:32px;margin-bottom:6px">🧑</div><div style="font-size:13px;color:var(--muted)">Appuyer pour prendre une photo</div></div>
+    </div>
+  </div>
+
+  <!-- Identité -->
+  <div class="card">
+    <div class="ct"><span>🪪</span>Identité</div>
+    <div class="field" id="field_nom"><label>Nom complet <span class="rs">*</span></label><input type="text" id="f_nom" placeholder="Ex: Kouassi Jean-Pierre"></div>
+    <div class="fr">
+      <div class="field" id="field_sexe"><label>Sexe <span class="rs">*</span></label><select id="f_sexe"><option value="">—</option><option>Masculin</option><option>Féminin</option></select></div>
+      <div class="field" id="field_nationalite"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
+    </div>
+    <div class="fr">
+      <div class="field" id="field_piece"><label>N° Pièce d'identité</label><input type="text" id="f_piece" placeholder="CNI / Passeport"></div>
+      <div class="field" id="field_ddn"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
+    </div>
+    <div class="fr">
+      <div class="field" id="field_lieu"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
+      <div class="field" id="field_prof"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
+    </div>
+    <div class="field" id="field_adr"><label>Adresse</label><input type="text" id="f_adr" placeholder="Adresse de résidence"></div>
+    <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
+    <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
+  </div>
+
+  <!-- Séjour -->
+  <div class="card">
+    <div class="ct"><span>🏨</span>Séjour</div>
+    <div class="fr">
+      <div class="field"><label>N° Chambre <span class="rs">*</span></label><select id="f_chambre"><option value="">— Choisir —</option></select></div>
+      <div class="field"><label>Type chambre</label><select id="f_tch"><option value="">—</option><option>Standard</option><option>Deluxe</option><option>Suite</option><option>Studio</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" oninput="majCIE()"></div>
+      <div class="field"><label>Date de départ</label><input type="date" id="f_dep" oninput="majCIE()"></div>
+    </div>
+    <div class="fr">
+      <div class="field"><label>Durée prévue</label><select id="f_dur"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+      <div class="field"><label>Tarif (FCFA)</label><input type="number" id="f_tarif" placeholder="15000" inputmode="numeric"></div>
+    </div>
+    <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
+    <div id="cieApercu" style="background:#fffbeb;border-radius:9px;padding:9px 12px;font-size:12px;color:#92400e;font-weight:600">⚡ CIE : 1 000 FCFA/jour — sera ajoutée automatiquement (1 jour par défaut)</div>
+  </div>
+
+  <!-- Paiement -->
+  <div class="card">
+    <div class="ct"><span>💳</span>Paiement</div>
+    <div class="fr">
+      <div class="field"><label>Mode</label><select id="f_pay"><option value="">—</option><option>Espèces</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
+      <div class="field"><label>Statut</label><select id="f_spay"><option value="">—</option><option>Payé</option><option>Avance versée</option><option>Non payé</option></select></div>
+    </div>
+    <div class="field"><label>Observations</label><textarea id="f_obs" placeholder="Notes, remarques…"></textarea></div>
+  </div>
+
+  <button class="btn btn-p" id="btnEnregistrer" onclick="enregistrerClient()">✅ Enregistrer le client</button>
+  <button class="btn btn-o" onclick="reinit()" style="margin-top:10px">🔄 Réinitialiser</button>
+  <div class="bottom-safe"></div>
+</div>
+
+<!-- PAGE CLIENTS -->
+<div class="page" id="page-clients">
+  <div id="pendingBanner"></div>
+  <div class="search-bar"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher…" oninput="filtrer()"></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-o" style="flex:1;padding:8px;font-size:12px" onclick="filtreS('')" id="fAll">Tous</button>
+    <button class="btn btn-o" style="flex:1;padding:8px;font-size:12px" onclick="filtreS('Actif')" id="fActif">Présents</button>
+    <button class="btn btn-o" style="flex:1;padding:8px;font-size:12px" onclick="filtreS('Sorti')" id="fSorti">Sortis</button>
+  </div>
+  <div id="clientsList"></div>
+  <div class="bottom-safe"></div>
+</div>
+
+<!-- PAGE DÉPENSES -->
+<div class="page" id="page-depenses">
+  <div class="card">
+    <div class="ct"><span>⚡</span>Charges récurrentes</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-s" style="font-size:13px;padding:11px" onclick="ajouterDepenseGenerale('Canal+',5000)">📺 Canal+<br><span style="font-weight:400;font-size:11px">5 000 FCFA</span></button>
+      <button class="btn btn-s" style="font-size:13px;padding:11px" onclick="ajouterDepenseGenerale('Internet',15000)">🌐 Internet<br><span style="font-weight:400;font-size:11px">15 000 FCFA</span></button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct"><span>➕</span>Autre dépense générale</div>
+    <div class="field"><label>Catégorie</label><select id="dg_cat"><option>Fournitures</option><option>Entretien</option><option>Imprévu</option><option>Autre</option></select></div>
+    <div class="fr">
+      <div class="field"><label>Montant (FCFA)</label><input type="number" id="dg_montant" inputmode="numeric" placeholder="0"></div>
+      <div class="field"><label>Date</label><input type="date" id="dg_date"></div>
+    </div>
+    <div class="field"><label>Description</label><input type="text" id="dg_desc" placeholder="Détail (optionnel)"></div>
+    <button class="btn btn-p" onclick="ajouterDepenseFormulaire()">Ajouter</button>
+  </div>
+  <div class="card">
+    <div class="ct"><span>📋</span>Dépenses générales (hors séjours)</div>
+    <div id="depensesGeneralesList"></div>
+  </div>
+  <div class="bottom-safe"></div>
+</div>
+
+<!-- PAGE STATS (admin) -->
+<div class="page" id="page-stats">
+  <div class="sr">
+    <div class="sb"><div class="sn" id="s_tot">0</div><div class="slb">Total</div></div>
+    <div class="sb"><div class="sn" id="s_act" style="color:var(--ok)">0</div><div class="slb">Présents</div></div>
+    <div class="sb"><div class="sn" id="s_sor" style="color:var(--err)">0</div><div class="slb">Sortis</div></div>
+  </div>
+  <div class="card"><div class="ct"><span>🏨</span>Chambres occupées</div><div id="chambresOcc"></div></div>
+  <div class="card">
+    <div class="ct"><span>💰</span>Revenus enregistrés</div>
+    <div style="font-size:26px;font-weight:800;color:var(--blue2)" id="s_rev">0 FCFA</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px" id="s_pay">dont 0 FCFA payés</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span>💸</span>Dépenses totales</div>
+    <div style="font-size:26px;font-weight:800;color:var(--err)" id="s_dep">0 FCFA</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px" id="s_depd">CIE / draps / Canal+ / Internet / imprévus…</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span>📈</span>Bénéfice net estimé</div>
+    <div style="font-size:26px;font-weight:800" id="s_net">0 FCFA</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">Revenus enregistrés − dépenses totales</div>
+  </div>
+  <div class="card">
+    <div class="ct"><span>📤</span>Export & Gestion</div>
+    <button class="btn btn-s" onclick="exportCSV()" style="margin-bottom:10px">📥 Exporter CSV (clients)</button>
+    <button class="btn btn-s" onclick="exportDepensesCSV()" style="margin-bottom:10px">📥 Exporter CSV (dépenses)</button>
+    <button class="btn btn-o" onclick="effacer()">🗑️ Effacer toutes les données</button>
+  </div>
+  <div class="bottom-safe"></div>
+</div>
+
+<!-- PAGE CONFIG (admin) -->
+<div class="page" id="page-config">
+  <div class="card">
+    <div class="ct"><span>🔗</span>Lien d'auto-enregistrement client</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Un client peut s'enregistrer lui-même en scannant ce code ou en ouvrant le lien. Sa demande arrive dans <strong>Clients</strong> en attente d'attribution de chambre.</p>
+    <div style="text-align:center;background:var(--bg);border-radius:10px;padding:16px;margin-bottom:12px"><div id="qrHolder" style="display:inline-block"></div></div>
+    <div class="field"><input type="text" id="checkinLink" readonly style="font-size:12px;font-family:monospace;text-align:center"></div>
+    <button class="btn btn-o" onclick="copierLien()">📋 Copier le lien</button>
+  </div>
+  <div class="card">
+    <div class="ct"><span>🔑</span>Clé API Anthropic</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Nécessaire pour le scan automatique des CNI. Une seule clé, partagée par toute l'équipe.</p>
+    <div class="field">
+      <label>Clé API (sk-ant-…)</label>
+      <div class="kw">
+        <input type="password" id="apiKey" placeholder="sk-ant-api03-…" autocomplete="off">
+        <button class="kt" onclick="toggleKey()">Afficher</button>
+      </div>
+      <div id="keyStatus"></div>
+    </div>
+    <button class="btn btn-p" onclick="saveKey()">💾 Sauvegarder la clé</button>
+    <button class="btn btn-o" style="margin-top:10px" onclick="delKey()">🗑️ Supprimer la clé</button>
+  </div>
+  <div class="card">
+    <div class="ct"><span>ℹ️</span>Obtenir une clé API</div>
+    <p style="font-size:13px;color:var(--muted);line-height:1.8">1. Allez sur <strong>console.anthropic.com</strong><br>2. Créez un compte<br>3. Menu → <strong>API Keys</strong> → Créer une clé<br>4. Copiez la clé (commence par <code>sk-ant-</code>)<br>5. Collez-la ci-dessus et sauvegardez</p>
+  </div>
+  <div class="card">
+    <div class="ct"><span>👥</span>Comptes utilisateurs</div>
+    <div id="usersList"></div>
+    <div style="height:6px"></div>
+    <div class="field"><label>Nom complet</label><input type="text" id="nu_nom" placeholder="Ex: Awa Koné"></div>
+    <div class="field"><label>Email</label><input type="email" id="nu_email" placeholder="email@exemple.com"></div>
+    <div class="field"><label>Mot de passe (6 caractères min.)</label><input type="password" id="nu_pass" placeholder="••••••"></div>
+    <div class="field"><label>Rôle</label><select id="nu_role"><option value="gerant">Gérant</option><option value="admin">Admin</option></select></div>
+    <button class="btn btn-p" onclick="creerCompte()">➕ Créer le compte</button>
+  </div>
+  <div class="bottom-safe"></div>
+</div>
+
+<!-- MODAL DÉTAIL -->
+<div class="mo" id="mo" onclick="closeMo(event)"><div class="modal" id="moContent"></div></div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+</div><!-- /appShell -->
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+<script type="module">
+import { firebaseConfig } from './firebase-config.js';
+import { initializeApp, deleteApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import {
+  getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut,
+  createUserWithEmailAndPassword
+} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
+import {
+  getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc,
+  collection, onSnapshot, query, orderBy, serverTimestamp, arrayUnion
+} from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let clientsCache = [];
+let usersCache = [];
+let depensesCache = [];
+let anthropicKey = '';
+let filtreStatut = '';
+let photoB64 = null, rectoB64 = null, versoB64 = null;
+let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubDepenses = null;
+
+// ───────────────────────── AUTH ─────────────────────────
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = v('li_email'), pass = document.getElementById('li_pass').value;
+  const btn = document.getElementById('li_btn');
+  hideLoginError();
+  btn.disabled = true; btn.textContent = 'Connexion…';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch (err) {
+    showLoginError(traduireErreur(err.code));
+  }
+  btn.disabled = false; btn.textContent = 'Se connecter';
+});
+document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
+
+function showLoginError(msg){ const el=document.getElementById('loginError'); el.textContent=msg; el.style.display='block'; }
+function hideLoginError(){ document.getElementById('loginError').style.display='none'; }
+function traduireErreur(code){
+  const m = {
+    'auth/invalid-credential':"Email ou mot de passe incorrect.",
+    'auth/invalid-email':"Adresse email invalide.",
+    'auth/user-not-found':"Aucun compte avec cet email.",
+    'auth/wrong-password':"Mot de passe incorrect.",
+    'auth/too-many-requests':"Trop de tentatives. Réessayez plus tard.",
+    'auth/weak-password':"Mot de passe trop court (6 caractères min).",
+    'auth/email-already-in-use':"Cet email est déjà utilisé."
+  };
+  return m[code] || "Erreur de connexion.";
+}
+
+onAuthStateChanged(auth, async (user) => {
+  cleanupListeners();
+  if (!user) {
+    currentUser = null;
+    document.getElementById('loginScreen').classList.remove('hidden');
+    document.getElementById('appShell').classList.add('hidden');
+    return;
+  }
+  try {
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (!snap.exists()) {
+      showLoginError("Compte non configuré. Contactez l'administrateur.");
+      await signOut(auth);
+      return;
+    }
+    const d = snap.data();
+    currentUser = { uid: user.uid, email: user.email, nom: d.nom || user.email, role: d.role || 'gerant' };
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('appShell').classList.remove('hidden');
+    document.getElementById('userNom').textContent = currentUser.nom;
+    document.getElementById('userRole').textContent = currentUser.role === 'admin' ? '👑 Admin' : '🧑‍💼 Gérant';
+    applyRoleUI();
+    startListeners();
+    document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
+    const sel = document.getElementById('f_chambre');
+    if (!sel.dataset.filled) {
+      for (let i = 1; i <= 30; i++) { const o = document.createElement('option'); o.value = o.text = 'Chambre ' + i; sel.appendChild(o); }
+      sel.dataset.filled = '1';
+    }
+    showPage('enregistrer');
+  } catch (err) {
+    showLoginError("Erreur de connexion. Réessayez.");
+    await signOut(auth);
+  }
+});
+
+function applyRoleUI(){
+  const admin = currentUser.role === 'admin';
+  document.getElementById('tab-stats').style.display = admin ? '' : 'none';
+  document.getElementById('tab-config').style.display = admin ? '' : 'none';
+}
+
+function cleanupListeners(){
+  if (unsubClients) { unsubClients(); unsubClients = null; }
+  if (unsubUsers) { unsubUsers(); unsubUsers = null; }
+  if (unsubConfig) { unsubConfig(); unsubConfig = null; }
+  if (unsubDepenses) { unsubDepenses(); unsubDepenses = null; }
+}
+
+function startListeners(){
+  const qClients = query(collection(db, 'clients'), orderBy('createdAt', 'desc'));
+  unsubClients = onSnapshot(qClients, (snap) => {
+    clientsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    filtrer(); stats();
+  }, () => showToast('❌ Erreur de synchronisation', 'er'));
+
+  unsubConfig = onSnapshot(doc(db, 'config', 'settings'), (snap) => {
+    anthropicKey = snap.exists() ? (snap.data().anthropicApiKey || '') : '';
+    showKeyStatus();
+  });
+
+  unsubDepenses = onSnapshot(collection(db, 'depenses'), (snap) => {
+    depensesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderDepensesGenerales(); stats();
+  }, () => showToast('❌ Erreur de synchronisation dépenses', 'er'));
+
+  if (currentUser.role === 'admin') {
+    unsubUsers = onSnapshot(collection(db, 'users'), (snap) => {
+      usersCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderUsers();
+    });
+    setupCheckinLink();
+  }
+  document.getElementById('dg_date').value = new Date().toISOString().split('T')[0];
+}
+
+function setupCheckinLink(){
+  const url = location.href.replace(/index\.html.*$/, '').replace(/\/?$/, '/') + 'checkin.html';
+  const inp = document.getElementById('checkinLink');
+  if (inp) inp.value = url;
+  const holder = document.getElementById('qrHolder');
+  if (holder && window.QRCode) {
+    holder.innerHTML = '';
+    const canvas = document.createElement('canvas');
+    holder.appendChild(canvas);
+    QRCode.toCanvas(canvas, url, { width: 180, margin: 1, color: { dark: '#1a3a5c' } }, (err) => { if (err) console.error(err); });
+  }
+}
+window.copierLien = function(){
+  const inp = document.getElementById('checkinLink');
+  inp.select(); inp.setSelectionRange(0, 99999);
+  navigator.clipboard?.writeText(inp.value).then(() => showToast('📋 Lien copié', 'ok')).catch(() => showToast('📋 Sélectionnez et copiez le lien', 'ok'));
+};
+
+// ───────────────────────── IMAGES (compression) ─────────────────────────
+function compressImage(file, maxWidth, quality){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxWidth) { h = Math.round(h * (maxWidth / w)); w = maxWidth; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => reject(new Error('Image invalide'));
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Lecture échouée'));
+    reader.readAsDataURL(file);
+  });
+}
+
+// ───────────────────────── SCAN CNI ─────────────────────────
+window.chargerFace = async function(inp, face){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    const b = await compressImage(f, 900, 0.6);
+    if (face === 'recto') {
+      rectoB64 = b;
+      document.getElementById('recto-preview').innerHTML = `<img class="sthumb" src="${b}"><div class="sl" style="color:var(--orange2)">✓ RECTO</div><div class="st" style="color:var(--orange2)">Chargé</div>`;
+      document.getElementById('side-recto').classList.add('loaded');
+    } else {
+      versoB64 = b;
+      document.getElementById('verso-preview').innerHTML = `<img class="sthumb" src="${b}"><div class="sl" style="color:var(--orange2)">✓ VERSO</div><div class="st" style="color:var(--orange2)">Chargé</div>`;
+      document.getElementById('side-verso').classList.add('loaded');
+    }
+    document.getElementById('btnScan').disabled = !rectoB64;
+  } catch (err) { showToast('❌ Erreur photo', 'er'); }
+};
+
+window.lancerOCR = async function(){
+  if (!anthropicKey) { showToast("⚙️ L'administrateur doit configurer la clé API", 'er'); showPage('config'); return; }
+  const prog = document.getElementById('scanProg');
+  prog.classList.add('on');
+  document.getElementById('btnScan').disabled = true;
+  document.getElementById('ocrBanner').classList.remove('on');
+  step(1, 'active'); step(2, ''); step(3, '');
+  const content = [];
+  const rd = rectoB64.split(',')[1], rm = rectoB64.split(';')[0].split(':')[1];
+  content.push({ type: 'image', source: { type: 'base64', media_type: rm, data: rd } });
+  content.push({ type: 'text', text: "Ceci est le RECTO de la pièce d'identité." });
+  if (versoB64) {
+    const vd = versoB64.split(',')[1], vm = versoB64.split(';')[0].split(':')[1];
+    content.push({ type: 'image', source: { type: 'base64', media_type: vm, data: vd } });
+    content.push({ type: 'text', text: 'Ceci est le VERSO de la pièce d\'identité.' });
+  }
+  content.push({ type: 'text', text: `Tu es expert en lecture de pièces d'identité africaines (CNI Côte d'Ivoire, passeports CEDEAO, etc.).\nAnalyse ces images et extrais TOUTES les informations visibles.\nRéponds UNIQUEMENT en JSON valide, sans texte autour:\n{"nom_complet":"","sexe":"Masculin ou Féminin","date_naissance":"JJ/MM/AAAA","lieu_naissance":"","nationalite":"","numero_piece":"","adresse":"","profession":"","type_document":"CNI ou Passeport"}\nSi un champ est illisible mets "". Ne jamais inventer.` });
+  try {
+    step(1, 'done'); step(2, 'active');
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1000, messages: [{ role: 'user', content }] })
+    });
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.error?.message || 'Erreur API ' + resp.status); }
+    const data = await resp.json();
+    const txt = data.content.map(b => b.text || '').join('');
+    step(2, 'done'); step(3, 'active');
+    let info;
+    try { const m = txt.match(/\{[\s\S]*\}/); info = JSON.parse(m ? m[0] : txt); }
+    catch (e) { throw new Error('Réponse IA invalide'); }
+    const ok = [];
+    if (info.nom_complet) { set('f_nom', info.nom_complet); ok.push('Nom'); hl('field_nom'); }
+    if (info.sexe) { set('f_sexe', normSexe(info.sexe)); ok.push('Sexe'); hl('field_sexe'); }
+    if (info.nationalite) { set('f_nationalite', info.nationalite); ok.push('Nationalité'); hl('field_nationalite'); }
+    if (info.numero_piece) { set('f_piece', info.numero_piece); ok.push('N° Pièce'); hl('field_piece'); }
+    if (info.date_naissance) { set('f_ddn', info.date_naissance); ok.push('Date naiss.'); hl('field_ddn'); }
+    if (info.lieu_naissance) { set('f_lieu', info.lieu_naissance); ok.push('Lieu naiss.'); hl('field_lieu'); }
+    if (info.profession) { set('f_prof', info.profession); ok.push('Profession'); hl('field_prof'); }
+    if (info.adresse) { set('f_adr', info.adresse); ok.push('Adresse'); hl('field_adr'); }
+    step(3, 'done');
+    const b = document.getElementById('ocrBanner');
+    b.innerHTML = `<div>✅ ${ok.length} champ(s) rempli(s) automatiquement</div><div class="ocr-tags">${ok.map(x => `<span class="otag">✓ ${x}</span>`).join('')}</div>${ok.length === 0 ? '<div style="margin-top:6px;font-size:12px;opacity:.8">Aucune info lisible — vérifiez la qualité des photos</div>' : ''}`;
+    b.classList.add('on');
+    showToast(`🎉 ${ok.length} champs remplis automatiquement !`, 'ok');
+    setTimeout(() => document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' }), 800);
+  } catch (err) {
+    step(1, ''); step(2, ''); step(3, '');
+    prog.classList.remove('on');
+    showToast('❌ ' + (err.message || 'Erreur scan'), 'er');
+  }
+  document.getElementById('btnScan').disabled = false;
+};
+function step(n, s){
+  const el = document.getElementById('step' + n);
+  el.className = 'sstep' + (s ? ' ' + s : '');
+  const ic = { 1: '📤', 2: '🧠', 3: '✍️' }, dn = { 1: '✅', 2: '✅', 3: '✅' };
+  el.querySelector('.sstep-ic').innerHTML = s === 'done' ? dn[n] : s === 'active' ? '<span class="spin">⚙️</span>' : ic[n];
+}
+function set(id, val){ const e = document.getElementById(id); if (e && val) e.value = val; }
+function hl(id){ const e = document.getElementById(id); if (!e) return; e.classList.add('autofilled'); setTimeout(() => e.classList.remove('autofilled'), 4000); }
+function normSexe(s){ if (!s) return ''; const l = s.toLowerCase(); if (l.includes('f')) return 'Féminin'; if (l.includes('m')) return 'Masculin'; return ''; }
+
+// ───────────────────────── PHOTO PORTRAIT ─────────────────────────
+window.handlePhoto = async function(inp){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    photoB64 = await compressImage(f, 500, 0.6);
+    document.getElementById('photoDisplay').innerHTML = `<img class="pp" src="${photoB64}"><div style="font-size:13px;color:var(--ok);font-weight:600">✓ Photo ajoutée</div>`;
+  } catch (err) { showToast('❌ Erreur photo', 'er'); }
+};
+
+// ───────────────────────── CIE (électricité, 1000 FCFA/jour) ─────────────────────────
+function calcJours(arr, dep){
+  if (!arr) return 1;
+  if (!dep) return 1;
+  const a = new Date(arr), d = new Date(dep);
+  const j = Math.round((d - a) / 86400000);
+  return j > 0 ? j : 1;
+}
+window.majCIE = function(){
+  const arr = v('f_arr'), dep = v('f_dep');
+  const j = calcJours(arr, dep);
+  const el = document.getElementById('cieApercu');
+  if (el) el.textContent = `⚡ CIE : 1 000 FCFA/jour × ${j} jour(s) = ${(1000 * j).toLocaleString('fr-FR')} FCFA — ajoutée automatiquement`;
+};
+
+// ───────────────────────── ENREGISTRER CLIENT ─────────────────────────
+window.enregistrerClient = async function(){
+  const nom = v('f_nom'), tel = v('f_tel'), ch = v('f_chambre'), arr = v('f_arr');
+  if (!nom || !tel || !ch || !arr) { showToast('⚠️ Champs obligatoires manquants (*)', 'er'); return; }
+  const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
+  if (occ) { showToast(`❌ ${ch} occupée par ${occ.nom}`, 'er'); return; }
+  const btn = document.getElementById('btnEnregistrer');
+  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  const dep = v('f_dep');
+  try {
+    const ref = await addDoc(collection(db, 'clients'), {
+      photo: photoB64, cni_recto: rectoB64, cni_verso: versoB64,
+      nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
+      ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: v('f_adr'), prov: v('f_prov'),
+      chambre: ch, tch: v('f_tch'), arrivee: arr, depart: dep, duree: v('f_dur'),
+      tarif: v('f_tarif') || '0', motif: v('f_motif'), pay: v('f_pay'), spay: v('f_spay'),
+      obs: v('f_obs'), statut: 'Actif',
+      createdBy: currentUser.uid, createdByNom: currentUser.nom,
+      createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
+      history: [{ action: 'creation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() }]
+    });
+    const jours = calcJours(arr, dep);
+    await addDoc(collection(db, 'depenses'), {
+      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} jour(s)`,
+      clientId: ref.id, clientNom: nom, date: arr,
+      createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+    });
+    reinit();
+    showToast(`✅ ${nom} enregistré(e) !`, 'ok'); showPage('clients');
+  } catch (err) {
+    showToast('❌ Erreur : ' + (err.message || 'échec'), 'er');
+  }
+  btn.disabled = false; btn.textContent = '✅ Enregistrer le client';
+};
+
+function reinit(){
+  ['f_nom', 'f_sexe', 'f_nationalite', 'f_piece', 'f_ddn', 'f_lieu', 'f_prof', 'f_adr', 'f_tel', 'f_prov',
+    'f_chambre', 'f_tch', 'f_dep', 'f_dur', 'f_tarif', 'f_motif', 'f_pay', 'f_spay', 'f_obs'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
+  photoB64 = null; rectoB64 = null; versoB64 = null;
+  document.getElementById('photoDisplay').innerHTML = '<div style="font-size:32px;margin-bottom:6px">🧑</div><div style="font-size:13px;color:var(--muted)">Appuyer pour prendre une photo</div>';
+  document.getElementById('photoInput').value = '';
+  document.getElementById('recto-preview').innerHTML = '<div class="si">🖼️</div><div class="sl">RECTO</div><div class="st">Photographier</div>';
+  document.getElementById('verso-preview').innerHTML = '<div class="si">🔄</div><div class="sl">VERSO</div><div class="st">Photographier</div>';
+  document.getElementById('side-recto').classList.remove('loaded');
+  document.getElementById('side-verso').classList.remove('loaded');
+  document.getElementById('btnScan').disabled = true;
+  document.getElementById('scanProg').classList.remove('on');
+  document.getElementById('ocrBanner').classList.remove('on');
+  document.getElementById('cieApercu').textContent = '⚡ CIE : 1 000 FCFA/jour — sera ajoutée automatiquement (1 jour par défaut)';
+}
+window.reinit = reinit;
+
+// ───────────────────────── LISTE ─────────────────────────
+function afficher(lst){
+  const d = lst !== undefined ? lst : clientsCache;
+  const c = document.getElementById('clientsList');
+  if (!d.length) { c.innerHTML = '<div class="empty"><div class="ei">👥</div><p>Aucun client</p></div>'; return; }
+  c.innerHTML = d.map(x => `<div class="cc" onclick="detail('${x.id}')"><div class="av">${x.photo ? `<img src="${x.photo}">` : ini(x.nom)}</div><div class="ci"><div class="cn">${x.nom}</div><div class="cm">📞 ${x.tel} | ${x.arrivee}</div><div class="chtag">${x.statut === 'En attente' ? '🆕 Demande en ligne' : '🏨 ' + x.chambre}</div><div class="added-by">👤 ${x.createdByNom || '—'}</div></div><span class="cbg ${x.statut === 'Actif' ? 'ba' : (x.statut === 'En attente' ? 'bw' : 'bs')}">${x.statut}</span></div>`).join('');
+  const pend = clientsCache.filter(x => x.statut === 'En attente');
+  const banner = document.getElementById('pendingBanner');
+  if (banner) banner.innerHTML = pend.length ? `<div class="card" style="background:#fffbeb;border:1.5px solid var(--orange2)"><div class="ct" style="color:#92400e"><span>🆕</span>${pend.length} nouvelle(s) demande(s) en ligne</div><p style="font-size:13px;color:#92400e">À valider et attribuer une chambre — cliquez sur un client marqué "En attente" ci-dessous.</p></div>` : '';
+}
+window.filtrer = function(){
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  let l = clientsCache;
+  if (filtreStatut) l = l.filter(c => c.statut === filtreStatut);
+  if (q) l = l.filter(c => c.nom.toLowerCase().includes(q) || c.tel.includes(q) || c.chambre.toLowerCase().includes(q));
+  afficher(l);
+};
+window.filtreS = function(s){ filtreStatut = s; filtrer(); };
+function ini(n){ return n.split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase() || '?'; }
+
+// ───────────────────────── DÉTAIL ─────────────────────────
+window.detail = function(id){
+  const c = clientsCache.find(x => x.id === id); if (!c) return;
+  const isAdmin = currentUser.role === 'admin';
+  const pending = c.statut === 'En attente';
+  const hist = (c.history || []).map(h => {
+    const d = new Date(h.at);
+    const lbl = h.action === 'creation' ? 'Créé par' : (h.action === 'depart' ? 'Départ enregistré par' : (h.action === 'validation' ? 'Demande validée par' : 'Réactivé par'));
+    return `<div style="font-size:12px;color:var(--muted);padding:3px 0">📌 ${lbl} <strong>${h.nom}</strong> — ${d.toLocaleString('fr-FR')}</div>`;
+  }).join('');
+  const deps = depensesCache.filter(x => x.clientId === c.id);
+  const totalDep = deps.reduce((s, x) => s + (Number(x.montant) || 0), 0);
+  const depLines = deps.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600">${x.categorie}</div><div style="font-size:11px;color:var(--muted)">${x.description || ''} ${x.date ? '· ' + x.date : ''}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:13px;font-weight:700;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${isAdmin ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:14px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
+  document.getElementById('moContent').innerHTML = `
+    <div class="mh"></div>
+    <div class="dh"><div class="da">${c.photo ? `<img src="${c.photo}">` : ini(c.nom)}</div>
+      <div style="font-size:20px;font-weight:800">${c.nom}</div>
+      <div style="font-size:13px;opacity:.75;margin-top:3px">📞 ${c.tel}</div>
+      <div style="margin-top:8px"><span class="cbg ${c.statut === 'Actif' ? 'ba' : (pending ? 'bw' : 'bs')}" style="background:rgba(255,255,255,.2);color:#fff">${c.statut}</span></div>
+    </div>
+    ${pending ? `<div style="background:#fffbeb;border-radius:9px;padding:12px;margin-bottom:12px;font-size:13px;color:#92400e">🆕 Demande envoyée en ligne — aucune chambre ni tarif attribué. Validez pour l'activer.</div>` : ''}
+    <div class="ig">
+      <div class="ii"><div class="iil">Chambre</div><div class="iiv">🏨 ${c.chambre || '—'}</div></div>
+      <div class="ii"><div class="iil">Type</div><div class="iiv">${c.tch || '—'}</div></div>
+      <div class="ii"><div class="iil">Arrivée</div><div class="iiv">📅 ${c.arrivee}</div></div>
+      <div class="ii"><div class="iil">Départ</div><div class="iiv">${c.depart || '—'}</div></div>
+      <div class="ii"><div class="iil">Tarif</div><div class="iiv">💰 ${Number(c.tarif).toLocaleString()} FCFA</div></div>
+      <div class="ii"><div class="iil">Paiement</div><div class="iiv">${c.spay || '—'}</div></div>
+      <div class="ii"><div class="iil">Nationalité</div><div class="iiv">${c.nationalite || '—'}</div></div>
+      <div class="ii"><div class="iil">Naissance</div><div class="iiv">${c.ddn || '—'}</div></div>
+      ${c.prof ? `<div class="ii"><div class="iil">Profession</div><div class="iiv">${c.prof}</div></div>` : ''}
+      ${c.lieu ? `<div class="ii"><div class="iil">Lieu naiss.</div><div class="iiv">${c.lieu}</div></div>` : ''}
+    </div>
+    ${c.piece ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">N° Pièce</div><div style="font-size:15px;font-weight:700;font-family:monospace;margin-top:3px">${c.piece}</div></div>` : ''}
+    ${c.adr ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">Adresse</div><div style="font-size:14px;margin-top:3px">${c.adr}</div></div>` : ''}
+    ${(c.cni_recto || c.cni_verso) ? `<div class="iil" style="margin-bottom:6px">📎 Photos CNI</div><div class="cni-imgs">${c.cni_recto ? `<div class="cni-box"><img src="${c.cni_recto}"><div class="cni-lbl">Recto</div></div>` : ''} ${c.cni_verso ? `<div class="cni-box"><img src="${c.cni_verso}"><div class="cni-lbl">Verso</div></div>` : ''}</div>` : ''}
+    ${c.obs ? `<div style="background:#fffbeb;border-radius:9px;padding:10px 12px;margin-top:10px;font-size:13px">📝 ${c.obs}</div>` : ''}
+    ${!pending ? `
+    <div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-top:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div class="iil">💸 Dépenses liées au séjour</div><div style="font-size:13px;font-weight:800;color:var(--err)">${totalDep.toLocaleString('fr-FR')} FCFA</div></div>
+      ${depLines || '<div style="font-size:12px;color:var(--muted)">Aucune dépense</div>'}
+      <div style="margin-top:8px" id="depAddForm">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+          <select id="dc_cat" style="padding:8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px"><option>Draps/Pressing</option><option>Imprévu</option><option>CIE</option><option>Autre</option></select>
+          <input type="number" id="dc_montant" placeholder="Montant" inputmode="numeric" style="padding:8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px">
+        </div>
+        <input type="text" id="dc_desc" placeholder="Description (optionnel)" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;margin-bottom:6px">
+        <button class="btn btn-s" style="padding:9px;font-size:13px" onclick="ajouterDepenseClient('${c.id}', ${JSON.stringify(c.nom)})">+ Ajouter la dépense</button>
+      </div>
+    </div>` : ''}
+    <div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-top:10px">
+      <div class="iil" style="margin-bottom:4px">📋 Historique</div>${hist || '<div style="font-size:12px;color:var(--muted)">—</div>'}
+    </div>
+    ${pending ? `
+    <div style="margin-top:14px">
+      <div class="ct" style="margin-bottom:10px"><span>🏨</span>Attribuer une chambre</div>
+      <div class="fr">
+        <select id="val_chambre" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">${document.getElementById('f_chambre').innerHTML}</select>
+        <select id="val_tch" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px"><option value="">Type —</option><option>Standard</option><option>Deluxe</option><option>Suite</option><option>Studio</option></select>
+      </div>
+      <div class="fr" style="margin-top:8px">
+        <input type="number" id="val_tarif" placeholder="Tarif (FCFA)" inputmode="numeric" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
+        <input type="date" id="val_dep" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
+      </div>
+      <select id="val_pay" style="width:100%;margin-top:8px;padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px"><option value="">Mode de paiement —</option><option>Espèces</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select>
+      <button class="btn btn-p" style="margin-top:10px" onclick="confirmerValidation('${c.id}')">✅ Valider et activer le séjour</button>
+      <button class="btn btn-d" style="margin-top:8px" onclick="delClient('${c.id}')">🗑️ Rejeter la demande</button>
+    </div>` : `
+    <div style="display:flex;gap:8px;margin-top:14px">
+      ${c.statut === 'Actif' ? `<button class="btn btn-d" style="flex:1" onclick="chgStatut('${c.id}','Sorti')">🚪 Départ</button>` : `<button class="btn btn-s" style="flex:1;padding:10px;font-size:13px" onclick="chgStatut('${c.id}','Actif')">↩️ Réactiver</button>`}
+      ${isAdmin ? `<button class="btn btn-o" style="flex:1;padding:10px;font-size:13px" onclick="editClient('${c.id}')">✏️ Modifier</button>` : ''}
+      ${isAdmin ? `<button class="btn btn-d" onclick="delClient('${c.id}')">🗑️</button>` : ''}
+    </div>`}
+    <div style="height:16px"></div>`;
+  document.getElementById('mo').classList.add('open');
+};
+
+// ───────────────────────── DÉPENSES LIÉES À UN CLIENT ─────────────────────────
+window.ajouterDepenseClient = async function(clientId, clientNom){
+  const cat = document.getElementById('dc_cat').value;
+  const montant = Number(document.getElementById('dc_montant').value);
+  const desc = document.getElementById('dc_desc').value.trim();
+  if (!montant || montant <= 0) { showToast('⚠️ Montant invalide', 'er'); return; }
+  try {
+    await addDoc(collection(db, 'depenses'), {
+      categorie: cat, montant, description: desc, clientId, clientNom,
+      date: new Date().toISOString().split('T')[0],
+      createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+    });
+    showToast('✅ Dépense ajoutée', 'ok');
+    detail(clientId);
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.supprDepense = async function(id){
+  if (currentUser.role !== 'admin') return;
+  if (!confirm('Supprimer cette dépense ?')) return;
+  try { await deleteDoc(doc(db, 'depenses', id)); showToast('🗑️ Dépense supprimée', 'er'); }
+  catch (e) { showToast('❌ Erreur', 'er'); }
+};
+
+// ───────────────────────── DÉPENSES GÉNÉRALES ─────────────────────────
+window.ajouterDepenseGenerale = async function(cat, montant){
+  try {
+    await addDoc(collection(db, 'depenses'), {
+      categorie: cat, montant, description: '', clientId: null, clientNom: null,
+      date: new Date().toISOString().split('T')[0],
+      createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+    });
+    showToast(`✅ ${cat} ajouté (${montant.toLocaleString('fr-FR')} FCFA)`, 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.ajouterDepenseFormulaire = async function(){
+  const cat = v('dg_cat'), montant = Number(v('dg_montant')), date = v('dg_date'), desc = v('dg_desc');
+  if (!montant || montant <= 0) { showToast('⚠️ Montant invalide', 'er'); return; }
+  try {
+    await addDoc(collection(db, 'depenses'), {
+      categorie: cat, montant, description: desc, clientId: null, clientNom: null,
+      date: date || new Date().toISOString().split('T')[0],
+      createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+    });
+    document.getElementById('dg_montant').value = ''; document.getElementById('dg_desc').value = '';
+    showToast('✅ Dépense ajoutée', 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+function renderDepensesGenerales(){
+  const el = document.getElementById('depensesGeneralesList'); if (!el) return;
+  const gen = depensesCache.filter(x => !x.clientId).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  if (!gen.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune dépense générale</p>'; return; }
+  el.innerHTML = gen.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:700">${x.categorie}</div><div style="font-size:11px;color:var(--muted)">${x.description || ''} ${x.date ? '· ' + x.date : ''} · ${x.createdByNom || ''}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:14px;font-weight:800;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${currentUser.role === 'admin' ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:15px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
+}
+
+// ───────────────────────── VALIDATION D'UNE DEMANDE EN LIGNE ─────────────────────────
+window.confirmerValidation = async function(id){
+  const ch = document.getElementById('val_chambre').value;
+  const tarif = document.getElementById('val_tarif').value || '0';
+  if (!ch) { showToast('⚠️ Choisissez une chambre', 'er'); return; }
+  const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
+  if (occ) { showToast(`❌ ${ch} déjà occupée par ${occ.nom}`, 'er'); return; }
+  const c = clientsCache.find(x => x.id === id); if (!c) return;
+  const dep = document.getElementById('val_dep').value || '';
+  try {
+    await updateDoc(doc(db, 'clients', id), {
+      statut: 'Actif', chambre: ch, tch: document.getElementById('val_tch').value,
+      tarif, depart: dep, pay: document.getElementById('val_pay').value,
+      updatedAt: serverTimestamp(),
+      history: arrayUnion({ action: 'validation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() })
+    });
+    const jours = calcJours(c.arrivee, dep);
+    await addDoc(collection(db, 'depenses'), {
+      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} jour(s)`,
+      clientId: id, clientNom: c.nom, date: c.arrivee,
+      createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+    });
+    document.getElementById('mo').classList.remove('open');
+    showToast(`✅ ${c.nom} activé(e), chambre ${ch}`, 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+
+// ───────────────────────── MODIFIER UN CLIENT (admin) ─────────────────────────
+window.editClient = function(id){
+  if (currentUser.role !== 'admin') return;
+  const c = clientsCache.find(x => x.id === id); if (!c) return;
+  const f = (id, val, type='text') => `<input type="${type}" id="ec_${id}" value="${(val || '').toString().replace(/"/g, '&quot;')}" style="width:100%;padding:9px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;margin-bottom:8px">`;
+  document.getElementById('moContent').innerHTML = `
+    <div class="mh"></div>
+    <div class="ct">✏️ Modifier — ${c.nom}</div>
+    <label class="iil">Nom</label>${f('nom', c.nom)}
+    <label class="iil">Téléphone</label>${f('tel', c.tel)}
+    <label class="iil">Chambre</label>${f('chambre', c.chambre)}
+    <label class="iil">Tarif (FCFA)</label>${f('tarif', c.tarif, 'number')}
+    <label class="iil">Date d'arrivée</label>${f('arrivee', c.arrivee, 'date')}
+    <label class="iil">Date de départ</label>${f('depart', c.depart, 'date')}
+    <label class="iil">Nationalité</label>${f('nationalite', c.nationalite)}
+    <label class="iil">N° Pièce</label>${f('piece', c.piece)}
+    <label class="iil">Adresse</label>${f('adr', c.adr)}
+    <label class="iil">Observations</label>${f('obs', c.obs)}
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn btn-p" style="flex:1" onclick="saveEditClient('${c.id}')">💾 Enregistrer</button>
+      <button class="btn btn-o" style="flex:1" onclick="detail('${c.id}')">Annuler</button>
+    </div><div style="height:16px"></div>`;
+};
+window.saveEditClient = async function(id){
+  if (currentUser.role !== 'admin') return;
+  const g = k => document.getElementById('ec_' + k).value.trim();
+  try {
+    await updateDoc(doc(db, 'clients', id), {
+      nom: g('nom'), tel: g('tel'), chambre: g('chambre'), tarif: g('tarif') || '0',
+      arrivee: g('arrivee'), depart: g('depart'), nationalite: g('nationalite'),
+      piece: g('piece'), adr: g('adr'), obs: g('obs'), updatedAt: serverTimestamp()
+    });
+    showToast('✅ Modifications enregistrées', 'ok');
+    detail(id);
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.closeMo = function(e){ if (e.target === document.getElementById('mo')) document.getElementById('mo').classList.remove('open'); };
+
+window.chgStatut = async function(id, s){
+  const c = clientsCache.find(x => x.id === id); if (!c) return;
+  try {
+    await updateDoc(doc(db, 'clients', id), {
+      statut: s,
+      depart: s === 'Sorti' ? new Date().toISOString().split('T')[0] : (c.depart || ''),
+      updatedAt: serverTimestamp(),
+      history: arrayUnion({ action: s === 'Sorti' ? 'depart' : 'reactivation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() })
+    });
+    document.getElementById('mo').classList.remove('open');
+    showToast(s === 'Sorti' ? '👋 Départ enregistré' : '✅ Client réactivé', 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.delClient = async function(id){
+  if (currentUser.role !== 'admin') { showToast('⛔ Réservé à l\'administrateur', 'er'); return; }
+  if (!confirm('Supprimer ce client ?')) return;
+  try {
+    await deleteDoc(doc(db, 'clients', id));
+    document.getElementById('mo').classList.remove('open');
+    showToast('🗑️ Client supprimé', 'er');
+  } catch (e) { showToast('❌ Erreur (droits insuffisants ?)', 'er'); }
+};
+
+// ───────────────────────── STATS ─────────────────────────
+function stats(){
+  const a = clientsCache.filter(c => c.statut === 'Actif');
+  const rev = clientsCache.reduce((s, c) => s + (Number(c.tarif) || 0), 0);
+  const pay = clientsCache.filter(c => c.spay === 'Payé').reduce((s, c) => s + (Number(c.tarif) || 0), 0);
+  const elTot = document.getElementById('s_tot'); if (!elTot) return;
+  elTot.textContent = clientsCache.length;
+  document.getElementById('s_act').textContent = a.length;
+  document.getElementById('s_sor').textContent = clientsCache.filter(c => c.statut === 'Sorti').length;
+  document.getElementById('s_rev').textContent = rev.toLocaleString('fr-FR') + ' FCFA';
+  document.getElementById('s_pay').textContent = `dont ${pay.toLocaleString('fr-FR')} FCFA payés`;
+  const totalDep = depensesCache.reduce((s, x) => s + (Number(x.montant) || 0), 0);
+  const sDep = document.getElementById('s_dep');
+  if (sDep) sDep.textContent = totalDep.toLocaleString('fr-FR') + ' FCFA';
+  const net = rev - totalDep;
+  const sNet = document.getElementById('s_net');
+  if (sNet) { sNet.textContent = net.toLocaleString('fr-FR') + ' FCFA'; sNet.style.color = net >= 0 ? 'var(--ok)' : 'var(--err)'; }
+  const cc = document.getElementById('chambresOcc');
+  if (!a.length) { cc.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune chambre occupée</p>'; return; }
+  cc.innerHTML = a.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><span class="chtag">🏨 ${c.chambre}</span><div style="font-size:13px;font-weight:600;margin-top:4px">${c.nom}</div></div><div style="font-size:12px;color:var(--muted);text-align:right">Depuis ${c.arrivee}<br>${Number(c.tarif).toLocaleString()} FCFA</div></div>`).join('');
+}
+
+// ───────────────────────── CSV / RESET ─────────────────────────
+window.exportCSV = function(){
+  if (currentUser.role !== 'admin') return;
+  if (!clientsCache.length) { showToast('Aucune donnée', 'er'); return; }
+  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
+  const rows = clientsCache.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(x => `"${(x || '').toString().replace(/"/g, '""')}"`).join(','));
+  const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clients_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+  showToast('📥 CSV téléchargé !', 'ok');
+};
+window.effacer = async function(){
+  if (currentUser.role !== 'admin') return;
+  if (!confirm('⚠️ Effacer TOUTES les données clients ? Cette action est irréversible.')) return;
+  try {
+    await Promise.all(clientsCache.map(c => deleteDoc(doc(db, 'clients', c.id))));
+    showToast('🗑️ Effacé', 'er');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.exportDepensesCSV = function(){
+  if (currentUser.role !== 'admin') return;
+  if (!depensesCache.length) { showToast('Aucune dépense', 'er'); return; }
+  const cols = ['Date', 'Catégorie', 'Montant', 'Client lié', 'Description', 'Ajoutée par'];
+  const rows = depensesCache.map(x => [x.date, x.categorie, x.montant, x.clientNom || '', x.description || '', x.createdByNom || ''].map(v => `"${(v || '').toString().replace(/"/g, '""')}"`).join(','));
+  const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `depenses_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
+  showToast('📥 CSV téléchargé !', 'ok');
+};
+
+// ───────────────────────── CONFIG : CLÉ API ─────────────────────────
+window.saveKey = async function(){
+  const k = v('apiKey');
+  if (!k.startsWith('sk-ant-')) { showToast('❌ Clé invalide', 'er'); return; }
+  try {
+    await setDoc(doc(db, 'config', 'settings'), { anthropicApiKey: k, updatedBy: currentUser.uid, updatedAt: serverTimestamp() }, { merge: true });
+    showToast('✅ Clé sauvegardée pour toute l\'équipe !', 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.delKey = async function(){
+  try {
+    await setDoc(doc(db, 'config', 'settings'), { anthropicApiKey: '' }, { merge: true });
+    document.getElementById('apiKey').value = '';
+    showToast('🗑️ Clé supprimée', 'er');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+function showKeyStatus(){
+  const el = document.getElementById('keyStatus'); if (!el) return;
+  const inp = document.getElementById('apiKey');
+  if (anthropicKey) { el.className = 'kok'; el.textContent = "✅ Clé configurée — Scan CNI actif pour toute l'équipe"; if (inp) inp.value = anthropicKey; }
+  else { el.className = 'kno'; el.textContent = 'Aucune clé — Scan CNI désactivé'; if (inp) inp.value=''; }
+}
+window.toggleKey = function(){
+  const i = document.getElementById('apiKey'), b = document.querySelector('.kt');
+  i.type = i.type === 'password' ? 'text' : 'password'; b.textContent = i.type === 'password' ? 'Afficher' : 'Masquer';
+};
+
+// ───────────────────────── CONFIG : COMPTES ─────────────────────────
+function renderUsers(){
+  const el = document.getElementById('usersList'); if (!el) return;
+  if (!usersCache.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucun compte</p>'; return; }
+  el.innerHTML = usersCache.map(u => `
+    <div class="user-row">
+      <div>
+        <div style="font-weight:700;font-size:14px">${u.nom || u.email}</div>
+        <div style="font-size:12px;color:var(--muted)">${u.email}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="role-pill ${u.role}">${u.role === 'admin' ? 'Admin' : 'Gérant'}</span>
+        ${u.id !== currentUser.uid ? `<button class="btn btn-d" style="padding:5px 10px;font-size:11px" onclick="retirerAcces('${u.id}')">Retirer</button>` : ''}
+      </div>
+    </div>`).join('');
+}
+window.retirerAcces = async function(uid){
+  if (!confirm("Retirer l'accès de ce compte à l'application ?\n(Le compte de connexion existera toujours, il faudra le supprimer aussi depuis la console Firebase si besoin.)")) return;
+  try { await deleteDoc(doc(db, 'users', uid)); showToast('✅ Accès retiré', 'ok'); }
+  catch (e) { showToast('❌ Erreur', 'er'); }
+};
+window.creerCompte = async function(){
+  const nom = v('nu_nom'), email = v('nu_email'), pass = document.getElementById('nu_pass').value, role = document.getElementById('nu_role').value;
+  if (!nom || !email || !pass) { showToast('⚠️ Champs manquants', 'er'); return; }
+  if (pass.length < 6) { showToast('⚠️ Mot de passe trop court (6 car. min)', 'er'); return; }
+  const secondaryApp = initializeApp(firebaseConfig, 'Secondary-' + Date.now());
+  const secondaryAuth = getAuth(secondaryApp);
+  try {
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+    const uid = cred.user.uid;
+    await signOut(secondaryAuth);
+    await setDoc(doc(db, 'users', uid), { email, nom, role, createdAt: serverTimestamp(), createdBy: currentUser.uid });
+    await deleteApp(secondaryApp);
+    ['nu_nom', 'nu_email', 'nu_pass'].forEach(id => document.getElementById(id).value = '');
+    showToast('✅ Compte créé', 'ok');
+  } catch (err) {
+    await deleteApp(secondaryApp).catch(() => {});
+    showToast('❌ ' + traduireErreur(err.code), 'er');
+  }
+};
+
+// ───────────────────────── UTILS ─────────────────────────
+function v(id){ const e = document.getElementById(id); return e ? e.value.trim() : ''; }
+window.showPage = function(p){
+  if ((p === 'stats' || p === 'config') && currentUser.role !== 'admin') { p = 'clients'; }
+  document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('tab-' + p).classList.add('active');
+  if (p === 'clients') filtrer();
+  if (p === 'stats') stats();
+};
+function showToast(msg, type=''){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
