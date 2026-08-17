@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1a3a5c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Résidence Biagné – Clients</title>
@@ -166,6 +166,79 @@ h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
 .ft-credit{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
 .ft-credit img{width:20px;height:20px;object-fit:contain}
 .ft-credit span{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.2px}
+
+/* ══════════ LISIBILITÉ ══════════ */
+:root{--muted:#54627a}
+body{font-size:16px;max-width:540px}
+.field label{font-size:13px;letter-spacing:.3px;color:#4a5870}
+.field input,.field select,.field textarea{font-size:16px;padding:13px 14px}
+.field textarea{height:88px}
+.ct{font-size:14.5px}
+.header h1{font-size:18px}
+.header p{font-size:12.5px;opacity:.85}
+.user-bar{font-size:13px}
+.role-badge{font-size:12px;padding:4px 11px}
+.btn-logout{font-size:13px;opacity:1;padding:6px}
+.tab{font-size:11.5px;padding:11px 2px;color:rgba(255,255,255,.72)}
+.ti{font-size:19px}
+.cc{padding:15px}
+.cn{font-size:16.5px}
+.cm{font-size:13.5px;white-space:normal;overflow:visible;text-overflow:clip}
+.chtag{font-size:12px;padding:4px 10px}
+.added-by{font-size:12px}
+.cbg{font-size:11.5px;padding:4px 10px}
+.sn{font-size:24px}
+.slb{font-size:11.5px}
+.iil{font-size:11.5px}
+.iiv{font-size:15px}
+.ii{padding:11px 13px}
+.sl{font-size:12px}
+.st{font-size:11.5px;color:rgba(255,255,255,.72)}
+.scan-title{font-size:15px}
+.scan-sub{font-size:13px;color:rgba(255,255,255,.75)}
+.sstep{font-size:14px;color:rgba(255,255,255,.6)}
+.login-hint{font-size:12.5px}
+.cni-lbl{font-size:11.5px}
+.cni-box img{height:88px}
+.app-footer .ft-contact{font-size:12px}
+.ft-credit span{font-size:11px}
+.toast{font-size:15px}
+.empty{font-size:15px}
+.search-bar{padding:12px 14px}
+.search-bar input{font-size:16px}
+.role-pill{font-size:11.5px;padding:4px 10px}
+.btn-d{padding:9px 15px;font-size:13.5px}
+.kw input{font-size:14px}
+.kok,.kno{font-size:13px}
+details.more{margin-top:2px}
+details.more>summary{list-style:none;cursor:pointer;font-size:13.5px;font-weight:700;color:var(--blue2);padding:11px 0 4px;display:flex;align-items:center;gap:7px}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:'▸';font-size:15px;transition:transform .15s}
+details.more[open]>summary::before{transform:rotate(90deg)}
+details.more>summary:hover{opacity:.75}
+.fr>.field{min-width:0}
+.field input[type=date]{padding-left:11px;padding-right:8px}
+@media (max-width:430px){.field input[type=date]{font-size:15px;padding-left:9px;padding-right:4px}}
+.cie-box{background:#fffbeb;border:1.5px solid #fcd77f;border-radius:10px;padding:12px 14px;font-size:13.5px;color:#7c3d05;font-weight:600;line-height:1.55}
+
+/* ══════════ GRAND ÉCRAN (réception sur PC) ══════════ */
+@media (min-width:900px){
+  body{max-width:1020px}
+  .hi{padding:16px 24px}
+  .user-bar{padding:9px 24px}
+  .page{padding:22px 24px}
+  .tab{font-size:13px;padding:13px 2px}
+  .ti{font-size:20px}
+  #page-enregistrer.active,#page-config.active,#page-stats.active{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;align-items:start}
+  #page-enregistrer.active>.btn,#page-config.active>.btn,#page-stats.active>.btn,
+  #page-enregistrer.active>.bottom-safe,#page-config.active>.bottom-safe,#page-stats.active>.bottom-safe,
+  #page-stats.active>.sr{grid-column:1/-1}
+  #page-enregistrer.active>.btn+.btn{margin-top:0}
+  .mo{align-items:center}
+  .modal{max-width:660px;border-radius:20px;max-height:88vh}
+  .mh{display:none}
+  .login-card{max-width:400px}
+}
 </style>
 </head>
 <body>
@@ -248,21 +321,24 @@ h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
   <div class="card">
     <div class="ct"><span>🪪</span>Identité</div>
     <div class="field" id="field_nom"><label>Nom complet <span class="rs">*</span></label><input type="text" id="f_nom" placeholder="Ex: Kouassi Jean-Pierre"></div>
+    <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
     <div class="fr">
       <div class="field" id="field_sexe"><label>Sexe <span class="rs">*</span></label><select id="f_sexe"><option value="">—</option><option>Masculin</option><option>Féminin</option></select></div>
-      <div class="field" id="field_nationalite"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
-    </div>
-    <div class="fr">
       <div class="field" id="field_piece"><label>N° Pièce d'identité</label><input type="text" id="f_piece" placeholder="CNI / Passeport"></div>
-      <div class="field" id="field_ddn"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
     </div>
-    <div class="fr">
-      <div class="field" id="field_lieu"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
-      <div class="field" id="field_prof"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
-    </div>
-    <div class="field" id="field_adr"><label>Adresse</label><input type="text" id="f_adr" placeholder="Adresse de résidence"></div>
-    <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
-    <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
+    <details class="more" id="plusIdentite">
+      <summary>Autres informations (registre)</summary>
+      <div class="fr">
+        <div class="field" id="field_nationalite"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
+        <div class="field" id="field_ddn"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
+      </div>
+      <div class="fr">
+        <div class="field" id="field_lieu"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
+        <div class="field" id="field_prof"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
+      </div>
+      <div class="field" id="field_adr"><label>Adresse</label><input type="text" id="f_adr" placeholder="Adresse de résidence"></div>
+      <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
+    </details>
   </div>
 
   <!-- Séjour -->
@@ -270,18 +346,21 @@ h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
     <div class="ct"><span>🏨</span>Séjour</div>
     <div class="fr">
       <div class="field"><label>N° Chambre <span class="rs">*</span></label><select id="f_chambre"><option value="">— Choisir —</option></select></div>
-      <div class="field"><label>Type chambre</label><select id="f_tch"><option value="">—</option><option>Standard</option><option>Deluxe</option><option>Suite</option><option>Studio</option></select></div>
+      <div class="field"><label>Durée prévue</label><select id="f_dur" onchange="majCIE()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
     </div>
     <div class="fr">
       <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" oninput="majCIE()"></div>
       <div class="field"><label>Date de départ</label><input type="date" id="f_dep" oninput="majCIE()"></div>
     </div>
-    <div class="fr">
-      <div class="field"><label>Durée prévue</label><select id="f_dur"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
-      <div class="field"><label>Tarif (FCFA)</label><input type="number" id="f_tarif" placeholder="15000" inputmode="numeric"></div>
-    </div>
-    <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
-    <div id="cieApercu" style="background:#fffbeb;border-radius:9px;padding:9px 12px;font-size:12px;color:#92400e;font-weight:600">⚡ CIE : 1 000 FCFA/jour — sera ajoutée automatiquement (1 jour par défaut)</div>
+    <div class="field"><label>Tarif total (FCFA)</label><input type="number" id="f_tarif" placeholder="15000" inputmode="numeric"></div>
+    <div id="cieApercu" class="cie-box">⚡ Électricité (CIE) : 1 000 FCFA par nuit — prélevés sur le tarif</div>
+    <details class="more">
+      <summary>Autres détails du séjour</summary>
+      <div class="fr">
+        <div class="field"><label>Type chambre</label><select id="f_tch"><option value="">—</option><option>Standard</option><option>Deluxe</option><option>Suite</option><option>Studio</option></select></div>
+        <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
+      </div>
+    </details>
   </div>
 
   <!-- Paiement -->
@@ -362,12 +441,12 @@ h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
   <div class="card">
     <div class="ct"><span>💸</span>Dépenses totales</div>
     <div style="font-size:26px;font-weight:800;color:var(--err)" id="s_dep">0 FCFA</div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px" id="s_depd">CIE / draps / Canal+ / Internet / imprévus…</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px" id="s_depd">Électricité (1 000 F/nuit) · draps · Canal+ · Internet · imprévus</div>
   </div>
   <div class="card">
     <div class="ct"><span>📈</span>Bénéfice net estimé</div>
     <div style="font-size:26px;font-weight:800" id="s_net">0 FCFA</div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">Revenus enregistrés − dépenses totales</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px">Revenus enregistrés − dépenses totales</div>
   </div>
   <div class="card">
     <div class="ct"><span>📤</span>Export & Gestion</div>
@@ -383,9 +462,11 @@ h1,h2,.ct,.dh,.btn,.tab,.logo-fallback{font-family:var(--font-display)}
   <div class="card">
     <div class="ct"><span>🔗</span>Lien d'auto-enregistrement client</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Un client peut s'enregistrer lui-même en scannant ce code ou en ouvrant le lien. Sa demande arrive dans <strong>Clients</strong> en attente d'attribution de chambre.</p>
-    <div style="text-align:center;background:var(--bg);border-radius:10px;padding:16px;margin-bottom:12px"><div id="qrHolder" style="display:inline-block"></div></div>
+    <div style="text-align:center;background:var(--bg);border-radius:10px;padding:16px;margin-bottom:12px"><div id="qrHolder" style="display:inline-block;max-width:100%"></div></div>
     <div class="field"><input type="text" id="checkinLink" readonly style="font-size:12px;font-family:monospace;text-align:center"></div>
     <button class="btn btn-o" onclick="copierLien()">📋 Copier le lien</button>
+    <button class="btn btn-s" style="margin-top:10px" onclick="ouvrirCheckin()">🔎 Tester la page d'enregistrement</button>
+    <button class="btn btn-s" style="margin-top:10px" onclick="telechargerQR()">⬇️ Télécharger le QR code (à imprimer)</button>
   </div>
   <div class="card">
     <div class="ct"><span>💳</span>QR code de paiement</div>
@@ -581,7 +662,10 @@ function startListeners(){
 }
 
 function setupCheckinLink(){
-  const url = location.href.replace(/index\.html.*$/, '').replace(/\/?$/, '/') + 'checkin.html';
+  // On repart du chemin du dossier (sans ?paramètres ni #ancre), sinon le
+  // lien fabriqué peut être invalide.
+  const url = location.origin + location.pathname.replace(/[^/]*$/, '') + 'checkin.html';
+  window.checkinUrl = url;
   const inp = document.getElementById('checkinLink');
   if (inp) inp.value = url;
   const holder = document.getElementById('qrHolder');
@@ -589,9 +673,21 @@ function setupCheckinLink(){
     holder.innerHTML = '';
     const canvas = document.createElement('canvas');
     holder.appendChild(canvas);
-    QRCode.toCanvas(canvas, url, { width: 180, margin: 1, color: { dark: '#1a3a5c' } }, (err) => { if (err) console.error(err); });
+    QRCode.toCanvas(canvas, url, { width: 320, margin: 2, color: { dark: '#1a3a5c' } }, (err) => { if (err) console.error(err); });
   }
 }
+window.ouvrirCheckin = function(){
+  if (window.checkinUrl) window.open(window.checkinUrl, '_blank');
+};
+window.telechargerQR = function(){
+  const canvas = document.querySelector('#qrHolder canvas');
+  if (!canvas) { showToast('QR code pas encore prêt', 'er'); return; }
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'qr-enregistrement-residence-biagne.png';
+  a.click();
+  showToast('⬇️ QR code téléchargé', 'ok');
+};
 window.copierLien = function(){
   const inp = document.getElementById('checkinLink');
   inp.select(); inp.setSelectionRange(0, 99999);
@@ -775,7 +871,13 @@ window.lancerOCRValidation = async function(){
   document.getElementById('valBtnScan').disabled = false;
 };
 function set(id, val){ const e = document.getElementById(id); if (e && val) e.value = val; }
-function hl(id){ const e = document.getElementById(id); if (!e) return; e.classList.add('autofilled'); setTimeout(() => e.classList.remove('autofilled'), 4000); }
+function hl(id){
+  const e = document.getElementById(id); if (!e) return;
+  // Si le champ rempli par l'IA est dans une section repliée, on l'ouvre
+  // pour que le personnel voie et vérifie ce qui a été écrit.
+  const d = e.closest('details'); if (d) d.open = true;
+  e.classList.add('autofilled'); setTimeout(() => e.classList.remove('autofilled'), 4000);
+}
 function normSexe(s){ if (!s) return ''; const l = s.toLowerCase(); if (l.includes('f')) return 'Féminin'; if (l.includes('m')) return 'Masculin'; return ''; }
 
 // ───────────────────────── PHOTO PORTRAIT ─────────────────────────
@@ -795,18 +897,27 @@ window.chargerPreuve = async function(inp){
 };
 
 // ───────────────────────── CIE (électricité, 1000 FCFA/jour) ─────────────────────────
-function calcJours(arr, dep){
-  if (!arr) return 1;
-  if (!dep) return 1;
-  const a = new Date(arr), d = new Date(dep);
-  const j = Math.round((d - a) / 86400000);
-  return j > 0 ? j : 1;
+const NUITS_DUREE = { '1 nuit': 1, '2 nuits': 2, '3 nuits': 3, '1 semaine': 7, '2 semaines': 14, '1 mois': 30 };
+// Nombre de nuits facturées : d'abord les dates si elles sont remplies,
+// sinon la durée prévue, sinon 1 nuit par défaut.
+function calcJours(arr, dep, duree){
+  if (arr && dep) {
+    const j = Math.round((new Date(dep) - new Date(arr)) / 86400000);
+    if (j > 0) return j;
+  }
+  const n = NUITS_DUREE[duree] || 0;
+  return n > 0 ? n : 1;
 }
 window.majCIE = function(){
-  const arr = v('f_arr'), dep = v('f_dep');
-  const j = calcJours(arr, dep);
+  const arr = v('f_arr'), dep = v('f_dep'), dur = v('f_dur');
+  const j = calcJours(arr, dep, dur);
   const el = document.getElementById('cieApercu');
-  if (el) el.textContent = `⚡ CIE : 1 000 FCFA/jour × ${j} jour(s) = ${(1000 * j).toLocaleString('fr-FR')} FCFA — ajoutée automatiquement`;
+  if (!el) return;
+  let src;
+  if (arr && dep) src = "calculé sur les dates d'arrivée et de départ";
+  else if (NUITS_DUREE[dur]) src = 'calculé sur la durée prévue';
+  else src = 'aucune durée indiquée — 1 nuit par défaut, précisez la durée ou la date de départ';
+  el.innerHTML = `⚡ Électricité (CIE) : 1 000 FCFA × ${j} nuit(s) = <strong>${(1000 * j).toLocaleString('fr-FR')} FCFA</strong><br><span style="font-weight:500">Prélevés sur le tarif — ${src}</span>`;
 };
 
 // ───────────────────────── ENREGISTRER CLIENT ─────────────────────────
@@ -817,7 +928,7 @@ window.enregistrerClient = async function(){
   if (occ) { showToast(`❌ ${ch} occupée par ${occ.nom}`, 'er'); return; }
   const btn = document.getElementById('btnEnregistrer');
   btn.disabled = true; btn.textContent = 'Enregistrement…';
-  const dep = v('f_dep');
+  const dep = v('f_dep'), dur = v('f_dur');
   try {
     const ref = await addDoc(collection(db, 'clients'), {
       photo: photoB64, cni_recto: rectoB64, cni_verso: versoB64, preuvePaiement: preuvePaiementB64,
@@ -830,9 +941,9 @@ window.enregistrerClient = async function(){
       createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
       history: [{ action: 'creation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() }]
     });
-    const jours = calcJours(arr, dep);
+    const jours = calcJours(arr, dep, dur);
     await addDoc(collection(db, 'depenses'), {
-      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} jour(s)`,
+      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} nuit(s)`,
       clientId: ref.id, clientNom: nom, date: arr,
       createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
     });
@@ -862,7 +973,7 @@ function reinit(){
   document.getElementById('preuveDisplay').innerHTML = '<div style="font-size:28px;margin-bottom:6px">🧾</div><div style="font-size:12px;color:var(--muted)">Ajouter la preuve de paiement</div>';
   document.getElementById('preuveInput').value = '';
   refreshQrPaiementUI();
-  document.getElementById('cieApercu').textContent = '⚡ CIE : 1 000 FCFA/jour — sera ajoutée automatiquement (1 jour par défaut)';
+  majCIE();
 }
 window.reinit = reinit;
 
@@ -871,7 +982,7 @@ function afficher(lst){
   const d = lst !== undefined ? lst : clientsCache;
   const c = document.getElementById('clientsList');
   if (!d.length) { c.innerHTML = '<div class="empty"><div class="ei">👥</div><p>Aucun client</p></div>'; return; }
-  c.innerHTML = d.map(x => `<div class="cc" onclick="detail('${x.id}')"><div class="av">${x.photo ? `<img src="${x.photo}">` : ini(x.nom)}</div><div class="ci"><div class="cn">${x.nom}</div><div class="cm">📞 ${x.tel} | ${x.arrivee}</div><div class="chtag">${x.statut === 'En attente' ? '🆕 Demande en ligne' : '🏨 ' + x.chambre}</div><div class="added-by">👤 ${x.createdByNom || '—'}</div></div><span class="cbg ${x.statut === 'Actif' ? 'ba' : (x.statut === 'En attente' ? 'bw' : 'bs')}">${x.statut}</span></div>`).join('');
+  c.innerHTML = d.map(x => `<div class="cc" onclick="detail('${esc(x.id)}')"><div class="av">${x.photo ? `<img src="${esc(x.photo)}">` : ini(x.nom)}</div><div class="ci"><div class="cn">${esc(x.nom)}</div><div class="cm">📞 ${esc(x.tel)} | ${esc(x.arrivee)}</div><div class="chtag">${x.statut === 'En attente' ? '🆕 Demande en ligne' : '🏨 ' + esc(x.chambre)}</div><div class="added-by">👤 ${esc(x.createdByNom || '—')}</div></div><span class="cbg ${x.statut === 'Actif' ? 'ba' : (x.statut === 'En attente' ? 'bw' : 'bs')}">${esc(x.statut)}</span></div>`).join('');
   const pend = clientsCache.filter(x => x.statut === 'En attente');
   const banner = document.getElementById('pendingBanner');
   if (banner) banner.innerHTML = pend.length ? `<div class="card" style="background:#fffbeb;border:1.5px solid var(--orange2)"><div class="ct" style="color:#92400e"><span>🆕</span>${pend.length} nouvelle(s) demande(s) en ligne</div><p style="font-size:13px;color:#92400e">À valider et attribuer une chambre — cliquez sur un client marqué "En attente" ci-dessous.</p></div>` : '';
@@ -884,8 +995,9 @@ window.filtrer = function(){
   afficher(l);
 };
 window.filtreS = function(s){ filtreStatut = s; filtrer(); };
-function ini(n){ return n.split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase() || '?'; }
-function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function ini(n){ return esc(String(n || '').split(' ').slice(0, 2).map(p => p[0] || '').join('').toUpperCase() || '?'); }
+function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function escAttr(s){ return esc(s); }
 
 // ───────────────────────── DÉTAIL ─────────────────────────
 window.detail = function(id){
@@ -895,33 +1007,33 @@ window.detail = function(id){
   const hist = (c.history || []).map(h => {
     const d = new Date(h.at);
     const lbl = h.action === 'creation' ? 'Créé par' : (h.action === 'depart' ? 'Départ enregistré par' : (h.action === 'validation' ? 'Demande validée par' : 'Réactivé par'));
-    return `<div style="font-size:12px;color:var(--muted);padding:3px 0">📌 ${lbl} <strong>${h.nom}</strong> — ${d.toLocaleString('fr-FR')}</div>`;
+    return `<div style="font-size:12px;color:var(--muted);padding:3px 0">📌 ${lbl} <strong>${esc(h.nom)}</strong> — ${d.toLocaleString('fr-FR')}</div>`;
   }).join('');
   const deps = depensesCache.filter(x => x.clientId === c.id);
   const totalDep = deps.reduce((s, x) => s + (Number(x.montant) || 0), 0);
-  const depLines = deps.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600">${x.categorie}</div><div style="font-size:11px;color:var(--muted)">${x.description || ''} ${x.date ? '· ' + x.date : ''}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:13px;font-weight:700;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${isAdmin ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:14px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
+  const depLines = deps.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:600">${esc(x.categorie)}</div><div style="font-size:12px;color:var(--muted)">${esc(x.description || '')} ${x.date ? '· ' + esc(x.date) : ''}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:13px;font-weight:700;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${isAdmin ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:14px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
   document.getElementById('moContent').innerHTML = `
     <div class="mh"></div>
-    <div class="dh"><div class="da">${c.photo ? `<img src="${c.photo}">` : ini(c.nom)}</div>
-      <div style="font-size:20px;font-weight:800">${c.nom}</div>
-      <div style="font-size:13px;opacity:.75;margin-top:3px">📞 ${c.tel}</div>
-      <div style="margin-top:8px"><span class="cbg ${c.statut === 'Actif' ? 'ba' : (pending ? 'bw' : 'bs')}" style="background:rgba(255,255,255,.2);color:#fff">${c.statut}</span></div>
+    <div class="dh"><div class="da">${c.photo ? `<img src="${esc(c.photo)}">` : ini(c.nom)}</div>
+      <div style="font-size:20px;font-weight:800">${esc(c.nom)}</div>
+      <div style="font-size:14px;opacity:.85;margin-top:3px">📞 ${esc(c.tel)}</div>
+      <div style="margin-top:8px"><span class="cbg ${c.statut === 'Actif' ? 'ba' : (pending ? 'bw' : 'bs')}" style="background:rgba(255,255,255,.2);color:#fff">${esc(c.statut)}</span></div>
     </div>
     ${pending ? `<div style="background:#fffbeb;border-radius:9px;padding:12px;margin-bottom:12px;font-size:13px;color:#92400e">🆕 Demande envoyée en ligne — aucune chambre ni tarif attribué. Validez pour l'activer.</div>` : ''}
     <div class="ig">
-      <div class="ii"><div class="iil">Chambre</div><div class="iiv">🏨 ${c.chambre || '—'}</div></div>
-      <div class="ii"><div class="iil">Type</div><div class="iiv">${c.tch || '—'}</div></div>
-      <div class="ii"><div class="iil">Arrivée</div><div class="iiv">📅 ${c.arrivee}</div></div>
-      <div class="ii"><div class="iil">Départ</div><div class="iiv">${c.depart || '—'}</div></div>
+      <div class="ii"><div class="iil">Chambre</div><div class="iiv">🏨 ${esc(c.chambre || '—')}</div></div>
+      <div class="ii"><div class="iil">Type</div><div class="iiv">${esc(c.tch || '—')}</div></div>
+      <div class="ii"><div class="iil">Arrivée</div><div class="iiv">📅 ${esc(c.arrivee)}</div></div>
+      <div class="ii"><div class="iil">Départ</div><div class="iiv">${esc(c.depart || '—')}</div></div>
       <div class="ii"><div class="iil">Tarif</div><div class="iiv">💰 ${Number(c.tarif).toLocaleString()} FCFA</div></div>
-      <div class="ii"><div class="iil">Paiement</div><div class="iiv">${c.spay || '—'}</div></div>
-      ${!pending ? `<div class="ii"><div class="iil">Nationalité</div><div class="iiv">${c.nationalite || '—'}</div></div>
-      <div class="ii"><div class="iil">Naissance</div><div class="iiv">${c.ddn || '—'}</div></div>
-      ${c.prof ? `<div class="ii"><div class="iil">Profession</div><div class="iiv">${c.prof}</div></div>` : ''}
-      ${c.lieu ? `<div class="ii"><div class="iil">Lieu naiss.</div><div class="iiv">${c.lieu}</div></div>` : ''}` : ''}
+      <div class="ii"><div class="iil">Paiement</div><div class="iiv">${esc(c.spay || '—')}</div></div>
+      ${!pending ? `<div class="ii"><div class="iil">Nationalité</div><div class="iiv">${esc(c.nationalite || '—')}</div></div>
+      <div class="ii"><div class="iil">Naissance</div><div class="iiv">${esc(c.ddn || '—')}</div></div>
+      ${c.prof ? `<div class="ii"><div class="iil">Profession</div><div class="iiv">${esc(c.prof)}</div></div>` : ''}
+      ${c.lieu ? `<div class="ii"><div class="iil">Lieu naiss.</div><div class="iiv">${esc(c.lieu)}</div></div>` : ''}` : ''}
     </div>
-    ${!pending && c.piece ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">N° Pièce</div><div style="font-size:15px;font-weight:700;font-family:monospace;margin-top:3px">${c.piece}</div></div>` : ''}
-    ${!pending && c.adr ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">Adresse</div><div style="font-size:14px;margin-top:3px">${c.adr}</div></div>` : ''}
+    ${!pending && c.piece ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">N° Pièce</div><div style="font-size:15px;font-weight:700;font-family:monospace;margin-top:3px">${esc(c.piece)}</div></div>` : ''}
+    ${!pending && c.adr ? `<div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-bottom:10px"><div class="iil">Adresse</div><div style="font-size:14px;margin-top:3px">${esc(c.adr)}</div></div>` : ''}
     ${pending ? `
     <div style="margin-top:14px">
       <div class="ct" style="margin-bottom:6px"><span>🪪</span>Vérifier l'identité (à l'arrivée)</div>
@@ -962,12 +1074,12 @@ window.detail = function(id){
     </div>` : ''}
     ${pending && c.pay && c.preuvePaiement ? `
     <div style="background:#ecfdf5;border:1.5px solid var(--ok);border-radius:9px;padding:12px;margin-top:10px">
-      <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">💳 Dépôt déclaré en ligne — ${c.pay}</div>
-      <img src="${c.preuvePaiement}" style="max-width:100%;border-radius:8px;display:block">
+      <div style="font-size:13px;font-weight:700;color:#065f46;margin-bottom:8px">💳 Dépôt déclaré en ligne — ${esc(c.pay)}</div>
+      <img src="${esc(c.preuvePaiement)}" style="max-width:100%;border-radius:8px;display:block">
       <div style="font-size:12px;color:#065f46;margin-top:6px">Vérifiez cette preuve avant de valider.</div>
     </div>` : ''}
-    ${(c.cni_recto || c.cni_verso) ? `<div class="iil" style="margin-bottom:6px">📎 Photos CNI</div><div class="cni-imgs">${c.cni_recto ? `<div class="cni-box"><img src="${c.cni_recto}"><div class="cni-lbl">Recto</div></div>` : ''} ${c.cni_verso ? `<div class="cni-box"><img src="${c.cni_verso}"><div class="cni-lbl">Verso</div></div>` : ''}</div>` : ''}
-    ${c.obs ? `<div style="background:#fffbeb;border-radius:9px;padding:10px 12px;margin-top:10px;font-size:13px">📝 ${c.obs}</div>` : ''}
+    ${(c.cni_recto || c.cni_verso) ? `<div class="iil" style="margin-bottom:6px">📎 Photos CNI</div><div class="cni-imgs">${c.cni_recto ? `<div class="cni-box"><img src="${esc(c.cni_recto)}"><div class="cni-lbl">Recto</div></div>` : ''} ${c.cni_verso ? `<div class="cni-box"><img src="${esc(c.cni_verso)}"><div class="cni-lbl">Verso</div></div>` : ''}</div>` : ''}
+    ${c.obs ? `<div style="background:#fffbeb;border-radius:9px;padding:10px 12px;margin-top:10px;font-size:13.5px">📝 ${esc(c.obs)}</div>` : ''}
     ${!pending ? `
     <div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-top:10px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div class="iil">💸 Dépenses liées au séjour</div><div style="font-size:13px;font-weight:800;color:var(--err)">${totalDep.toLocaleString('fr-FR')} FCFA</div></div>
@@ -978,7 +1090,7 @@ window.detail = function(id){
           <input type="number" id="dc_montant" placeholder="Montant" inputmode="numeric" style="padding:8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px">
         </div>
         <input type="text" id="dc_desc" placeholder="Description (optionnel)" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;margin-bottom:6px">
-        <button class="btn btn-s" style="padding:9px;font-size:13px" onclick="ajouterDepenseClient('${c.id}', ${JSON.stringify(c.nom)})">+ Ajouter la dépense</button>
+        <button class="btn btn-s" style="padding:9px;font-size:13px" onclick="ajouterDepenseClient('${esc(c.id)}', &quot;${esc(String(c.nom || '').replace(/[\\]/g, ''))}&quot;)">+ Ajouter la dépense</button>
       </div>
     </div>` : ''}
     <div style="background:var(--bg);border-radius:9px;padding:10px 12px;margin-top:10px">
@@ -1059,7 +1171,7 @@ function renderDepensesGenerales(){
   const el = document.getElementById('depensesGeneralesList'); if (!el) return;
   const gen = depensesCache.filter(x => !x.clientId).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
   if (!gen.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune dépense générale</p>'; return; }
-  el.innerHTML = gen.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:700">${x.categorie}</div><div style="font-size:11px;color:var(--muted)">${x.description || ''} ${x.date ? '· ' + x.date : ''} · ${x.createdByNom || ''}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:14px;font-weight:800;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${currentUser.role === 'admin' ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:15px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
+  el.innerHTML = gen.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:700">${esc(x.categorie)}</div><div style="font-size:12px;color:var(--muted)">${esc(x.description || '')} ${x.date ? '· ' + esc(x.date) : ''} · ${esc(x.createdByNom || '')}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:14px;font-weight:800;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${currentUser.role === 'admin' ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:15px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
 }
 
 // ───────────────────────── VALIDATION D'UNE DEMANDE EN LIGNE ─────────────────────────
@@ -1087,9 +1199,9 @@ window.confirmerValidation = async function(id){
       updatedAt: serverTimestamp(),
       history: arrayUnion({ action: 'validation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() })
     });
-    const jours = calcJours(c.arrivee, dep);
+    const jours = calcJours(c.arrivee, dep, c.duree);
     await addDoc(collection(db, 'depenses'), {
-      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} jour(s)`,
+      categorie: 'CIE', montant: 1000 * jours, description: `Électricité — ${jours} nuit(s)`,
       clientId: id, clientNom: c.nom, date: c.arrivee,
       createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
     });
@@ -1138,13 +1250,29 @@ window.closeMo = function(e){ if (e.target === document.getElementById('mo')) do
 
 window.chgStatut = async function(id, s){
   const c = clientsCache.find(x => x.id === id); if (!c) return;
+  const aujourdhui = new Date().toISOString().split('T')[0];
   try {
     await updateDoc(doc(db, 'clients', id), {
       statut: s,
-      depart: s === 'Sorti' ? new Date().toISOString().split('T')[0] : (c.depart || ''),
+      depart: s === 'Sorti' ? aujourdhui : (c.depart || ''),
       updatedAt: serverTimestamp(),
       history: arrayUnion({ action: s === 'Sorti' ? 'depart' : 'reactivation', by: currentUser.uid, nom: currentUser.nom, at: Date.now() })
     });
+    // Le client est resté plus longtemps que prévu : le compteur a été
+    // rechargé pour ces nuits en plus, on ajoute le complément d'électricité.
+    if (s === 'Sorti') {
+      const reel = calcJours(c.arrivee, aujourdhui, c.duree);
+      const facture = calcJours(c.arrivee, c.depart, c.duree);
+      if (reel > facture) {
+        const ecart = reel - facture;
+        await addDoc(collection(db, 'depenses'), {
+          categorie: 'CIE', montant: 1000 * ecart,
+          description: `Électricité — complément ${ecart} nuit(s) (séjour prolongé)`,
+          clientId: id, clientNom: c.nom, date: aujourdhui,
+          createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
+        });
+      }
+    }
     document.getElementById('mo').classList.remove('open');
     showToast(s === 'Sorti' ? '👋 Départ enregistré' : '✅ Client réactivé', 'ok');
   } catch (e) { showToast('❌ Erreur', 'er'); }
@@ -1178,24 +1306,32 @@ function stats(){
   if (sNet) { sNet.textContent = net.toLocaleString('fr-FR') + ' FCFA'; sNet.style.color = net >= 0 ? 'var(--ok)' : 'var(--err)'; }
   const cc = document.getElementById('chambresOcc');
   if (!a.length) { cc.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune chambre occupée</p>'; return; }
-  cc.innerHTML = a.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><span class="chtag">🏨 ${c.chambre}</span><div style="font-size:13px;font-weight:600;margin-top:4px">${c.nom}</div></div><div style="font-size:12px;color:var(--muted);text-align:right">Depuis ${c.arrivee}<br>${Number(c.tarif).toLocaleString()} FCFA</div></div>`).join('');
+  cc.innerHTML = a.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><span class="chtag">🏨 ${esc(c.chambre)}</span><div style="font-size:14px;font-weight:600;margin-top:4px">${esc(c.nom)}</div></div><div style="font-size:12px;color:var(--muted);text-align:right">Depuis ${esc(c.arrivee)}<br>${Number(c.tarif).toLocaleString()} FCFA</div></div>`).join('');
 }
 
 // ───────────────────────── CSV / RESET ─────────────────────────
+// Une cellule qui commence par = + - @ serait exécutée comme une formule
+// à l'ouverture dans Excel. On la neutralise.
+function csvCell(x){
+  let t = (x == null ? '' : x).toString();
+  if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
+  return '"' + t.replace(/"/g, '""') + '"';
+}
 window.exportCSV = function(){
   if (currentUser.role !== 'admin') return;
   if (!clientsCache.length) { showToast('Aucune donnée', 'er'); return; }
   const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
-  const rows = clientsCache.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(x => `"${(x || '').toString().replace(/"/g, '""')}"`).join(','));
+  const rows = clientsCache.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
   const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clients_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
   showToast('📥 CSV téléchargé !', 'ok');
 };
 window.effacer = async function(){
   if (currentUser.role !== 'admin') return;
-  if (!confirm('⚠️ Effacer TOUTES les données clients ? Cette action est irréversible.')) return;
+  if (!confirm('⚠️ Effacer TOUTES les fiches clients et les dépenses liées à leurs séjours ?\n\nLes dépenses générales (Canal+, Internet, fournitures…) sont conservées.\nCette action est irréversible.')) return;
   try {
     await Promise.all(clientsCache.map(c => deleteDoc(doc(db, 'clients', c.id))));
+    await Promise.all(depensesCache.filter(x => x.clientId).map(x => deleteDoc(doc(db, 'depenses', x.id))));
     showToast('🗑️ Effacé', 'er');
   } catch (e) { showToast('❌ Erreur', 'er'); }
 };
@@ -1203,7 +1339,7 @@ window.exportDepensesCSV = function(){
   if (currentUser.role !== 'admin') return;
   if (!depensesCache.length) { showToast('Aucune dépense', 'er'); return; }
   const cols = ['Date', 'Catégorie', 'Montant', 'Client lié', 'Description', 'Ajoutée par'];
-  const rows = depensesCache.map(x => [x.date, x.categorie, x.montant, x.clientNom || '', x.description || '', x.createdByNom || ''].map(v => `"${(v || '').toString().replace(/"/g, '""')}"`).join(','));
+  const rows = depensesCache.map(x => [x.date, x.categorie, x.montant, x.clientNom || '', x.description || '', x.createdByNom || ''].map(csvCell).join(','));
   const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `depenses_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
   showToast('📥 CSV téléchargé !', 'ok');
@@ -1282,11 +1418,11 @@ function renderUsers(){
   el.innerHTML = usersCache.map(u => `
     <div class="user-row">
       <div>
-        <div style="font-weight:700;font-size:14px">${u.nom || u.email}</div>
-        <div style="font-size:12px;color:var(--muted)">${u.email}</div>
+        <div style="font-weight:700;font-size:15px">${esc(u.nom || u.email)}</div>
+        <div style="font-size:13px;color:var(--muted)">${esc(u.email)}</div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="role-pill ${u.role}">${u.role === 'admin' ? 'Admin' : 'Gérant'}</span>
+        <span class="role-pill ${esc(u.role)}">${u.role === 'admin' ? 'Admin' : 'Gérant'}</span>
         ${u.id !== currentUser.uid ? `<button class="btn btn-d" style="padding:5px 10px;font-size:11px" onclick="retirerAcces('${u.id}')">Retirer</button>` : ''}
       </div>
     </div>`).join('');

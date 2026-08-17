@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1a3a5c">
 <title>Résidence Biagné – Enregistrement</title>
 <link rel="icon" href="icon-192.png">
@@ -58,6 +58,24 @@ h1,h2,.ct,.confirm h2{font-family:var(--font-display)}
 .confirm .ic{font-size:56px;margin-bottom:16px}
 .confirm h2{font-size:19px;margin-bottom:10px}
 .confirm p{font-size:14px;color:var(--muted);line-height:1.6}
+/* ══════════ LISIBILITÉ ══════════ */
+:root{--muted:#54627a}
+body{font-size:16px;max-width:560px}
+.header h1{font-size:20px}
+.header p{font-size:13px;opacity:.85}
+.ct{font-size:14.5px}
+.field label{font-size:13px;letter-spacing:.3px;color:#4a5870}
+.field input,.field select,.field textarea{font-size:16px;padding:13px 14px}
+.field textarea{height:80px}
+.confirm h2{font-size:21px}
+.confirm p{font-size:15px}
+.toast{font-size:15px}
+.app-footer .ft-contact{font-size:12px}
+.ft-credit span{font-size:11px}
+@media (min-width:900px){
+  body{max-width:620px}
+  .page{padding:24px}
+}
 </style>
 </head>
 <body>
@@ -132,7 +150,7 @@ h1,h2,.ct,.confirm h2{font-family:var(--font-display)}
 
 <footer class="app-footer">
   <div class="ft-name">Résidence Biagné</div>
-  <div class="ft-contact">📞 +225 07 16 30 00 00 · +225 08 48 03 59</div>
+  <div class="ft-contact">📞 +225 07 16 30 00 00 · +225 07 08 48 03 59</div>
   <div class="ft-credit"><img src="logo-it.png" alt="Biagné Service Informatique"><span>Conçu par Biagné Service Informatique</span></div>
 </footer>
 
