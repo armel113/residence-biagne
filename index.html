@@ -406,8 +406,8 @@ details.more>summary:hover{opacity:.75}
   <div class="card">
     <div class="ct"><span>⚡</span>Charges récurrentes</div>
     <div style="display:flex;gap:8px">
-      <button class="btn btn-s" style="font-size:13px;padding:11px" onclick="ajouterDepenseGenerale('Canal+',5000)">📺 Canal+<br><span style="font-weight:400;font-size:11px">5 000 FCFA</span></button>
-      <button class="btn btn-s" style="font-size:13px;padding:11px" onclick="ajouterDepenseGenerale('Internet',15000)">🌐 Internet<br><span style="font-weight:400;font-size:11px">15 000 FCFA</span></button>
+      <button class="btn btn-s" style="font-size:13.5px;padding:12px" id="btnCanal" onclick="ajouterCanal()">📺 Canal+<br><span style="font-weight:400;font-size:12px" id="lblCanal">5 000 FCFA</span></button>
+      <button class="btn btn-s" style="font-size:13.5px;padding:12px" id="btnInternet" onclick="ajouterInternet()">🌐 Internet<br><span style="font-weight:400;font-size:12px" id="lblInternet">15 000 FCFA</span></button>
     </div>
   </div>
   <div class="card">
@@ -508,6 +508,15 @@ details.more>summary:hover{opacity:.75}
     <button class="btn btn-p" onclick="saveChambres()">💾 Enregistrer les chambres</button>
   </div>
   <div class="card">
+    <div class="ct"><span>⚡</span>Montant des charges récurrentes</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Montants des deux boutons rapides de l'écran Dépenses.</p>
+    <div class="fr">
+      <div class="field"><label>Canal+ (FCFA)</label><input type="number" id="cfg_canal" inputmode="numeric" placeholder="5000"></div>
+      <div class="field"><label>Internet (FCFA)</label><input type="number" id="cfg_internet" inputmode="numeric" placeholder="15000"></div>
+    </div>
+    <button class="btn btn-p" onclick="saveCharges()">💾 Enregistrer les montants</button>
+  </div>
+  <div class="card">
     <div class="ct"><span>🔑</span>Clé API Anthropic</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.6">Nécessaire pour le scan automatique des CNI. Une seule clé, partagée par toute l'équipe.</p>
     <div class="field">
@@ -599,6 +608,7 @@ let photoB64 = null, rectoB64 = null, versoB64 = null, preuvePaiementB64 = null;
 let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubConfigPublic = null, unsubDepenses = null;
 let qrPaiementUrl = '', qrPaiementStagedB64 = null;
 let listeChambres = [];
+let montantCanal = 5000, montantInternet = 15000;
 let periode = 'mois';
 const PLAFOND_CLIENTS = 300;
 
@@ -671,6 +681,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('userNom').textContent = currentUser.nom;
     document.getElementById('userRole').textContent = currentUser.role === 'admin' ? '👑 Admin' : '🧑‍💼 Gérant';
     applyRoleUI();
+    if (!listeChambres.length) { listeChambres = chambresParDefaut(); remplirChambres(); }
     startListeners();
     document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
     showPage('enregistrer');
@@ -702,6 +713,24 @@ function remplirChambres(){
   const zone = document.getElementById('cfg_chambres');
   if (zone && document.activeElement !== zone) zone.value = listeChambres.join('\n');
 }
+function majChargesUI(){
+  const c = document.getElementById('lblCanal'), i = document.getElementById('lblInternet');
+  if (c) c.textContent = montantCanal.toLocaleString('fr-FR') + ' FCFA';
+  if (i) i.textContent = montantInternet.toLocaleString('fr-FR') + ' FCFA';
+  const cc = document.getElementById('cfg_canal'), ci = document.getElementById('cfg_internet');
+  if (cc && document.activeElement !== cc) cc.value = montantCanal;
+  if (ci && document.activeElement !== ci) ci.value = montantInternet;
+}
+window.saveCharges = async function(){
+  if (currentUser.role !== 'admin') return;
+  const c = Number(document.getElementById('cfg_canal').value);
+  const i = Number(document.getElementById('cfg_internet').value);
+  if (!(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
+  try {
+    await setDoc(doc(db, 'config', 'settings'), { montantCanal: c, montantInternet: i }, { merge: true });
+    showToast('✅ Montants enregistrés', 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
 window.saveChambres = async function(){
   if (currentUser.role !== 'admin') return;
   const lignes = document.getElementById('cfg_chambres').value
@@ -741,8 +770,14 @@ function startListeners(){
     const d = snap.exists() ? snap.data() : {};
     anthropicKey = d.anthropicApiKey || '';
     listeChambres = Array.isArray(d.chambres) && d.chambres.length ? d.chambres : chambresParDefaut();
-    remplirChambres();
+    montantCanal = Number(d.montantCanal) > 0 ? Number(d.montantCanal) : 5000;
+    montantInternet = Number(d.montantInternet) > 0 ? Number(d.montantInternet) : 15000;
+    remplirChambres(); majChargesUI();
     showKeyStatus();
+  }, () => {
+    // Lecture impossible : on garde au moins la liste par défaut, sinon le
+    // menu des chambres reste vide et plus personne ne peut enregistrer.
+    if (!listeChambres.length) { listeChambres = chambresParDefaut(); remplirChambres(); }
   });
 
   unsubConfigPublic = onSnapshot(doc(db, 'config', 'public'), (snap) => {
@@ -1096,7 +1131,7 @@ function afficher(lst){
   c.innerHTML = d.map(x => `<div class="cc" onclick="detail('${esc(x.id)}')"><div class="av">${x.photo ? `<img src="${esc(x.photo)}">` : ini(x.nom)}</div><div class="ci"><div class="cn">${esc(x.nom)}</div><div class="cm">📞 ${esc(x.tel)} | ${esc(x.arrivee)}</div><div class="chtag">${x.statut === 'En attente' ? '🆕 Demande en ligne' : '🏨 ' + esc(x.chambre)}</div><div class="added-by">👤 ${esc(x.createdByNom || '—')}</div></div><span class="cbg ${x.statut === 'Actif' ? 'ba' : (x.statut === 'En attente' ? 'bw' : 'bs')}">${esc(x.statut)}</span></div>`).join('');
   const cap = document.getElementById('capBanner');
   if (cap) cap.innerHTML = clientsCache.length >= PLAFOND_CLIENTS
-    ? `<div class="card" style="background:#eff6ff;border:1.5px solid var(--blue2)"><div class="ct" style="color:var(--blue2)"><span>ℹ️</span>Affichage limité</div><p style="font-size:13.5px;color:var(--blue2);line-height:1.6">Seules les ${PLAFOND_CLIENTS} fiches les plus récentes sont chargées, pour ne pas consommer trop de données mobiles. Les fiches plus anciennes restent dans la base — exportez le CSV depuis Résumé pour les retrouver.</p></div>`
+    ? `<div class="card" style="background:#eff6ff;border:1.5px solid var(--blue2)"><div class="ct" style="color:var(--blue2)"><span>ℹ️</span>Affichage limité</div><p style="font-size:13.5px;color:var(--blue2);line-height:1.6">Seules les ${PLAFOND_CLIENTS} fiches les plus récentes sont chargées, pour ne pas consommer trop de données mobiles. Les fiches plus anciennes restent dans la base et sont bien incluses dans l'export CSV du Résumé.</p></div>`
     : '';
   const pend = clientsCache.filter(x => x.statut === 'En attente');
   const banner = document.getElementById('pendingBanner');
@@ -1259,7 +1294,15 @@ window.supprDepense = async function(id){
 };
 
 // ───────────────────────── DÉPENSES GÉNÉRALES ─────────────────────────
+window.ajouterCanal = () => ajouterDepenseGenerale('Canal+', montantCanal);
+window.ajouterInternet = () => ajouterDepenseGenerale('Internet', montantInternet);
 window.ajouterDepenseGenerale = async function(cat, montant){
+  const b = { debut: new Date().toISOString().slice(0, 8) + '01', fin: new Date().toISOString().slice(0, 10) };
+  const deja = depensesCache.filter(x => x.categorie === cat && !x.clientId && x.date >= b.debut && x.date <= b.fin);
+  const avertissement = deja.length
+    ? `⚠️ ${cat} a déjà été saisi ${deja.length} fois ce mois-ci.\n\n`
+    : '';
+  if (!confirm(`${avertissement}Enregistrer ${cat} — ${montant.toLocaleString('fr-FR')} FCFA ?\n\nSeul l'administrateur peut supprimer une dépense.`)) return;
   try {
     await addDoc(collection(db, 'depenses'), {
       categorie: cat, montant, description: '', clientId: null, clientNom: null,
@@ -1480,14 +1523,22 @@ function csvCell(x){
   if (/^[=+\-@\t\r]/.test(t)) t = "'" + t;
   return '"' + t.replace(/"/g, '""') + '"';
 }
-window.exportCSV = function(){
+window.exportCSV = async function(){
   if (currentUser.role !== 'admin') return;
-  if (!clientsCache.length) { showToast('Aucune donnée', 'er'); return; }
-  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
-  const rows = clientsCache.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
+  // L'écran n'affiche que les fiches récentes ; l'export, lui, doit contenir
+  // TOUT le fichier client, y compris les fiches anciennes non chargées.
+  showToast('⏳ Préparation de l\'export…', 'ok');
+  let toutes;
+  try {
+    const snap = await getDocs(query(collection(db, 'clients'), orderBy('createdAt', 'desc')));
+    toutes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch (e) { toutes = clientsCache; }
+  if (!toutes.length) { showToast('Aucune donnée', 'er'); return; }
+  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Durée', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
+  const rows = toutes.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.duree, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
   const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clients_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
-  showToast('📥 CSV téléchargé !', 'ok');
+  showToast(`📥 ${toutes.length} fiche(s) exportée(s) !`, 'ok');
 };
 window.effacer = async function(){
   if (currentUser.role !== 'admin') return;
@@ -1495,8 +1546,10 @@ window.effacer = async function(){
   if (saisie !== 'EFFACER') { showToast('⚠️ Tapez EFFACER dans la case pour confirmer', 'er'); return; }
   if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nEffacer TOUTES les fiches clients et les dépenses liées à leurs séjours ?\nCette action est irréversible.')) return;
   try {
-    await Promise.all(clientsCache.map(c => deleteDoc(doc(db, 'clients', c.id))));
-    await Promise.all(depensesCache.filter(x => x.clientId).map(x => deleteDoc(doc(db, 'depenses', x.id))));
+    const snapC = await getDocs(collection(db, 'clients'));
+    await Promise.all(snapC.docs.map(d => deleteDoc(doc(db, 'clients', d.id))));
+    const snapD = await getDocs(collection(db, 'depenses'));
+    await Promise.all(snapD.docs.filter(d => d.data().clientId).map(d => deleteDoc(doc(db, 'depenses', d.id))));
     document.getElementById('cfg_effacer').value = '';
     showToast('🗑️ Effacé', 'er');
   } catch (e) { showToast('❌ Erreur', 'er'); }
