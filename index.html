@@ -353,7 +353,11 @@ details.more>summary:hover{opacity:.75}
       <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" oninput="majCIE()"></div>
       <div class="field"><label>Date de départ</label><input type="date" id="f_dep" oninput="majCIE()"></div>
     </div>
-    <div class="field"><label>Tarif total (FCFA)</label><input type="number" id="f_tarif" placeholder="15000" inputmode="numeric"></div>
+    <div class="fr">
+      <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="f_prixnuit" inputmode="numeric" oninput="majCIE()"></div>
+      <div class="field"><label>Tarif total (FCFA)</label><input type="number" id="f_tarif" placeholder="15000" inputmode="numeric" oninput="tarifSaisiAlaMain()"></div>
+    </div>
+    <div id="tarifHint" style="font-size:13px;color:var(--muted);font-weight:600;margin:-6px 0 12px"></div>
     <div id="cieApercu" class="cie-box">⚡ Électricité (CIE) : 1 000 FCFA par nuit — prélevés sur le tarif</div>
     <details class="more">
       <summary>Autres détails du séjour</summary>
@@ -508,8 +512,9 @@ details.more>summary:hover{opacity:.75}
     <button class="btn btn-p" onclick="saveChambres()">💾 Enregistrer les chambres</button>
   </div>
   <div class="card">
-    <div class="ct"><span>⚡</span>Montant des charges récurrentes</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Montants des deux boutons rapides de l'écran Dépenses.</p>
+    <div class="ct"><span>💵</span>Tarifs et charges</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Le prix d'une nuit sert à calculer automatiquement le tarif au moment de l'enregistrement. Les deux autres montants sont ceux des boutons rapides de l'écran Dépenses.</p>
+    <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="cfg_prixnuit" inputmode="numeric" placeholder="15000"></div>
     <div class="fr">
       <div class="field"><label>Canal+ (FCFA)</label><input type="number" id="cfg_canal" inputmode="numeric" placeholder="5000"></div>
       <div class="field"><label>Internet (FCFA)</label><input type="number" id="cfg_internet" inputmode="numeric" placeholder="15000"></div>
@@ -622,6 +627,7 @@ let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubConfigPubli
 let qrPaiementUrl = '', qrPaiementStagedB64 = null;
 let listeChambres = [];
 let montantCanal = 5000, montantInternet = 15000;
+let prixNuit = 15000;
 let periode = 'mois';
 const PLAFOND_CLIENTS = 300;
 
@@ -727,6 +733,10 @@ function remplirChambres(){
   if (zone && document.activeElement !== zone) zone.value = listeChambres.join('\n');
 }
 function majChargesUI(){
+  const pn = document.getElementById('cfg_prixnuit');
+  if (pn && document.activeElement !== pn) pn.value = prixNuit;
+  const fp = document.getElementById('f_prixnuit');
+  if (fp && !fp.value) { fp.value = prixNuit; majCIE(); }
   const c = document.getElementById('lblCanal'), i = document.getElementById('lblInternet');
   if (c) c.textContent = montantCanal.toLocaleString('fr-FR') + ' FCFA';
   if (i) i.textContent = montantInternet.toLocaleString('fr-FR') + ' FCFA';
@@ -736,11 +746,12 @@ function majChargesUI(){
 }
 window.saveCharges = async function(){
   if (currentUser.role !== 'admin') return;
+  const n = Number(document.getElementById('cfg_prixnuit').value);
   const c = Number(document.getElementById('cfg_canal').value);
   const i = Number(document.getElementById('cfg_internet').value);
-  if (!(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
+  if (!(n > 0) || !(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
   try {
-    await setDoc(doc(db, 'config', 'settings'), { montantCanal: c, montantInternet: i }, { merge: true });
+    await setDoc(doc(db, 'config', 'settings'), { prixNuit: n, montantCanal: c, montantInternet: i }, { merge: true });
     showToast('✅ Montants enregistrés', 'ok');
   } catch (e) { showToast('❌ Erreur', 'er'); }
 };
@@ -783,6 +794,7 @@ function startListeners(){
     const d = snap.exists() ? snap.data() : {};
     anthropicKey = d.anthropicApiKey || '';
     listeChambres = Array.isArray(d.chambres) && d.chambres.length ? d.chambres : chambresParDefaut();
+    prixNuit = Number(d.prixNuit) > 0 ? Number(d.prixNuit) : 15000;
     montantCanal = Number(d.montantCanal) > 0 ? Number(d.montantCanal) : 5000;
     montantInternet = Number(d.montantInternet) > 0 ? Number(d.montantInternet) : 15000;
     remplirChambres(); majChargesUI();
@@ -1060,9 +1072,34 @@ function calcJours(arr, dep, duree){
   const n = NUITS_DUREE[duree] || 0;
   return n > 0 ? n : 1;
 }
+// Le tarif se calcule tout seul (prix d'une nuit × nombre de nuits), sauf si
+// le personnel le corrige à la main — dans ce cas on ne l'écrase plus.
+let tarifManuel = false;
+window.tarifSaisiAlaMain = function(){
+  tarifManuel = true;
+  const h = document.getElementById('tarifHint');
+  if (h) h.innerHTML = '✏️ Tarif saisi à la main — <a href="#" onclick="recalculerTarif();return false" style="color:var(--blue2)">revenir au calcul automatique</a>';
+};
+window.recalculerTarif = function(){ tarifManuel = false; majCIE(); };
+function majTarif(nuits){
+  const champPrix = document.getElementById('f_prixnuit');
+  const champTarif = document.getElementById('f_tarif');
+  const hint = document.getElementById('tarifHint');
+  if (!champPrix || !champTarif) return;
+  if (!champPrix.value) champPrix.value = prixNuit;
+  const pn = Number(champPrix.value) || 0;
+  if (tarifManuel) return;
+  const total = pn * nuits;
+  champTarif.value = total > 0 ? total : '';
+  if (hint) hint.textContent = total > 0
+    ? `= ${pn.toLocaleString('fr-FR')} F × ${nuits} nuit(s) = ${total.toLocaleString('fr-FR')} FCFA`
+    : '';
+}
+
 window.majCIE = function(){
   const arr = v('f_arr'), dep = v('f_dep'), dur = v('f_dur');
   const j = calcJours(arr, dep, dur);
+  majTarif(j);
   const el = document.getElementById('cieApercu');
   if (!el) return;
   let src;
@@ -1094,7 +1131,8 @@ window.enregistrerClient = async function(){
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
       ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: v('f_adr'), prov: v('f_prov'),
       chambre: ch, tch: v('f_tch'), arrivee: arr, depart: dep, duree: v('f_dur'),
-      tarif: v('f_tarif') || '0', motif: v('f_motif'), pay: v('f_pay'), spay: v('f_spay'),
+      tarif: v('f_tarif') || '0', prixNuit: v('f_prixnuit') || String(prixNuit), nuits: String(calcJours(arr, dep, dur)),
+      motif: v('f_motif'), pay: v('f_pay'), spay: v('f_spay'),
       obs: v('f_obs'), statut: 'Actif',
       createdBy: currentUser.uid, createdByNom: currentUser.nom,
       createdAt: serverTimestamp(), updatedAt: serverTimestamp(),
@@ -1118,6 +1156,9 @@ function reinit(){
   ['f_nom', 'f_sexe', 'f_nationalite', 'f_piece', 'f_ddn', 'f_lieu', 'f_prof', 'f_adr', 'f_tel', 'f_prov',
     'f_chambre', 'f_tch', 'f_dep', 'f_dur', 'f_tarif', 'f_motif', 'f_pay', 'f_spay', 'f_obs'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
   document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
+  tarifManuel = false;
+  document.getElementById('f_prixnuit').value = prixNuit;
+  document.getElementById('tarifHint').textContent = '';
   photoB64 = null; rectoB64 = null; versoB64 = null;
   document.getElementById('photoDisplay').innerHTML = '<div style="font-size:32px;margin-bottom:6px">🧑</div><div style="font-size:13px;color:var(--muted)">Appuyer pour prendre une photo</div>';
   document.getElementById('photoInput').value = '';
@@ -1547,8 +1588,8 @@ window.exportCSV = async function(){
     toutes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (e) { toutes = clientsCache; }
   if (!toutes.length) { showToast('Aucune donnée', 'er'); return; }
-  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Durée', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
-  const rows = toutes.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.duree, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
+  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Durée', 'Nuits', 'Prix/nuit', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
+  const rows = toutes.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.duree, c.nuits, c.prixNuit, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
   const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clients_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
   showToast(`📥 ${toutes.length} fiche(s) exportée(s) !`, 'ok');
