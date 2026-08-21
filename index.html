@@ -255,6 +255,7 @@ details.more>summary:hover{opacity:.75}
       <div class="login-err" id="loginError"></div>
       <button type="submit" class="btn btn-p" id="li_btn">Se connecter</button>
     </form>
+    <p class="login-hint"><a href="#" id="li_forgot" style="color:var(--blue2);font-weight:700">Mot de passe oublié ?</a></p>
     <p class="login-hint">Compte créé par votre administrateur</p>
     <p class="login-hint" style="margin-top:4px">📞 +225 07 16 30 00 00 · +225 07 08 48 03 59</p>
   </div>
@@ -388,6 +389,7 @@ details.more>summary:hover{opacity:.75}
 
 <!-- PAGE CLIENTS -->
 <div class="page" id="page-clients">
+  <div id="capBanner"></div>
   <div id="pendingBanner"></div>
   <div class="search-bar"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher…" oninput="filtrer()"></div>
   <div style="display:flex;gap:8px;margin-bottom:12px">
@@ -420,6 +422,16 @@ details.more>summary:hover{opacity:.75}
   </div>
   <div class="card">
     <div class="ct"><span>📋</span>Dépenses générales (hors séjours)</div>
+    <div class="field" style="margin-bottom:10px">
+      <label>Période affichée</label>
+      <select id="dg_periode" onchange="changerPeriodeDepenses()">
+        <option value="mois">Ce mois-ci</option>
+        <option value="precedent">Le mois dernier</option>
+        <option value="annee">Cette année</option>
+        <option value="tout">Depuis le début</option>
+      </select>
+    </div>
+    <div id="depGenEntete" style="display:flex;justify-content:space-between;align-items:center;font-size:13.5px;font-weight:700;color:var(--muted);padding:8px 0;border-bottom:2px solid var(--border);margin-bottom:6px"></div>
     <div id="depensesGeneralesList"></div>
   </div>
   <div class="bottom-safe"></div>
@@ -427,32 +439,43 @@ details.more>summary:hover{opacity:.75}
 
 <!-- PAGE STATS (admin) -->
 <div class="page" id="page-stats">
+  <div class="card" style="padding:14px 16px">
+    <div class="field" style="margin-bottom:0">
+      <label>Période affichée</label>
+      <select id="s_periode" onchange="changerPeriode()">
+        <option value="mois">Ce mois-ci</option>
+        <option value="precedent">Le mois dernier</option>
+        <option value="annee">Cette année</option>
+        <option value="tout">Depuis le début</option>
+      </select>
+    </div>
+    <div id="s_periodeLbl" style="font-size:13px;color:var(--muted);margin-top:8px;font-weight:600"></div>
+  </div>
   <div class="sr">
-    <div class="sb"><div class="sn" id="s_tot">0</div><div class="slb">Total</div></div>
-    <div class="sb"><div class="sn" id="s_act" style="color:var(--ok)">0</div><div class="slb">Présents</div></div>
-    <div class="sb"><div class="sn" id="s_sor" style="color:var(--err)">0</div><div class="slb">Sortis</div></div>
+    <div class="sb"><div class="sn" id="s_tot">0</div><div class="slb">Clients (période)</div></div>
+    <div class="sb"><div class="sn" id="s_act" style="color:var(--ok)">0</div><div class="slb">Présents aujourd'hui</div></div>
+    <div class="sb"><div class="sn" id="s_sor" style="color:var(--err)">0</div><div class="slb">Sortis (période)</div></div>
   </div>
   <div class="card"><div class="ct"><span>🏨</span>Chambres occupées</div><div id="chambresOcc"></div></div>
   <div class="card">
-    <div class="ct"><span>💰</span>Revenus enregistrés</div>
+    <div class="ct"><span>💰</span>Revenus de la période</div>
     <div style="font-size:26px;font-weight:800;color:var(--blue2)" id="s_rev">0 FCFA</div>
     <div style="font-size:12px;color:var(--muted);margin-top:4px" id="s_pay">dont 0 FCFA payés</div>
   </div>
   <div class="card">
-    <div class="ct"><span>💸</span>Dépenses totales</div>
+    <div class="ct"><span>💸</span>Dépenses de la période</div>
     <div style="font-size:26px;font-weight:800;color:var(--err)" id="s_dep">0 FCFA</div>
     <div style="font-size:13px;color:var(--muted);margin-top:4px" id="s_depd">Électricité (1 000 F/nuit) · draps · Canal+ · Internet · imprévus</div>
   </div>
   <div class="card">
     <div class="ct"><span>📈</span>Bénéfice net estimé</div>
     <div style="font-size:26px;font-weight:800" id="s_net">0 FCFA</div>
-    <div style="font-size:13px;color:var(--muted);margin-top:4px">Revenus enregistrés − dépenses totales</div>
+    <div style="font-size:13px;color:var(--muted);margin-top:4px">Revenus de la période − dépenses de la période</div>
   </div>
   <div class="card">
     <div class="ct"><span>📤</span>Export & Gestion</div>
     <button class="btn btn-s" onclick="exportCSV()" style="margin-bottom:10px">📥 Exporter CSV (clients)</button>
-    <button class="btn btn-s" onclick="exportDepensesCSV()" style="margin-bottom:10px">📥 Exporter CSV (dépenses)</button>
-    <button class="btn btn-o" onclick="effacer()">🗑️ Effacer toutes les données</button>
+    <button class="btn btn-s" onclick="exportDepensesCSV()">📥 Exporter CSV (dépenses)</button>
   </div>
   <div class="bottom-safe"></div>
 </div>
@@ -477,6 +500,12 @@ details.more>summary:hover{opacity:.75}
     </div>
     <button class="btn btn-p" onclick="saveQrPaiement()">💾 Sauvegarder le QR</button>
     <button class="btn btn-o" style="margin-top:10px" onclick="delQrPaiement()">🗑️ Retirer le QR</button>
+  </div>
+  <div class="card">
+    <div class="ct"><span>🏨</span>Liste des chambres</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Une chambre par ligne. C'est cette liste qui apparaît dans le formulaire d'enregistrement.</p>
+    <div class="field"><textarea id="cfg_chambres" style="height:150px;font-family:monospace;font-size:14px" placeholder="Chambre 1&#10;Chambre 2&#10;Studio A"></textarea></div>
+    <button class="btn btn-p" onclick="saveChambres()">💾 Enregistrer les chambres</button>
   </div>
   <div class="card">
     <div class="ct"><span>🔑</span>Clé API Anthropic</div>
@@ -506,6 +535,12 @@ details.more>summary:hover{opacity:.75}
     <div class="field"><label>Rôle</label><select id="nu_role"><option value="gerant">Gérant</option><option value="admin">Admin</option></select></div>
     <button class="btn btn-p" onclick="creerCompte()">➕ Créer le compte</button>
   </div>
+  <div class="card" style="border:2px solid var(--err)">
+    <div class="ct" style="color:var(--err)"><span>⚠️</span>Zone dangereuse</div>
+    <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:12px">Efface <strong>toutes</strong> les fiches clients et les dépenses liées à leurs séjours. Les dépenses générales sont conservées. <strong>Aucun retour en arrière n'est possible.</strong> Pensez à exporter les CSV avant.</p>
+    <div class="field"><label>Pour confirmer, tapez EFFACER en majuscules</label><input type="text" id="cfg_effacer" placeholder="EFFACER" autocomplete="off"></div>
+    <button class="btn btn-d" style="width:100%" onclick="effacer()">🗑️ Effacer toutes les données clients</button>
+  </div>
   <div class="bottom-safe"></div>
 </div>
 
@@ -521,22 +556,38 @@ details.more>summary:hover{opacity:.75}
 <div class="toast" id="toast"></div>
 </div><!-- /appShell -->
 
+<script>
+// Mise en cache de l'app elle-même : elle s'ouvre même sans réseau.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 <script type="module">
 import { firebaseConfig } from './firebase-config.js';
 import { initializeApp, deleteApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
 import {
   getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword, sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
 import {
-  getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, addDoc,
+  getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc, where, limit,
   collection, onSnapshot, query, orderBy, serverTimestamp, arrayUnion
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+// Mémoire locale : l'app continue de fonctionner sans réseau et les
+// enregistrements partent tout seuls dès que la connexion revient.
+let db;
+try {
+  db = initializeFirestore(app, {
+    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+  });
+} catch (e) {
+  db = getFirestore(app);
+}
 
 let currentUser = null;
 let clientsCache = [];
@@ -547,6 +598,9 @@ let filtreStatut = '';
 let photoB64 = null, rectoB64 = null, versoB64 = null, preuvePaiementB64 = null;
 let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubConfigPublic = null, unsubDepenses = null;
 let qrPaiementUrl = '', qrPaiementStagedB64 = null;
+let listeChambres = [];
+let periode = 'mois';
+const PLAFOND_CLIENTS = 300;
 
 // ───────────────────────── AUTH ─────────────────────────
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -564,7 +618,22 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 document.getElementById('btnLogout').addEventListener('click', () => signOut(auth));
 
-function showLoginError(msg){ const el=document.getElementById('loginError'); el.textContent=msg; el.style.display='block'; }
+document.getElementById('li_forgot').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = v('li_email');
+  if (!email) { showLoginError("Saisissez d'abord votre email ci-dessus, puis recliquez."); return; }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    const el = document.getElementById('loginError');
+    el.textContent = "Un email de réinitialisation vient d'être envoyé à " + email + ". Pensez à regarder dans les spams.";
+    el.style.display = 'block';
+    el.style.background = '#dcfce7'; el.style.color = '#166534';
+  } catch (err) {
+    showLoginError(traduireErreur(err.code));
+  }
+});
+
+function showLoginError(msg){ const el=document.getElementById('loginError'); el.textContent=msg; el.style.background=''; el.style.color=''; el.style.display='block'; }
 function hideLoginError(){ document.getElementById('loginError').style.display='none'; }
 function traduireErreur(code){
   const m = {
@@ -574,7 +643,8 @@ function traduireErreur(code){
     'auth/wrong-password':"Mot de passe incorrect.",
     'auth/too-many-requests':"Trop de tentatives. Réessayez plus tard.",
     'auth/weak-password':"Mot de passe trop court (6 caractères min).",
-    'auth/email-already-in-use':"Cet email est déjà utilisé."
+    'auth/email-already-in-use':"Cet email est déjà utilisé.",
+    'auth/missing-email':"Saisissez votre adresse email."
   };
   return m[code] || "Erreur de connexion.";
 }
@@ -603,17 +673,46 @@ onAuthStateChanged(auth, async (user) => {
     applyRoleUI();
     startListeners();
     document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
-    const sel = document.getElementById('f_chambre');
-    if (!sel.dataset.filled) {
-      for (let i = 1; i <= 30; i++) { const o = document.createElement('option'); o.value = o.text = 'Chambre ' + i; sel.appendChild(o); }
-      sel.dataset.filled = '1';
-    }
     showPage('enregistrer');
   } catch (err) {
     showLoginError("Erreur de connexion. Réessayez.");
     await signOut(auth);
   }
 });
+
+// Le cache local peut être en retard : on revérifie dans la base avant
+// d'attribuer une chambre, sinon deux personnes peuvent loger le même client.
+async function chambreDejaOccupee(ch, saufId){
+  try {
+    const snap = await getDocs(query(collection(db, 'clients'), where('chambre', '==', ch), where('statut', '==', 'Actif')));
+    const occ = snap.docs.filter(d => d.id !== saufId);
+    return occ.length ? (occ[0].data().nom || 'un client') : null;
+  } catch (e) { return null; }
+}
+
+function chambresParDefaut(){
+  const l = []; for (let i = 1; i <= 30; i++) l.push('Chambre ' + i); return l;
+}
+function remplirChambres(){
+  const sel = document.getElementById('f_chambre'); if (!sel) return;
+  const actuel = sel.value;
+  sel.innerHTML = '<option value="">— Choisir —</option>' +
+    listeChambres.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+  if (actuel && listeChambres.includes(actuel)) sel.value = actuel;
+  const zone = document.getElementById('cfg_chambres');
+  if (zone && document.activeElement !== zone) zone.value = listeChambres.join('\n');
+}
+window.saveChambres = async function(){
+  if (currentUser.role !== 'admin') return;
+  const lignes = document.getElementById('cfg_chambres').value
+    .split('\n').map(x => x.trim()).filter(x => x.length);
+  if (!lignes.length) { showToast('⚠️ Indiquez au moins une chambre', 'er'); return; }
+  if (lignes.length > 200) { showToast('⚠️ 200 chambres maximum', 'er'); return; }
+  try {
+    await setDoc(doc(db, 'config', 'settings'), { chambres: lignes }, { merge: true });
+    showToast(`✅ ${lignes.length} chambre(s) enregistrée(s)`, 'ok');
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
 
 function applyRoleUI(){
   const admin = currentUser.role === 'admin';
@@ -630,14 +729,19 @@ function cleanupListeners(){
 }
 
 function startListeners(){
-  const qClients = query(collection(db, 'clients'), orderBy('createdAt', 'desc'));
+  // On ne charge que les fiches les plus récentes : chaque fiche transporte
+  // ses photos, donc tout charger ferait exploser la consommation de données.
+  const qClients = query(collection(db, 'clients'), orderBy('createdAt', 'desc'), limit(PLAFOND_CLIENTS));
   unsubClients = onSnapshot(qClients, (snap) => {
     clientsCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     filtrer(); stats();
   }, () => showToast('❌ Erreur de synchronisation', 'er'));
 
   unsubConfig = onSnapshot(doc(db, 'config', 'settings'), (snap) => {
-    anthropicKey = snap.exists() ? (snap.data().anthropicApiKey || '') : '';
+    const d = snap.exists() ? snap.data() : {};
+    anthropicKey = d.anthropicApiKey || '';
+    listeChambres = Array.isArray(d.chambres) && d.chambres.length ? d.chambres : chambresParDefaut();
+    remplirChambres();
     showKeyStatus();
   });
 
@@ -927,7 +1031,14 @@ window.enregistrerClient = async function(){
   const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
   if (occ) { showToast(`❌ ${ch} occupée par ${occ.nom}`, 'er'); return; }
   const btn = document.getElementById('btnEnregistrer');
-  btn.disabled = true; btn.textContent = 'Enregistrement…';
+  btn.disabled = true; btn.textContent = 'Vérification…';
+  const dejaPris = await chambreDejaOccupee(ch, null);
+  if (dejaPris) {
+    btn.disabled = false; btn.textContent = '✅ Enregistrer le client';
+    showToast(`❌ ${ch} vient d'être attribuée à ${dejaPris}`, 'er');
+    return;
+  }
+  btn.textContent = 'Enregistrement…';
   const dep = v('f_dep'), dur = v('f_dur');
   try {
     const ref = await addDoc(collection(db, 'clients'), {
@@ -983,6 +1094,10 @@ function afficher(lst){
   const c = document.getElementById('clientsList');
   if (!d.length) { c.innerHTML = '<div class="empty"><div class="ei">👥</div><p>Aucun client</p></div>'; return; }
   c.innerHTML = d.map(x => `<div class="cc" onclick="detail('${esc(x.id)}')"><div class="av">${x.photo ? `<img src="${esc(x.photo)}">` : ini(x.nom)}</div><div class="ci"><div class="cn">${esc(x.nom)}</div><div class="cm">📞 ${esc(x.tel)} | ${esc(x.arrivee)}</div><div class="chtag">${x.statut === 'En attente' ? '🆕 Demande en ligne' : '🏨 ' + esc(x.chambre)}</div><div class="added-by">👤 ${esc(x.createdByNom || '—')}</div></div><span class="cbg ${x.statut === 'Actif' ? 'ba' : (x.statut === 'En attente' ? 'bw' : 'bs')}">${esc(x.statut)}</span></div>`).join('');
+  const cap = document.getElementById('capBanner');
+  if (cap) cap.innerHTML = clientsCache.length >= PLAFOND_CLIENTS
+    ? `<div class="card" style="background:#eff6ff;border:1.5px solid var(--blue2)"><div class="ct" style="color:var(--blue2)"><span>ℹ️</span>Affichage limité</div><p style="font-size:13.5px;color:var(--blue2);line-height:1.6">Seules les ${PLAFOND_CLIENTS} fiches les plus récentes sont chargées, pour ne pas consommer trop de données mobiles. Les fiches plus anciennes restent dans la base — exportez le CSV depuis Résumé pour les retrouver.</p></div>`
+    : '';
   const pend = clientsCache.filter(x => x.statut === 'En attente');
   const banner = document.getElementById('pendingBanner');
   if (banner) banner.innerHTML = pend.length ? `<div class="card" style="background:#fffbeb;border:1.5px solid var(--orange2)"><div class="ct" style="color:#92400e"><span>🆕</span>${pend.length} nouvelle(s) demande(s) en ligne</div><p style="font-size:13px;color:#92400e">À valider et attribuer une chambre — cliquez sur un client marqué "En attente" ci-dessous.</p></div>` : '';
@@ -1169,8 +1284,14 @@ window.ajouterDepenseFormulaire = async function(){
 };
 function renderDepensesGenerales(){
   const el = document.getElementById('depensesGeneralesList'); if (!el) return;
-  const gen = depensesCache.filter(x => !x.clientId).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-  if (!gen.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13px">Aucune dépense générale</p>'; return; }
+  const b = bornesPeriode();
+  const gen = depensesCache.filter(x => !x.clientId && dansPeriode(x.date, b)).sort((a, b2) => (b2.date || '').localeCompare(a.date || ''));
+  const entete = document.getElementById('depGenEntete');
+  if (entete) {
+    const t = gen.reduce((s, x) => s + (Number(x.montant) || 0), 0);
+    entete.innerHTML = `<span>${periode === 'tout' ? 'Depuis le début' : b.libelle}</span><span style="font-weight:800;color:var(--err)">${t.toLocaleString('fr-FR')} FCFA</span>`;
+  }
+  if (!gen.length) { el.innerHTML = '<p style="color:var(--muted);font-size:13.5px">Aucune dépense générale sur cette période</p>'; return; }
   el.innerHTML = gen.map(x => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:700">${esc(x.categorie)}</div><div style="font-size:12px;color:var(--muted)">${esc(x.description || '')} ${x.date ? '· ' + esc(x.date) : ''} · ${esc(x.createdByNom || '')}</div></div><div style="display:flex;align-items:center;gap:8px"><div style="font-size:14px;font-weight:800;color:var(--err)">${Number(x.montant).toLocaleString('fr-FR')} FCFA</div>${currentUser.role === 'admin' ? `<button onclick="supprDepense('${x.id}')" style="background:none;border:none;color:var(--err);font-size:15px;cursor:pointer">🗑️</button>` : ''}</div></div>`).join('');
 }
 
@@ -1184,6 +1305,8 @@ window.confirmerValidation = async function(id){
   const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
   if (occ) { showToast(`❌ ${ch} déjà occupée par ${occ.nom}`, 'er'); return; }
   const c = clientsCache.find(x => x.id === id); if (!c) return;
+  const dejaPris = await chambreDejaOccupee(ch, id);
+  if (dejaPris) { showToast(`❌ ${ch} vient d'être attribuée à ${dejaPris}`, 'er'); return; }
   const dep = document.getElementById('val_dep').value || '';
   try {
     await updateDoc(doc(db, 'clients', id), {
@@ -1287,18 +1410,58 @@ window.delClient = async function(id){
   } catch (e) { showToast('❌ Erreur (droits insuffisants ?)', 'er'); }
 };
 
+// ───────────────────────── PÉRIODES ─────────────────────────
+// Les dates sont stockées en texte AAAA-MM-JJ : on peut donc comparer
+// directement, sans conversion.
+function bornesPeriode(){
+  const n = new Date();
+  const p2 = x => String(x).padStart(2, '0');
+  if (periode === 'tout') return { debut: '0000-00-00', fin: '9999-99-99', libelle: 'Depuis le début' };
+  if (periode === 'annee') {
+    const y = n.getFullYear();
+    return { debut: `${y}-01-01`, fin: `${y}-12-31`, libelle: 'Année ' + y };
+  }
+  const d = new Date(n.getFullYear(), n.getMonth() - (periode === 'precedent' ? 1 : 0), 1);
+  const y = d.getFullYear(), m = d.getMonth();
+  const dernier = new Date(y, m + 1, 0).getDate();
+  const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'][m];
+  return { debut: `${y}-${p2(m + 1)}-01`, fin: `${y}-${p2(m + 1)}-${p2(dernier)}`, libelle: mois.charAt(0).toUpperCase() + mois.slice(1) + ' ' + y };
+}
+function dansPeriode(dateTexte, b){
+  if (!dateTexte) return periode === 'tout';
+  const d = String(dateTexte).slice(0, 10);
+  return d >= b.debut && d <= b.fin;
+}
+window.changerPeriode = function(){
+  periode = document.getElementById('s_periode').value;
+  const autre = document.getElementById('dg_periode');
+  if (autre) autre.value = periode;
+  stats(); renderDepensesGenerales();
+};
+window.changerPeriodeDepenses = function(){
+  periode = document.getElementById('dg_periode').value;
+  const autre = document.getElementById('s_periode');
+  if (autre) autre.value = periode;
+  stats(); renderDepensesGenerales();
+};
+
 // ───────────────────────── STATS ─────────────────────────
 function stats(){
+  const b = bornesPeriode();
+  const lbl = document.getElementById('s_periodeLbl');
+  if (lbl) lbl.textContent = periode === 'tout' ? 'Toutes les données enregistrées' : `${b.libelle} — du ${b.debut.split('-').reverse().join('/')} au ${b.fin.split('-').reverse().join('/')}`;
   const a = clientsCache.filter(c => c.statut === 'Actif');
-  const rev = clientsCache.reduce((s, c) => s + (Number(c.tarif) || 0), 0);
-  const pay = clientsCache.filter(c => c.spay === 'Payé').reduce((s, c) => s + (Number(c.tarif) || 0), 0);
+  const cP = clientsCache.filter(c => dansPeriode(c.arrivee, b));
+  const dP = depensesCache.filter(x => dansPeriode(x.date, b));
+  const rev = cP.reduce((s, c) => s + (Number(c.tarif) || 0), 0);
+  const pay = cP.filter(c => c.spay === 'Payé').reduce((s, c) => s + (Number(c.tarif) || 0), 0);
   const elTot = document.getElementById('s_tot'); if (!elTot) return;
-  elTot.textContent = clientsCache.length;
+  elTot.textContent = cP.length;
   document.getElementById('s_act').textContent = a.length;
-  document.getElementById('s_sor').textContent = clientsCache.filter(c => c.statut === 'Sorti').length;
+  document.getElementById('s_sor').textContent = cP.filter(c => c.statut === 'Sorti').length;
   document.getElementById('s_rev').textContent = rev.toLocaleString('fr-FR') + ' FCFA';
   document.getElementById('s_pay').textContent = `dont ${pay.toLocaleString('fr-FR')} FCFA payés`;
-  const totalDep = depensesCache.reduce((s, x) => s + (Number(x.montant) || 0), 0);
+  const totalDep = dP.reduce((s, x) => s + (Number(x.montant) || 0), 0);
   const sDep = document.getElementById('s_dep');
   if (sDep) sDep.textContent = totalDep.toLocaleString('fr-FR') + ' FCFA';
   const net = rev - totalDep;
@@ -1328,10 +1491,13 @@ window.exportCSV = function(){
 };
 window.effacer = async function(){
   if (currentUser.role !== 'admin') return;
-  if (!confirm('⚠️ Effacer TOUTES les fiches clients et les dépenses liées à leurs séjours ?\n\nLes dépenses générales (Canal+, Internet, fournitures…) sont conservées.\nCette action est irréversible.')) return;
+  const saisie = (document.getElementById('cfg_effacer')?.value || '').trim();
+  if (saisie !== 'EFFACER') { showToast('⚠️ Tapez EFFACER dans la case pour confirmer', 'er'); return; }
+  if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nEffacer TOUTES les fiches clients et les dépenses liées à leurs séjours ?\nCette action est irréversible.')) return;
   try {
     await Promise.all(clientsCache.map(c => deleteDoc(doc(db, 'clients', c.id))));
     await Promise.all(depensesCache.filter(x => x.clientId).map(x => deleteDoc(doc(db, 'depenses', x.id))));
+    document.getElementById('cfg_effacer').value = '';
     showToast('🗑️ Effacé', 'er');
   } catch (e) { showToast('❌ Erreur', 'er'); }
 };
@@ -1396,6 +1562,10 @@ window.delQrPaiement = async function(){
     showToast('🗑️ QR retiré', 'er');
   } catch (e) { showToast('❌ Erreur', 'er'); }
 };
+// Exposée sur window : elle est appelée depuis un attribut onchange dans le
+// HTML, et le code de cette page est un module (donc pas global par défaut).
+// Sans cette ligne, choisir "Mobile Money" ne faisait rien apparaître.
+window.refreshQrPaiementUI = refreshQrPaiementUI;
 function refreshQrPaiementUI(){
   const d = document.getElementById('qrPayDisplay');
   if (d && !qrPaiementStagedB64) {
