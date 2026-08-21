@@ -573,8 +573,9 @@ if ('serviceWorker' in navigator) {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 <script type="module">
-import { firebaseConfig } from './firebase-config.js';
+import { firebaseConfig, appCheckSiteKey } from './firebase-config.js';
 import { initializeApp, deleteApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app-check.js';
 import {
   getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut,
   createUserWithEmailAndPassword, sendPasswordResetEmail
@@ -586,6 +587,18 @@ import {
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 const app = initializeApp(firebaseConfig);
+
+// App Check doit démarrer AVANT tout accès à la base.
+// Si aucune clé n'est renseignée, on continue sans : l'app reste utilisable.
+if (appCheckSiteKey) {
+  try {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(appCheckSiteKey),
+      isTokenAutoRefreshEnabled: true
+    });
+  } catch (e) { console.warn('App Check non activé', e); }
+}
+
 const auth = getAuth(app);
 // Mémoire locale : l'app continue de fonctionner sans réseau et les
 // enregistrements partent tout seuls dès que la connexion revient.

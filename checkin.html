@@ -155,11 +155,23 @@ body{font-size:16px;max-width:560px}
 </footer>
 
 <script type="module">
-import { firebaseConfig } from './firebase-config.js';
+import { firebaseConfig, appCheckSiteKey } from './firebase-config.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app-check.js';
 import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
 const app = initializeApp(firebaseConfig);
+
+// Même protection que sur l'application du personnel.
+if (appCheckSiteKey) {
+  try {
+    initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(appCheckSiteKey),
+      isTokenAutoRefreshEnabled: true
+    });
+  } catch (e) { console.warn('App Check non activé', e); }
+}
+
 const db = getFirestore(app);
 let photoB64 = null, preuvePaiementB64 = null, qrPaiementUrl = '';
 
