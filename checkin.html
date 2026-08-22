@@ -160,7 +160,9 @@ body{font-size:16px;max-width:560px}
 </footer>
 
 <script type="module">
-import { firebaseConfig, appCheckSiteKey } from './firebase-config.js';
+import * as configResidence from './firebase-config.js';
+const firebaseConfig = configResidence.firebaseConfig;
+const appCheckSiteKey = configResidence.appCheckSiteKey || '';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app-check.js';
 import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
