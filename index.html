@@ -347,11 +347,11 @@ details.more>summary:hover{opacity:.75}
     <div class="ct"><span>🏨</span>Séjour</div>
     <div class="fr">
       <div class="field"><label>N° Chambre <span class="rs">*</span></label><select id="f_chambre"><option value="">— Choisir —</option></select></div>
-      <div class="field"><label>Durée prévue</label><select id="f_dur" onchange="majCIE()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+      <div class="field"><label>Durée prévue <span class="rs">*</span></label><select id="f_dur" onchange="dureeChangee()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
     </div>
     <div class="fr">
       <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" oninput="majCIE()"></div>
-      <div class="field"><label>Date de départ</label><input type="date" id="f_dep" oninput="majCIE()"></div>
+      <div class="field"><label>Date de départ</label><input type="date" id="f_dep" oninput="departSaisiAlaMain()"></div>
     </div>
     <div class="fr">
       <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="f_prixnuit" inputmode="numeric" oninput="majCIE()"></div>
@@ -393,6 +393,7 @@ details.more>summary:hover{opacity:.75}
 
 <!-- PAGE CLIENTS -->
 <div class="page" id="page-clients">
+  <div id="departsBanner"></div>
   <div id="capBanner"></div>
   <div id="pendingBanner"></div>
   <div class="search-bar"><span>🔍</span><input type="text" id="searchInput" placeholder="Rechercher…" oninput="filtrer()"></div>
@@ -458,7 +459,7 @@ details.more>summary:hover{opacity:.75}
   <div class="sr">
     <div class="sb"><div class="sn" id="s_tot">0</div><div class="slb">Clients (période)</div></div>
     <div class="sb"><div class="sn" id="s_act" style="color:var(--ok)">0</div><div class="slb">Présents aujourd'hui</div></div>
-    <div class="sb"><div class="sn" id="s_sor" style="color:var(--err)">0</div><div class="slb">Sortis (période)</div></div>
+    <div class="sb"><div class="sn" id="s_dep_att" style="color:var(--orange)">0</div><div class="slb">Départs attendus</div></div>
   </div>
   <div class="card"><div class="ct"><span>🏨</span>Chambres occupées</div><div id="chambresOcc"></div></div>
   <div class="card">
@@ -515,11 +516,21 @@ details.more>summary:hover{opacity:.75}
     <div class="ct"><span>💵</span>Tarifs et charges</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Le prix d'une nuit sert à calculer automatiquement le tarif au moment de l'enregistrement. Les deux autres montants sont ceux des boutons rapides de l'écran Dépenses.</p>
     <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="cfg_prixnuit" inputmode="numeric" placeholder="15000"></div>
+    <div class="field">
+      <label>Numéro WhatsApp de la réception</label>
+      <input type="tel" id="cfg_whatsapp" inputmode="tel" placeholder="2250716300000">
+      <div style="font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5">Format international, sans + ni espaces. Exemple pour la Côte d'Ivoire : 225 suivi du numéro. Le client verra un bouton « Prévenir la réception » après son enregistrement en ligne.</div>
+    </div>
     <div class="fr">
       <div class="field"><label>Canal+ (FCFA)</label><input type="number" id="cfg_canal" inputmode="numeric" placeholder="5000"></div>
       <div class="field"><label>Internet (FCFA)</label><input type="number" id="cfg_internet" inputmode="numeric" placeholder="15000"></div>
     </div>
-    <button class="btn btn-p" onclick="saveCharges()">💾 Enregistrer les montants</button>
+    <button class="btn btn-p" onclick="saveCharges()">💾 Enregistrer</button>
+  </div>
+  <div class="card">
+    <div class="ct"><span>🔔</span>Alertes nouvelles demandes</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Quand un client s'enregistre en ligne, l'app émet un signal sonore et affiche une alerte — à condition qu'elle soit ouverte sur le téléphone ou le PC. À activer sur chaque appareil.</p>
+    <button class="btn btn-s" onclick="activerNotifications()">🔔 Activer les alertes sur cet appareil</button>
   </div>
   <div class="card">
     <div class="ct"><span>🔑</span>Clé API Anthropic</div>
@@ -628,6 +639,7 @@ let qrPaiementUrl = '', qrPaiementStagedB64 = null;
 let listeChambres = [];
 let montantCanal = 5000, montantInternet = 15000;
 let prixNuit = 15000;
+let whatsappReception = '';
 let periode = 'mois';
 const PLAFOND_CLIENTS = 300;
 
@@ -720,6 +732,74 @@ async function chambreDejaOccupee(ch, saufId){
   } catch (e) { return null; }
 }
 
+// Alerte quand une demande en ligne arrive pendant que l'app est ouverte.
+let nbEnAttenteConnu = null;
+function bipNouvelleDemande(){
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.22].forEach(retard => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.001, ctx.currentTime + retard);
+      g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + retard + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + retard + 0.18);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + retard); o.stop(ctx.currentTime + retard + 0.2);
+    });
+  } catch (e) {}
+}
+function alerterNouvellesDemandes(liste){
+  const n = liste.length;
+  if (nbEnAttenteConnu === null) { nbEnAttenteConnu = n; return; }
+  if (n > nbEnAttenteConnu) {
+    const dernier = liste[0];
+    const texte = dernier ? `${dernier.nom} vient de s'enregistrer en ligne` : 'Nouvelle demande en ligne';
+    showToast('🔔 ' + texte, 'ok');
+    bipNouvelleDemande();
+    try {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Résidence Biagné', { body: texte, icon: './icon-192.png', tag: 'demande' });
+      }
+    } catch (e) {}
+  }
+  nbEnAttenteConnu = n;
+}
+window.activerNotifications = async function(){
+  if (!('Notification' in window)) { showToast('Non pris en charge par ce navigateur', 'er'); return; }
+  try {
+    const r = await Notification.requestPermission();
+    showToast(r === 'granted' ? '🔔 Notifications activées' : '⚠️ Notifications refusées', r === 'granted' ? 'ok' : 'er');
+    if (r === 'granted') bipNouvelleDemande();
+  } catch (e) { showToast('❌ Erreur', 'er'); }
+};
+
+// Clients dont la date de départ est aujourd'hui ou déjà passée : ce sont
+// les chambres à libérer, et les séjours à régulariser s'ils restent.
+function departsAttendus(){
+  const auj = new Date().toISOString().split('T')[0];
+  return clientsCache
+    .filter(c => c.statut === 'Actif' && c.depart && c.depart <= auj)
+    .sort((a, b) => (a.depart || '').localeCompare(b.depart || ''));
+}
+function renderDeparts(){
+  const el = document.getElementById('departsBanner'); if (!el) return;
+  const auj = new Date().toISOString().split('T')[0];
+  const liste = departsAttendus();
+  if (!liste.length) { el.innerHTML = ''; return; }
+  const lignes = liste.map(c => {
+    const retard = c.depart < auj;
+    const jours = Math.round((new Date(auj) - new Date(c.depart)) / 86400000);
+    return `<div onclick="detail('${esc(c.id)}')" style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(0,0,0,.07);cursor:pointer">
+      <div><div style="font-weight:700;font-size:15px">${esc(c.nom)}</div><div style="font-size:13px;color:var(--muted)">🏨 ${esc(c.chambre || '—')}</div></div>
+      <span class="cbg ${retard ? 'bs' : 'bw'}" style="white-space:nowrap">${retard ? `+${jours} nuit(s)` : "aujourd'hui"}</span>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="card" style="background:#fff7ed;border:1.5px solid #fcd77f">
+    <div class="ct" style="color:#92400e"><span>🧳</span>Départs attendus (${liste.length})</div>
+    <p style="font-size:13px;color:#92400e;line-height:1.55;margin-bottom:2px">Ces chambres doivent être libérées. Si le client reste, modifiez sa date de départ : le tarif et l'électricité seront régularisés.</p>
+    ${lignes}</div>`;
+}
+
 function chambresParDefaut(){
   const l = []; for (let i = 1; i <= 30; i++) l.push('Chambre ' + i); return l;
 }
@@ -735,6 +815,8 @@ function remplirChambres(){
 function majChargesUI(){
   const pn = document.getElementById('cfg_prixnuit');
   if (pn && document.activeElement !== pn) pn.value = prixNuit;
+  const wa = document.getElementById('cfg_whatsapp');
+  if (wa && document.activeElement !== wa) wa.value = whatsappReception;
   const fp = document.getElementById('f_prixnuit');
   if (fp && !fp.value) { fp.value = prixNuit; majCIE(); }
   const c = document.getElementById('lblCanal'), i = document.getElementById('lblInternet');
@@ -746,13 +828,17 @@ function majChargesUI(){
 }
 window.saveCharges = async function(){
   if (currentUser.role !== 'admin') return;
+  const wa = document.getElementById('cfg_whatsapp').value.replace(/[^0-9]/g, '');
+  if (wa && (wa.length < 8 || wa.length > 15)) { showToast('⚠️ Numéro WhatsApp invalide', 'er'); return; }
   const n = Number(document.getElementById('cfg_prixnuit').value);
   const c = Number(document.getElementById('cfg_canal').value);
   const i = Number(document.getElementById('cfg_internet').value);
   if (!(n > 0) || !(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
   try {
     await setDoc(doc(db, 'config', 'settings'), { prixNuit: n, montantCanal: c, montantInternet: i }, { merge: true });
-    showToast('✅ Montants enregistrés', 'ok');
+    // Le numéro va dans la config publique : c'est la page client qui le lit.
+    await setDoc(doc(db, 'config', 'public'), { whatsappReception: wa }, { merge: true });
+    showToast('✅ Enregistré', 'ok');
   } catch (e) { showToast('❌ Erreur', 'er'); }
 };
 window.saveChambres = async function(){
@@ -806,6 +892,8 @@ function startListeners(){
   });
 
   unsubConfigPublic = onSnapshot(doc(db, 'config', 'public'), (snap) => {
+    whatsappReception = snap.exists() ? (snap.data().whatsappReception || '') : '';
+    majChargesUI();
     qrPaiementUrl = snap.exists() ? (snap.data().qrPaiement || '') : '';
     refreshQrPaiementUI();
   });
@@ -1072,6 +1160,28 @@ function calcJours(arr, dep, duree){
   const n = NUITS_DUREE[duree] || 0;
   return n > 0 ? n : 1;
 }
+// La date de départ se remplit toute seule à partir de l'arrivée et de la
+// durée : sans elle, l'électricité, le tarif et le suivi des départs sont faux.
+let departManuel = false;
+window.departSaisiAlaMain = function(){ departManuel = true; majCIE(); };
+window.dureeChangee = function(){ departManuel = false; majCIE(); };
+// Départ prévu à partir de l'arrivée et de la durée déclarée par le client.
+function departPrevu(arrivee, duree){
+  const n = NUITS_DUREE[duree] || 0;
+  if (!arrivee || !n) return '';
+  const d = new Date(arrivee); d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+}
+function majDepart(){
+  const arr = v('f_arr'), dur = v('f_dur');
+  const champ = document.getElementById('f_dep');
+  if (!champ || departManuel || !arr) return;
+  const n = NUITS_DUREE[dur] || 0;
+  if (!n) return;
+  const d = new Date(arr); d.setDate(d.getDate() + n);
+  champ.value = d.toISOString().split('T')[0];
+}
+
 // Le tarif se calcule tout seul (prix d'une nuit × nombre de nuits), sauf si
 // le personnel le corrige à la main — dans ce cas on ne l'écrase plus.
 let tarifManuel = false;
@@ -1097,6 +1207,7 @@ function majTarif(nuits){
 }
 
 window.majCIE = function(){
+  majDepart();
   const arr = v('f_arr'), dep = v('f_dep'), dur = v('f_dur');
   const j = calcJours(arr, dep, dur);
   majTarif(j);
@@ -1113,6 +1224,11 @@ window.majCIE = function(){
 window.enregistrerClient = async function(){
   const nom = v('f_nom'), tel = v('f_tel'), ch = v('f_chambre'), arr = v('f_arr');
   if (!nom || !tel || !ch || !arr) { showToast('⚠️ Champs obligatoires manquants (*)', 'er'); return; }
+  if (!v('f_dur') && !v('f_dep')) {
+    showToast('❌ Indiquez la durée prévue ou la date de départ', 'er');
+    document.getElementById('f_dur').focus();
+    return;
+  }
   const occ = clientsCache.find(c => c.chambre === ch && c.statut === 'Actif');
   if (occ) { showToast(`❌ ${ch} occupée par ${occ.nom}`, 'er'); return; }
   const btn = document.getElementById('btnEnregistrer');
@@ -1156,7 +1272,7 @@ function reinit(){
   ['f_nom', 'f_sexe', 'f_nationalite', 'f_piece', 'f_ddn', 'f_lieu', 'f_prof', 'f_adr', 'f_tel', 'f_prov',
     'f_chambre', 'f_tch', 'f_dep', 'f_dur', 'f_tarif', 'f_motif', 'f_pay', 'f_spay', 'f_obs'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
   document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
-  tarifManuel = false;
+  tarifManuel = false; departManuel = false;
   document.getElementById('f_prixnuit').value = prixNuit;
   document.getElementById('tarifHint').textContent = '';
   photoB64 = null; rectoB64 = null; versoB64 = null;
@@ -1187,7 +1303,9 @@ function afficher(lst){
   if (cap) cap.innerHTML = clientsCache.length >= PLAFOND_CLIENTS
     ? `<div class="card" style="background:#eff6ff;border:1.5px solid var(--blue2)"><div class="ct" style="color:var(--blue2)"><span>ℹ️</span>Affichage limité</div><p style="font-size:13.5px;color:var(--blue2);line-height:1.6">Seules les ${PLAFOND_CLIENTS} fiches les plus récentes sont chargées, pour ne pas consommer trop de données mobiles. Les fiches plus anciennes restent dans la base et sont bien incluses dans l'export CSV du Résumé.</p></div>`
     : '';
+  renderDeparts();
   const pend = clientsCache.filter(x => x.statut === 'En attente');
+  alerterNouvellesDemandes(pend);
   const banner = document.getElementById('pendingBanner');
   if (banner) banner.innerHTML = pend.length ? `<div class="card" style="background:#fffbeb;border:1.5px solid var(--orange2)"><div class="ct" style="color:#92400e"><span>🆕</span>${pend.length} nouvelle(s) demande(s) en ligne</div><p style="font-size:13px;color:#92400e">À valider et attribuer une chambre — cliquez sur un client marqué "En attente" ci-dessous.</p></div>` : '';
 }
@@ -1309,7 +1427,7 @@ window.detail = function(id){
       </div>
       <div class="fr" style="margin-top:8px">
         <input type="number" id="val_tarif" placeholder="Tarif (FCFA)" inputmode="numeric" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
-        <input type="date" id="val_dep" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
+        <input type="date" id="val_dep" value="${departPrevu(c.arrivee, c.duree)}" style="padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px">
       </div>
       <select id="val_pay" style="width:100%;margin-top:8px;padding:11px;border:1.5px solid var(--border);border-radius:9px;font-size:14px"><option value="">Mode de paiement —</option><option ${c.pay === 'Espèces' ? 'selected' : ''}>Espèces</option><option ${c.pay === 'Mobile Money' ? 'selected' : ''}>Mobile Money</option><option ${c.pay === 'Orange Money' ? 'selected' : ''}>Orange Money</option><option ${c.pay === 'Wave' ? 'selected' : ''}>Wave</option><option ${c.pay === 'Virement' ? 'selected' : ''}>Virement</option></select>
       <button class="btn btn-p" style="margin-top:10px" onclick="confirmerValidation('${c.id}')">✅ Valider et activer le séjour</button>
@@ -1482,12 +1600,19 @@ window.chgStatut = async function(id, s){
     // rechargé pour ces nuits en plus, on ajoute le complément d'électricité.
     if (s === 'Sorti') {
       const reel = calcJours(c.arrivee, aujourdhui, c.duree);
-      const facture = calcJours(c.arrivee, c.depart, c.duree);
-      if (reel > facture) {
-        const ecart = reel - facture;
+      // On compare à l'électricité RÉELLEMENT enregistrée pour ce client,
+      // pas à un calcul refait : si la fiche a été corrigée entre-temps
+      // (durée rallongée, date de départ ajoutée), le rattrapage doit
+      // porter sur ce qui manque vraiment en caisse.
+      const dejaCompte = depensesCache
+        .filter(x => x.clientId === id && x.categorie === 'CIE')
+        .reduce((t, x) => t + (Number(x.montant) || 0), 0);
+      const nuitsDejaCouvertes = Math.round(dejaCompte / 1000);
+      if (reel > nuitsDejaCouvertes) {
+        const ecart = reel - nuitsDejaCouvertes;
         await addDoc(collection(db, 'depenses'), {
           categorie: 'CIE', montant: 1000 * ecart,
-          description: `Électricité — complément ${ecart} nuit(s) (séjour prolongé)`,
+          description: `Électricité — complément ${ecart} nuit(s) (régularisation au départ)`,
           clientId: id, clientNom: c.nom, date: aujourdhui,
           createdBy: currentUser.uid, createdByNom: currentUser.nom, createdAt: serverTimestamp()
         });
@@ -1555,7 +1680,7 @@ function stats(){
   const elTot = document.getElementById('s_tot'); if (!elTot) return;
   elTot.textContent = cP.length;
   document.getElementById('s_act').textContent = a.length;
-  document.getElementById('s_sor').textContent = cP.filter(c => c.statut === 'Sorti').length;
+  document.getElementById('s_dep_att').textContent = departsAttendus().length;
   document.getElementById('s_rev').textContent = rev.toLocaleString('fr-FR') + ' FCFA';
   document.getElementById('s_pay').textContent = `dont ${pay.toLocaleString('fr-FR')} FCFA payés`;
   const totalDep = dP.reduce((s, x) => s + (Number(x.montant) || 0), 0);

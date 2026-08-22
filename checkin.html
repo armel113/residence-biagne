@@ -129,8 +129,9 @@ body{font-size:16px;max-width:560px}
   <div class="card">
     <div class="ct">🏨 Votre séjour</div>
     <div class="fr">
-      <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr"></div>
-      <div class="field"><label>Durée prévue</label><select id="f_dur"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+      <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" onchange="majDepartPrevu()"></div>
+      <div class="field"><label>Durée prévue <span class="rs">*</span></label><select id="f_dur" onchange="majDepartPrevu()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+    <div id="departPrevuBox" style="font-size:13.5px;color:#7c3d05;background:#fffbeb;border:1.5px solid #fcd77f;border-radius:10px;padding:11px 13px;font-weight:600;line-height:1.5"></div>
     </div>
     <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
     <div class="field"><label>Remarques (allergies, heure d'arrivée prévue…)</label><textarea id="f_obs"></textarea></div>
@@ -144,6 +145,10 @@ body{font-size:16px;max-width:560px}
   <div class="ic">✅</div>
   <h2>Demande envoyée !</h2>
   <p>Merci ! Votre demande a bien été transmise à la réception.<br>Présentez-vous à l'accueil, une chambre vous sera attribuée.</p>
+  <div id="waBox" class="hidden" style="margin-top:26px">
+    <p style="margin-bottom:14px">Pour être sûr que la réception vous voie arriver, prévenez-la aussi sur WhatsApp :</p>
+    <a id="waLink" href="#" target="_blank" rel="noopener" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;font-size:16px;text-decoration:none;padding:15px 26px;border-radius:12px">💬 Prévenir la réception sur WhatsApp</a>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -173,12 +178,31 @@ if (appCheckSiteKey) {
 }
 
 const db = getFirestore(app);
-let photoB64 = null, preuvePaiementB64 = null, qrPaiementUrl = '';
+let photoB64 = null, preuvePaiementB64 = null, qrPaiementUrl = '', waNumero = '';
 
 getDoc(doc(db, 'config', 'public')).then(snap => {
-  qrPaiementUrl = snap.exists() ? (snap.data().qrPaiement || '') : '';
+  const d = snap.exists() ? snap.data() : {};
+  qrPaiementUrl = d.qrPaiement || '';
+  waNumero = (d.whatsappReception || '').replace(/[^0-9]/g, '');
   const img = document.getElementById('payQrImg'); if (img) img.src = qrPaiementUrl;
 }).catch(() => {});
+
+const NUITS_DUREE = { '1 nuit': 1, '2 nuits': 2, '3 nuits': 3, '1 semaine': 7, '2 semaines': 14, '1 mois': 30 };
+window.majDepartPrevu = function(){
+  const box = document.getElementById('departPrevuBox');
+  const arr = v('f_arr'), dur = v('f_dur');
+  const n = NUITS_DUREE[dur] || 0;
+  if (!box) return;
+  if (!n || !arr) {
+    box.innerHTML = dur === 'Longue durée'
+      ? "\u2139\ufe0f Vous pourrez pr\u00e9ciser votre date de d\u00e9part \u00e0 la r\u00e9ception."
+      : '';
+    return;
+  }
+  const d = new Date(arr); d.setDate(d.getDate() + n);
+  const j = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  box.innerHTML = `\ud83e\uddf3 D\u00e9part pr\u00e9vu le <strong>${j}</strong> \u2014 ${n} nuit(s).<br><span style="font-weight:500">Lib\u00e9ration de la chambre en d\u00e9but d'apr\u00e8s-midi. Pr\u00e9venez la r\u00e9ception si vous souhaitez rester plus longtemps.</span>`;
+};
 
 window.toggleQrBox = function(){
   const mode = document.getElementById('f_pay').value;
@@ -233,11 +257,13 @@ function showToast(msg, type=''){
 window.envoyer = async function(){
   const nom = v('f_nom'), tel = v('f_tel'), arr = v('f_arr');
   if (!nom || !tel || !arr) { showToast('⚠️ Nom, téléphone et date d\'arrivée obligatoires', 'er'); return; }
+  if (!v('f_dur')) { showToast('⚠️ Indiquez la durée de votre séjour', 'er'); document.getElementById('f_dur').focus(); return; }
   const payMode = v('f_pay');
   if (payMode && !preuvePaiementB64) { showToast('⚠️ Ajoutez la preuve de votre paiement, ou laissez "Je paierai sur place"', 'er'); return; }
   const btn = document.getElementById('btnEnvoyer');
   btn.disabled = true; btn.textContent = 'Envoi…';
   try {
+    // La durée conditionne le tarif et la date de départ : on l'exige.
     await addDoc(collection(db, 'clients'), {
       photo: photoB64, cni_recto: null, cni_verso: null,
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
@@ -251,6 +277,21 @@ window.envoyer = async function(){
     });
     document.getElementById('formPage').classList.add('hidden');
     document.getElementById('confirmPage').classList.remove('hidden');
+    // Message WhatsApp pré-écrit : le client n'a plus qu'à appuyer sur Envoyer.
+    if (waNumero) {
+      const lignes = [
+        'Bonjour, je viens de m\'enregistrer en ligne à la Résidence Biagné.',
+        '',
+        'Nom : ' + nom,
+        'Téléphone : ' + tel,
+        'Arrivée : ' + arr
+      ];
+      const duree = v('f_dur'); if (duree) lignes.push('Durée prévue : ' + duree);
+      if (payMode) lignes.push('Paiement déclaré : ' + payMode);
+      document.getElementById('waLink').href =
+        'https://wa.me/' + waNumero + '?text=' + encodeURIComponent(lignes.join('\n'));
+      document.getElementById('waBox').classList.remove('hidden');
+    }
   } catch (err) {
     showToast('❌ Erreur : ' + (err.message || 'échec'), 'er');
     btn.disabled = false; btn.textContent = '✅ Envoyer ma demande';
