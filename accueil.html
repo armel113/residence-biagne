@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Résidence meublée Biagné — Appartements meublés à Soubré</title>
+<meta name="description" content="Appartements entièrement meublés à Soubré : salon, chambre climatisée, cuisine équipée, WiFi illimité. À la nuitée comme au mois. Accueil 24h/24.">
+<meta name="theme-color" content="#1a3a5c">
+<link rel="icon" href="./icon-192.png">
+<meta property="og:title" content="Résidence meublée Biagné — Soubré">
+<meta property="og:description" content="Appartements entièrement meublés : salon, chambre climatisée, cuisine équipée, WiFi illimité. Accueil 24h/24.">
+<meta property="og:image" content="./photo-chambre.jpg">
+<meta property="og:type" content="website">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --nuit:#12304d;        /* bleu profond de la marque */
+    --nuit-clair:#1f4a75;
+    --cuivre:#e07b1a;      /* orange de l'enseigne */
+    --sable:#f7f4ee;
+    --encre:#16202c;
+    --gris:#5a6a7e;
+    --trait:rgba(18,48,77,.12);
+  }
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+    background:var(--sable);color:var(--encre);line-height:1.6;
+    font-size:17px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:840px;margin:0 auto;background:#fff;
+    box-shadow:0 0 60px rgba(18,48,77,.08)}
+
+  /* ── Ouverture ── */
+  .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
+  .hero img{width:100%;height:340px;object-fit:cover;opacity:.5;display:block}
+  .hero-txt{position:absolute;inset:auto 0 0 0;padding:26px 24px 24px;
+    background:linear-gradient(transparent,rgba(10,26,44,.92) 55%)}
+  .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
+    font-weight:700;color:var(--cuivre);margin-bottom:8px}
+  .hero h1{font-size:clamp(28px,7vw,42px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+  .hero .sous{margin-top:9px;font-size:16px;color:rgba(255,255,255,.9);max-width:30ch}
+
+  /* ── Bandeau équipements ── */
+  .equip{display:flex;flex-wrap:wrap;gap:0;background:var(--nuit-clair);color:#fff}
+  .equip div{flex:1 1 50%;padding:15px 18px;font-size:14.5px;font-weight:600;
+    border-top:1px solid rgba(255,255,255,.13);border-right:1px solid rgba(255,255,255,.13)}
+  @media(min-width:640px){.equip div{flex:1 1 25%}}
+
+  .sec{padding:44px 24px}
+  .sec h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cuivre);font-weight:800;margin-bottom:18px}
+  .sec p{color:var(--gris);max-width:60ch}
+
+  /* ── La visite : une pièce, une photo ── */
+  .piece{border-top:1px solid var(--trait);padding:30px 24px}
+  .piece:first-of-type{border-top:none}
+  .piece img{width:100%;border-radius:12px;display:block;background:var(--sable)}
+  .piece h3{font-size:22px;font-weight:800;margin:18px 0 6px;letter-spacing:-.01em}
+  .piece p{color:var(--gris);font-size:16px}
+
+  /* ── Tarif ── */
+  .tarif{background:var(--nuit);color:#fff;padding:40px 24px;text-align:center}
+  .prix{font-size:clamp(38px,10vw,54px);font-weight:800;letter-spacing:-.03em;line-height:1}
+  .prix span{font-size:19px;font-weight:600;opacity:.75;letter-spacing:0}
+  .tarif p{color:rgba(255,255,255,.82);margin-top:12px;font-size:15.5px}
+
+  /* ── Actions ── */
+  .actions{padding:34px 24px 12px;display:grid;gap:12px}
+  .btn{display:block;text-align:center;text-decoration:none;font-weight:800;
+    font-size:17px;padding:17px 20px;border-radius:12px;transition:transform .12s}
+  .btn:active{transform:scale(.985)}
+  .btn:focus-visible{outline:3px solid var(--cuivre);outline-offset:3px}
+  .b1{background:var(--cuivre);color:#fff;box-shadow:0 6px 18px rgba(224,123,26,.3)}
+  .b2{background:#25D366;color:#fff}
+  .b3{background:#fff;color:var(--nuit);border:2px solid var(--nuit)}
+  .note{padding:0 24px 34px;font-size:14px;color:var(--gris);text-align:center}
+
+  .infos{border-top:1px solid var(--trait);padding:30px 24px;font-size:16px}
+  .infos div{display:flex;gap:12px;padding:9px 0;align-items:flex-start}
+  .infos b{min-width:96px;color:var(--nuit);font-weight:700}
+  .infos a{color:var(--nuit);font-weight:600}
+
+  footer{background:var(--nuit);color:rgba(255,255,255,.62);
+    padding:26px 24px;text-align:center;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <img src="./photo-chambre.jpg" alt="Chambre climatisée de la Résidence Biagné">
+    <div class="hero-txt">
+      <div class="kicker">Soubré · Quartier Maracana</div>
+      <h1>Résidence meublée Biagné</h1>
+      <p class="sous">Des appartements entièrement meublés, à la nuitée comme au mois.</p>
+    </div>
+  </header>
+
+  <div class="equip">
+    <div>❄️ Climatisation</div>
+    <div>📶 WiFi illimité</div>
+    <div>📺 TV connectée</div>
+    <div>🍳 Cuisine équipée</div>
+  </div>
+
+  <section class="sec">
+    <h2>L'essentiel</h2>
+    <p>Vous n'avez pas une chambre, vous avez un appartement : un salon à vous, une chambre climatisée et une cuisine où vous pouvez vraiment préparer vos repas. Le quartier est calme et central, à quelques minutes des commerces. L'accueil est assuré 24h/24, quelle que soit l'heure de votre arrivée.</p>
+  </section>
+
+  <section>
+    <div class="piece">
+      <img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision">
+      <h3>Le salon</h3>
+      <p>Canapés, table basse et télévision connectée. De quoi recevoir ou simplement souffler après la route.</p>
+    </div>
+    <div class="piece">
+      <img src="./photo-chambre.jpg" alt="Chambre climatisée avec lit double">
+      <h3>La chambre</h3>
+      <p>Lit double, climatisation et stores occultants. On dort au frais et dans le noir, même en pleine journée.</p>
+    </div>
+    <div class="piece">
+      <img src="./photo-cuisine.jpg" alt="Cuisine équipée avec évier, plan de travail et bouilloire">
+      <h3>La cuisine</h3>
+      <p>Plan de travail, évier, réfrigérateur et ustensiles. Pour les longs séjours, ça change tout.</p>
+    </div>
+  </section>
+
+  <section class="tarif">
+    <div class="prix">15 000 F <span>la nuit</span></div>
+    <p>Tarif dégressif pour les séjours d'une semaine ou plus.<br>Contactez-nous pour un devis.</p>
+  </section>
+
+  <div class="actions">
+    <a class="btn b1" href="./checkin.html">📝 M'enregistrer en ligne</a>
+    <a class="btn b2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 Écrire sur WhatsApp</a>
+    <a class="btn b3" href="tel:+2250716300000">📞 Appeler la réception</a>
+  </div>
+  <p class="note">L'enregistrement en ligne vous fait gagner du temps à l'arrivée : remplissez votre fiche depuis chez vous, la chambre vous est attribuée sur place.</p>
+
+  <section class="infos">
+    <div><b>Adresse</b><span>202, Soubré — quartier Maracana</span></div>
+    <div><b>Horaires</b><span>Accueil 24h/24, 7j/7</span></div>
+    <div><b>Téléphone</b><a href="tel:+2250716300000">07 16 30 00 00</a></div>
+    <div><b>Itinéraire</b><a href="https://www.google.com/maps/place/R%C3%A9sidence+meubl%C3%A9e+Biagn%C3%A9/@5.7801469,-6.5976597,17z" target="_blank" rel="noopener">Voir sur Google Maps</a></div>
+  </section>
+
+  <footer>
+    Résidence meublée Biagné — Soubré, Côte d'Ivoire<br>
+    Conçu par Biagné Service Informatique
+  </footer>
+
+</div>
+</body>
+</html>
