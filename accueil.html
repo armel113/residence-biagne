@@ -34,8 +34,27 @@
 
   /* ── Ouverture ── */
   .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
-  .hero img{width:100%;height:74vh;min-height:420px;max-height:620px;object-fit:cover;object-position:center 62%;opacity:1;display:block;transition:opacity .8s}
-  .hero.lecture img{opacity:0}
+  /* Décor du panneau bleu : halo cuivré qui respire et fine trame qui dérive.
+     Uniquement du CSS — aucun fichier supplémentaire à charger. */
+  .deco{position:absolute;inset:0;z-index:0;pointer-events:none;display:none}
+  .deco::before{content:'';position:absolute;inset:-25%;
+    background:radial-gradient(circle at 28% 34%,rgba(224,123,26,.26),transparent 56%);
+    animation:souffle 11s ease-in-out infinite}
+  .deco::after{content:'';position:absolute;inset:0;opacity:.55;
+    background-image:
+      linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+    background-size:54px 54px;
+    animation:glisse 30s linear infinite}
+  @keyframes souffle{0%,100%{opacity:.5}50%{opacity:1}}
+  @keyframes glisse{to{background-position:54px 54px}}
+  @keyframes leve{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .logo-res{display:none}
+  @media (prefers-reduced-motion:reduce){
+    .deco::before,.deco::after,.logo-res{animation:none}
+  }
+  .hero img:not(.logo-res){width:100%;height:74vh;min-height:420px;max-height:620px;object-fit:cover;object-position:center 62%;opacity:1;display:block;transition:opacity .8s}
+  .hero.lecture img:not(.logo-res){opacity:0}
   .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;
     opacity:0;transition:opacity .8s ease}
   .hero video.on{opacity:1}
@@ -99,13 +118,22 @@
     /* Sur grand écran, une bande large couperait presque toute la vidéo
        verticale : on la met à droite dans son format d'origine, le texte
        occupe la gauche. */
-    .hero{display:grid;grid-template-columns:1fr 380px;align-items:stretch;min-height:520px}
-    .hero img,.hero video{grid-column:2;grid-row:1;height:100%;min-height:520px;max-height:640px;
-      position:relative;inset:auto;object-position:center 58%}
-    .hero-txt{grid-column:1;grid-row:1;position:relative;inset:auto;display:flex;
-      flex-direction:column;justify-content:center;background:none;padding:48px 44px}
+    /* Hauteur fixe : le texte à gauche, la vidéo verticale à droite.
+       Plus simple et plus sûr qu'une grille dont la hauteur dépend du contenu. */
+    .hero{display:block;position:relative;height:640px}
+    .hero img:not(.logo-res),.hero video{position:absolute;top:0;right:0;bottom:0;left:auto;
+      width:400px;height:640px;min-height:0;max-height:none;object-position:center 58%}
+    .hero-txt{position:absolute;top:0;left:0;bottom:0;right:400px;display:flex;
+      flex-direction:column;justify-content:center;background:none;padding:40px 44px;
+      overflow:hidden}
     .hero h1{font-size:44px}
     .hero .sous{font-size:18px;max-width:26ch}
+    .deco{display:block}
+    .hero img.logo-res{display:block;position:static;height:auto;width:98px;border-radius:14px;margin-bottom:20px;
+      border:1px solid rgba(224,123,26,.45);box-shadow:0 8px 26px rgba(0,0,0,.5);
+      animation:leve 7s ease-in-out infinite}
+    .hero-txt{z-index:2}
+    .hero-actions .btn{box-shadow:0 6px 20px rgba(0,0,0,.3)}
     .hero-plus{display:block;margin-top:32px}
     .hero-prix{display:flex;gap:34px;flex-wrap:wrap;margin-bottom:26px}
     .hero-prix strong{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff}
@@ -135,9 +163,11 @@
 <div class="wrap">
 
   <header class="hero">
+    <div class="deco" aria-hidden="true"></div>
     <img src="./photo-chambre.jpg" alt="Chambre climatisée de la Résidence Biagné" id="heroImg">
     <video id="heroVid" muted loop playsinline preload="none" poster="./photo-chambre.jpg" aria-hidden="true"></video>
     <div class="hero-txt">
+      <img class="logo-res" src="./logo-residence.jpg" alt="Logo Résidence Biagné">
       <div class="kicker">Soubré · Quartier Maracana</div>
       <h1>Résidence meublée Biagné</h1>
       <p class="sous">Des appartements entièrement meublés, à la nuitée comme au mois.</p>
