@@ -34,18 +34,22 @@
 
   /* ── Ouverture ── */
   .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
-  .hero img{width:100%;height:340px;object-fit:cover;opacity:.92;display:block}
-  .hero video{position:absolute;inset:0;width:100%;height:340px;object-fit:cover;
+  .hero img{width:100%;height:74vh;min-height:420px;max-height:620px;object-fit:cover;object-position:center 62%;opacity:1;display:block;transition:opacity .8s}
+  .hero.lecture img{opacity:0}
+  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;
     opacity:0;transition:opacity .8s ease}
-  .hero video.on{opacity:.92}
+  .hero video.on{opacity:1}
   @media (prefers-reduced-motion:reduce){.hero video{display:none}}
-  .hero-txt{position:absolute;inset:auto 0 0 0;padding:60px 24px 24px;
-    background:linear-gradient(transparent,rgba(8,22,38,.55) 30%,rgba(8,22,38,.93) 75%)}
+  /* Texte en haut : le bas de l'image reste dégagé, c'est là que se
+     trouvent les meubles qu'on veut montrer. */
+  .hero-txt{position:absolute;inset:0 0 auto 0;padding:22px 24px 70px;
+    background:linear-gradient(rgba(8,22,38,.92) 25%,rgba(8,22,38,.6) 62%,transparent)}
   .hero-txt h1,.hero-txt .sous{text-shadow:0 2px 12px rgba(0,0,0,.55)}
   .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
     font-weight:700;color:var(--cuivre);margin-bottom:8px}
   .hero h1{font-size:clamp(28px,7vw,42px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
   .hero .sous{margin-top:9px;font-size:16px;color:rgba(255,255,255,.9);max-width:30ch}
+  .hero-plus{display:none}
 
   /* ── Bandeau équipements ── */
   .equip{display:flex;flex-wrap:wrap;gap:0;background:var(--nuit-clair);color:#fff}
@@ -69,7 +73,11 @@
   .tarif{background:var(--nuit);color:#fff;padding:40px 24px;text-align:center}
   .prix{font-size:clamp(38px,10vw,54px);font-weight:800;letter-spacing:-.03em;line-height:1}
   .prix span{font-size:19px;font-weight:600;opacity:.75;letter-spacing:0}
-  .tarif p{color:rgba(255,255,255,.82);margin-top:12px;font-size:15.5px}
+  .grille{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .grille .prix{font-size:clamp(26px,7vw,40px)}
+  .prix-we{color:var(--cuivre)}
+  .jours{font-size:14px;color:rgba(255,255,255,.82);margin-top:8px;line-height:1.45;font-weight:600}
+  .tarif p{color:rgba(255,255,255,.82);margin-top:14px;font-size:15.5px}
 
   /* ── Actions ── */
   .actions{padding:34px 24px 12px;display:grid;gap:12px}
@@ -88,8 +96,24 @@
   .infos a{color:var(--nuit);font-weight:600}
 
   @media (min-width:900px){
-    .hero img,.hero video{height:460px}
-    .hero-txt{padding:80px 40px 34px}
+    /* Sur grand écran, une bande large couperait presque toute la vidéo
+       verticale : on la met à droite dans son format d'origine, le texte
+       occupe la gauche. */
+    .hero{display:grid;grid-template-columns:1fr 380px;align-items:stretch;min-height:520px}
+    .hero img,.hero video{grid-column:2;grid-row:1;height:100%;min-height:520px;max-height:640px;
+      position:relative;inset:auto;object-position:center 58%}
+    .hero-txt{grid-column:1;grid-row:1;position:relative;inset:auto;display:flex;
+      flex-direction:column;justify-content:center;background:none;padding:48px 44px}
+    .hero h1{font-size:44px}
+    .hero .sous{font-size:18px;max-width:26ch}
+    .hero-plus{display:block;margin-top:32px}
+    .hero-prix{display:flex;gap:34px;flex-wrap:wrap;margin-bottom:26px}
+    .hero-prix strong{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff}
+    .hero-prix .we{color:var(--cuivre)}
+    .hero-prix span{display:block;font-size:13.5px;color:rgba(255,255,255,.78);
+      font-weight:600;margin-top:4px;max-width:20ch;line-height:1.4}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .hero-actions .btn{padding:14px 22px;font-size:15.5px}
     .sec,.piece,.infos,.actions{padding-left:40px;padding-right:40px}
     /* Le texte d'intro centré : à 1100px, aligné à gauche il déséquilibre */
     .sec{text-align:center;padding-top:56px;padding-bottom:48px}
@@ -117,6 +141,16 @@
       <div class="kicker">Soubré · Quartier Maracana</div>
       <h1>Résidence meublée Biagné</h1>
       <p class="sous">Des appartements entièrement meublés, à la nuitée comme au mois.</p>
+      <div class="hero-plus">
+        <div class="hero-prix">
+          <div><strong>15 000 F</strong><span>la nuit, du lundi au jeudi</span></div>
+          <div><strong class="we">20 000 F</strong><span>la nuit, du vendredi au dimanche</span></div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn b1" href="#reserver">📝 M'enregistrer en ligne</a>
+          <a class="btn b2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 WhatsApp</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -151,11 +185,14 @@
   </section>
 
   <section class="tarif">
-    <div class="prix">15 000 F <span>la nuit</span></div>
+    <div class="grille">
+      <div><div class="prix">15 000 F</div><div class="jours">la nuit<br>du lundi au jeudi</div></div>
+      <div><div class="prix prix-we">20 000 F</div><div class="jours">la nuit<br>du vendredi au dimanche</div></div>
+    </div>
     <p>Tarif dégressif pour les séjours d'une semaine ou plus.<br>Contactez-nous pour un devis.</p>
   </section>
 
-  <div class="actions">
+  <div class="actions" id="reserver">
     <a class="btn b1" href="./checkin.html">📝 M'enregistrer en ligne</a>
     <a class="btn b2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 Écrire sur WhatsApp</a>
     <a class="btn b3" href="tel:+2250716300000">📞 Appeler la réception</a>
@@ -166,7 +203,7 @@
     <div><b>Adresse</b><span>202, Soubré — quartier Maracana</span></div>
     <div><b>Horaires</b><span>Accueil 24h/24, 7j/7</span></div>
     <div><b>Téléphone</b><a href="tel:+2250716300000">07 16 30 00 00</a></div>
-    <div><b>Itinéraire</b><a href="https://www.google.com/maps/place/R%C3%A9sidence+meubl%C3%A9e+Biagn%C3%A9/@5.7801469,-6.5976597,17z" target="_blank" rel="noopener">Voir sur Google Maps</a></div>
+    <div><b>Itinéraire</b><a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.7801416,-6.5950848&amp;destination_place_id=ChIJ-nqhKrgxvA8RgVpnIP6-9XM" target="_blank" rel="noopener">Voir sur Google Maps</a></div>
   </section>
 
   <footer>
@@ -193,7 +230,10 @@
     });
   v.load();
   v.addEventListener('canplay', function(){
-    v.play().then(function(){ v.classList.add('on'); }).catch(function(){});
+    v.play().then(function(){
+      v.classList.add('on');
+      document.querySelector('.hero').classList.add('lecture');
+    }).catch(function(){});
   }, { once: true });
 })();
 </script>
