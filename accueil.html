@@ -29,18 +29,19 @@
     background:var(--sable);color:var(--encre);line-height:1.6;
     font-size:17px;-webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:840px;margin:0 auto;background:#fff;
+  .wrap{max-width:1100px;margin:0 auto;background:#fff;
     box-shadow:0 0 60px rgba(18,48,77,.08)}
 
   /* ── Ouverture ── */
   .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
-  .hero img{width:100%;height:340px;object-fit:cover;opacity:.5;display:block}
+  .hero img{width:100%;height:340px;object-fit:cover;opacity:.92;display:block}
   .hero video{position:absolute;inset:0;width:100%;height:340px;object-fit:cover;
     opacity:0;transition:opacity .8s ease}
-  .hero video.on{opacity:.5}
+  .hero video.on{opacity:.92}
   @media (prefers-reduced-motion:reduce){.hero video{display:none}}
-  .hero-txt{position:absolute;inset:auto 0 0 0;padding:26px 24px 24px;
-    background:linear-gradient(transparent,rgba(10,26,44,.92) 55%)}
+  .hero-txt{position:absolute;inset:auto 0 0 0;padding:60px 24px 24px;
+    background:linear-gradient(transparent,rgba(8,22,38,.55) 30%,rgba(8,22,38,.93) 75%)}
+  .hero-txt h1,.hero-txt .sous{text-shadow:0 2px 12px rgba(0,0,0,.55)}
   .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
     font-weight:700;color:var(--cuivre);margin-bottom:8px}
   .hero h1{font-size:clamp(28px,7vw,42px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
@@ -86,6 +87,22 @@
   .infos b{min-width:96px;color:var(--nuit);font-weight:700}
   .infos a{color:var(--nuit);font-weight:600}
 
+  @media (min-width:900px){
+    .hero img,.hero video{height:460px}
+    .hero-txt{padding:80px 40px 34px}
+    .sec,.piece,.infos,.actions{padding-left:40px;padding-right:40px}
+    /* Le texte d'intro centré : à 1100px, aligné à gauche il déséquilibre */
+    .sec{text-align:center;padding-top:56px;padding-bottom:48px}
+    .sec p{margin:0 auto;font-size:18px}
+    .infos{max-width:620px;margin:0 auto}
+    .tarif{padding:52px 40px}
+    /* Les trois pièces côte à côte plutôt qu'empilées */
+    .visite{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+    .visite .piece{border-top:none;border-left:1px solid var(--trait);padding:32px 24px}
+    .visite .piece:first-child{border-left:none}
+    .visite .piece img{aspect-ratio:4/3;object-fit:cover}
+    .actions{grid-template-columns:repeat(3,1fr);max-width:none}
+  }
   footer{background:var(--nuit);color:rgba(255,255,255,.62);
     padding:26px 24px;text-align:center;font-size:13.5px}
 </style>
@@ -115,7 +132,7 @@
     <p>Vous n'avez pas une chambre, vous avez un appartement : un salon à vous, une chambre climatisée et une cuisine où vous pouvez vraiment préparer vos repas. Le quartier est calme et central, à quelques minutes des commerces. L'accueil est assuré 24h/24, quelle que soit l'heure de votre arrivée.</p>
   </section>
 
-  <section>
+  <section class="visite">
     <div class="piece">
       <img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision">
       <h3>Le salon</h3>
