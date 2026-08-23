@@ -3,161 +3,314 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#1a3a5c">
-<title>Résidence Biagné – Enregistrement</title>
-<link rel="icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Enregistrement — Résidence meublée Biagné</title>
+<meta name="description" content="Remplissez votre fiche d'arrivée avant de vous présenter à la Résidence Biagné, à Soubré. Deux minutes, et votre chambre vous attend.">
+<meta name="theme-color" content="#0e2338">
+<link rel="icon" href="./icon-192.png">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--navy:#122642;--blue:#1a3a5c;--blue2:#2563a8;--sky:#38bdf8;--orange:#e07b1a;--orange2:#f59e2a;--amber:#fbbf24;--bg:#faf6f0;--card:#fff;--text:#1a2535;--muted:#6b7a92;--border:#e4ddd0;--ok:#16a34a;--err:#dc2626;--r:16px;--font-display:'Outfit',system-ui,sans-serif;--font-body:'Inter',system-ui,sans-serif}
-body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
-h1,h2,.ct,.confirm h2{font-family:var(--font-display)}
-:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
-@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
-.hidden{display:none!important}
-.header{background:linear-gradient(135deg,var(--navy) 0%,var(--blue2) 75%,var(--sky) 145%);color:#fff;padding:26px 16px 24px;text-align:center}
-.logo-wrap{position:relative;width:56px;height:56px;border-radius:14px;margin:0 auto 10px}
-.logo-wrap::before,.logo-wrap::after{content:'';position:absolute;inset:0;border-radius:inherit;border:2px solid var(--amber);opacity:0;animation:pulse-ring 2.6s cubic-bezier(.4,0,.2,1) infinite;pointer-events:none}
-.logo-wrap::after{animation-delay:1.3s;border-color:var(--orange2)}
-@keyframes pulse-ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.9);opacity:0}}
-.logo{width:100%;height:100%;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:inherit;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 3px 10px rgba(224,123,26,.4)}
-.logo img{width:100%;height:100%;object-fit:cover}
-.header h1{font-size:18px;font-weight:700}
-.header p{font-size:12px;opacity:.75;margin-top:4px}
-.page{padding:16px}
-.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(18,38,66,.06),0 6px 20px rgba(18,38,66,.05);animation:card-in .5s cubic-bezier(.16,1,.3,1) backwards}
-.card:nth-of-type(2){animation-delay:.08s}
-.card:nth-of-type(3){animation-delay:.16s}
-@keyframes card-in{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
-.ct{font-size:13px;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}
-.field input,.field select,.field textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;color:var(--text);background:#fafbfd;-webkit-appearance:none;appearance:none}
-.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue2);background:#fff}
-.field textarea{height:70px;resize:none}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.rs{color:var(--orange)}
-.pz{border:2px dashed var(--border);border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative}
-.pz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.pp{width:70px;height:70px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block;border:3px solid var(--blue2)}
-.btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 14px rgba(224,123,26,.4)}
-.btn-p:disabled{opacity:.5}
-.app-footer{text-align:center;padding:8px 16px 30px}
-.app-footer .ft-name{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--blue2)}
-.app-footer .ft-contact{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.2px}
-.ft-credit{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
-.ft-credit img{width:20px;height:20px;object-fit:contain}
-.ft-credit span{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.2px}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:12px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:999;white-space:nowrap;max-width:90vw}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.er{background:var(--err)}
-.confirm{text-align:center;padding:50px 24px}
-.confirm .ic{font-size:56px;margin-bottom:16px}
-.confirm h2{font-size:19px;margin-bottom:10px}
-.confirm p{font-size:14px;color:var(--muted);line-height:1.6}
-/* ══════════ LISIBILITÉ ══════════ */
-:root{--muted:#54627a}
-body{font-size:16px;max-width:560px}
-.header h1{font-size:20px}
-.header p{font-size:13px;opacity:.85}
-.ct{font-size:14.5px}
-.field label{font-size:13px;letter-spacing:.3px;color:#4a5870}
-.field input,.field select,.field textarea{font-size:16px;padding:13px 14px}
-.field textarea{height:80px}
-.confirm h2{font-size:21px}
-.confirm p{font-size:15px}
-.toast{font-size:15px}
-.app-footer .ft-contact{font-size:12px}
-.ft-credit span{font-size:11px}
-@media (min-width:900px){
-  body{max-width:620px}
-  .page{padding:24px}
-}
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --nuit:#0e2338;
+    --nuit2:#16375a;
+    --cuivre:#e08423;
+    --cuivre-clair:#f5a94e;
+    --sable:#faf7f2;
+    --encre:#131c27;
+    --gris:#5d6b7d;
+    --trait:rgba(14,35,56,.13);
+    --ombre:0 14px 40px rgba(14,35,56,.12);
+    --ok:#1f9d55;
+    --err:#c62f2f;
+  }
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+    background:var(--sable);color:var(--encre);line-height:1.6;font-size:17px;
+    -webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%}
+  .enveloppe{max-width:680px;margin:0 auto;background:#fff;min-height:100svh;
+    box-shadow:0 0 60px rgba(14,35,56,.09)}
+
+  /* ══ En-tête ══ */
+  .tete{position:relative;background:var(--nuit);color:#fff;padding:30px 24px 28px;
+    overflow:hidden;text-align:center}
+  .tete::after{content:'';position:absolute;inset:auto 0 0 0;height:3px;
+    background:linear-gradient(90deg,transparent,var(--cuivre),transparent)}
+  .grain{position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:52px 52px;animation:derive 30s linear infinite}
+  @keyframes derive{to{background-position:52px 52px}}
+  .tete > *{position:relative;z-index:1}
+  .tete img.logo{width:66px;border-radius:13px;margin:0 auto 14px;
+    border:1px solid rgba(224,132,35,.5);box-shadow:0 8px 24px rgba(0,0,0,.45)}
+  .tete h1{font-size:clamp(21px,4.6vw,27px);font-weight:800;letter-spacing:-.02em}
+  .tete p{margin-top:6px;color:rgba(255,255,255,.82);font-size:15px}
+
+  /* ══ Bandeau rassurant ══ */
+  .promesse{background:var(--nuit2);color:#fff;display:grid;grid-template-columns:repeat(3,1fr)}
+  .promesse div{padding:13px 8px;text-align:center;font-size:12.5px;font-weight:700;
+    border-right:1px solid rgba(255,255,255,.13);line-height:1.35}
+  .promesse div:last-child{border-right:0}
+  .promesse em{font-style:normal;display:block;font-size:17px;margin-bottom:3px}
+
+  /* ══ Progression ══ */
+  .jauge{position:sticky;top:0;z-index:40;height:4px;background:rgba(14,35,56,.1)}
+  .jauge i{display:block;height:100%;width:0;background:var(--cuivre);
+    transition:width .35s ease}
+
+  .page{padding:26px 22px 40px}
+  .intro{background:#fffaf2;border:1.5px solid rgba(224,132,35,.35);border-radius:14px;
+    padding:16px 18px;font-size:15px;color:#7a4a10;line-height:1.55;margin-bottom:22px}
+  .intro b{color:#5c360a}
+
+  /* ══ Cartes ══ */
+  .card{background:#fff;border:1px solid var(--trait);border-radius:16px;
+    padding:20px 20px 22px;margin-bottom:16px;box-shadow:var(--ombre);
+    opacity:0;transform:translateY(18px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.16,.9,.3,1)}
+  .card.vu{opacity:1;transform:none}
+  .ct{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:800;
+    color:var(--nuit);letter-spacing:-.01em;margin-bottom:16px;
+    padding-bottom:12px;border-bottom:2px solid var(--trait)}
+  .ct .pas{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--cuivre);
+    letter-spacing:.12em}
+
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:12.5px;font-weight:800;letter-spacing:.05em;
+    text-transform:uppercase;color:#4a5870;margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;font:inherit;font-size:16px;
+    padding:13px 14px;border:1.5px solid var(--trait);border-radius:11px;
+    background:#fcfcfd;color:var(--encre);transition:border-color .2s,box-shadow .2s,background .2s}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:0;
+    border-color:var(--cuivre);background:#fff;box-shadow:0 0 0 4px rgba(224,132,35,.15)}
+  .field textarea{height:84px;resize:vertical}
+  .field input[type=date]{padding-left:11px;padding-right:8px}
+  .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fr > .field{min-width:0}
+  @media(max-width:430px){.field input[type=date]{font-size:15px;padding-left:9px;padding-right:4px}}
+  .rs{color:var(--cuivre)}
+  .aide{font-size:13px;color:var(--gris);margin:-8px 0 14px;line-height:1.5}
+
+  details.plus{margin-top:4px}
+  details.plus > summary{list-style:none;cursor:pointer;font-size:14px;font-weight:800;
+    color:var(--nuit2);padding:10px 0 4px;display:flex;align-items:center;gap:7px}
+  details.plus > summary::-webkit-details-marker{display:none}
+  details.plus > summary::before{content:'▸';font-size:15px;transition:transform .18s}
+  details.plus[open] > summary::before{transform:rotate(90deg)}
+
+  /* Zones photo */
+  .pz{position:relative;border:2px dashed var(--trait);border-radius:14px;
+    padding:22px 14px;text-align:center;cursor:pointer;background:#fcfcfd;
+    transition:border-color .25s,background .25s}
+  .pz:hover{border-color:var(--cuivre);background:#fffaf2}
+  .pz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .pz img{max-width:150px;margin:0 auto;border-radius:11px}
+
+  /* Encadré départ prévu */
+  #departPrevuBox:empty{display:none}
+  #departPrevuBox{grid-column:1/-1;font-size:14px;color:#7c3d05;background:#fffbeb;
+    border:1.5px solid #fcd77f;border-radius:12px;padding:13px 15px;font-weight:600;
+    line-height:1.5;margin-top:2px}
+
+  /* ══ Bouton ══ */
+  .btn{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;
+    font:inherit;font-weight:800;font-size:17px;padding:17px 22px;border-radius:13px;
+    border:0;cursor:pointer;text-decoration:none;
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),box-shadow .16s,opacity .2s}
+  .btn:hover:not(:disabled){transform:translateY(-2px)}
+  .btn:focus-visible{outline:3px solid var(--cuivre);outline-offset:3px}
+  .btn:disabled{opacity:.65;cursor:default}
+  .btn-p{background:var(--cuivre);color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 10px 28px rgba(224,132,35,.34)}
+  .btn-p::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
+    transform:translateX(-130%);animation:balaye 5s ease-in-out infinite}
+  @keyframes balaye{0%,72%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+  .btn-p:disabled::after{animation:none}
+  .sous-btn{text-align:center;font-size:13px;color:var(--gris);margin-top:14px;line-height:1.5}
+
+  /* ══ Confirmation ══ */
+  .confirm{text-align:center;padding:56px 24px}
+  .confirm .ic{font-size:64px;margin-bottom:16px;animation:pop .6s cubic-bezier(.2,1.5,.4,1)}
+  @keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+  .confirm h2{font-size:clamp(24px,5.4vw,32px);font-weight:800;letter-spacing:-.025em;
+    margin-bottom:12px}
+  .confirm p{font-size:16.5px;color:var(--gris);line-height:1.65;max-width:44ch;margin:0 auto}
+  .b-wa{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    background:#25D366;color:#fff;font-weight:800;font-size:16.5px;text-decoration:none;
+    padding:16px 28px;border-radius:13px;box-shadow:0 10px 28px rgba(37,211,102,.34);
+    transition:transform .16s,box-shadow .16s}
+  .b-wa:hover{transform:translateY(-2px)}
+  .retour{display:inline-block;margin-top:26px;font-size:15px;color:var(--nuit2);
+    font-weight:700}
+
+  .hidden{display:none!important}
+
+  /* ══ Message flottant ══ */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120%);z-index:90;
+    background:var(--nuit);color:#fff;font-weight:700;font-size:15px;
+    padding:14px 22px;border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.3);
+    max-width:calc(100% - 40px);text-align:center;transition:transform .35s cubic-bezier(.16,.9,.3,1)}
+  .toast.show{transform:translate(-50%,0)}
+  .toast.ok{background:var(--ok)}
+  .toast.er{background:var(--err)}
+
+  footer{background:var(--nuit);color:rgba(255,255,255,.6);padding:26px 24px;
+    text-align:center;font-size:13px;line-height:1.7}
+  footer a{color:rgba(255,255,255,.85)}
+  footer .nom{color:#fff;font-weight:800;font-size:15px;margin-bottom:4px}
+
+  @media (prefers-reduced-motion:reduce){
+    .card{opacity:1;transform:none;transition:none}
+    .grain,.btn-p::after,.confirm .ic{animation:none}
+    .btn,.pz,.field input,.field select{transition:none}
+  }
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo-wrap"><div class="logo"><img src="icon-512.png" alt="Résidence Biagné"></div></div>
-  <h1>Résidence Biagné</h1>
-  <p>Enregistrement à votre arrivée</p>
-</div>
+<div class="enveloppe">
 
-<div class="page" id="formPage">
-  <div class="card">
-    <div class="ct">📷 Votre photo (optionnel)</div>
-    <div class="pz" id="photoZone">
-      <input type="file" id="photoInput" accept="image/*" capture="user" onchange="handlePhoto(this)">
-      <div id="photoDisplay"><div style="font-size:28px;margin-bottom:6px">🧑</div><div style="font-size:13px;color:var(--muted)">Appuyer pour prendre une photo</div></div>
-    </div>
+  <header class="tete">
+    <div class="grain" aria-hidden="true"></div>
+    <img class="logo" src="./logo-residence.jpg" alt="Résidence Biagné">
+    <h1>Votre fiche d'arrivée</h1>
+    <p>Deux minutes, et votre chambre vous attend</p>
+  </header>
+
+  <div class="promesse">
+    <div><em>⏱️</em>2 minutes</div>
+    <div><em>🔒</em>Données protégées</div>
+    <div><em>🕐</em>Accueil 24h/24</div>
   </div>
 
-  <div class="card">
-    <div class="ct">🪪 Vos informations</div>
-    <div class="field"><label>Nom complet <span class="rs">*</span></label><input type="text" id="f_nom" placeholder="Ex: Kouassi Jean-Pierre"></div>
-    <div class="fr">
-      <div class="field"><label>Sexe</label><select id="f_sexe"><option value="">—</option><option>Masculin</option><option>Féminin</option></select></div>
-      <div class="field"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
-    </div>
-    <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
-    <div class="fr">
-      <div class="field"><label>N° Pièce d'identité</label><input type="text" id="f_piece" placeholder="CNI / Passeport"></div>
-      <div class="field"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
-    </div>
-    <div class="fr">
-      <div class="field"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
-      <div class="field"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
-    </div>
-    <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
-  </div>
+  <div class="jauge" aria-hidden="true"><i id="jauge"></i></div>
 
-  <div class="card">
-    <div class="ct">💳 Paiement (optionnel)</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5">Vous pouvez payer un dépôt maintenant par Mobile Money, ou régler sur place à l'arrivée.</p>
-    <div class="field"><label>Mode de paiement</label><select id="f_pay" onchange="toggleQrBox()"><option value="">Je paierai sur place (espèces)</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
-    <div id="payQrBox" class="hidden">
-      <div style="text-align:center;margin:10px 0"><img id="payQrImg" style="max-width:170px;border-radius:8px" src=""></div>
-      <div class="pz" id="preuveZone" style="max-width:220px;margin:0 auto">
-        <input type="file" id="preuveInput" accept="image/*" onchange="chargerPreuve(this)">
-        <div id="preuveDisplay"><div style="font-size:28px;margin-bottom:6px">🧾</div><div style="font-size:12px;color:var(--muted)">Ajouter la preuve de paiement <span class="rs">*</span></div></div>
+  <div class="page" id="formPage">
+
+    <p class="intro">
+      <b>Pourquoi ce formulaire ?</b> Il remplace la paperasse à la réception : vous arrivez,
+      on vous remet la clé. Les champs marqués <span class="rs">*</span> suffisent — le reste
+      peut être complété sur place.
+    </p>
+
+    <div class="card">
+      <div class="ct"><span>🪪</span>Vos informations<span class="pas">Étape 1</span></div>
+      <div class="field"><label>Nom complet <span class="rs">*</span></label><input type="text" id="f_nom" placeholder="Ex: Kouassi Jean-Pierre"></div>
+      <div class="field"><label>Téléphone <span class="rs">*</span></label><input type="tel" id="f_tel" placeholder="0700 000 000" inputmode="numeric"></div>
+      <div class="fr">
+        <div class="field"><label>Sexe</label><select id="f_sexe"><option value="">—</option><option>Masculin</option><option>Féminin</option></select></div>
+        <div class="field"><label>N° Pièce d'identité</label><input type="text" id="f_piece" placeholder="CNI / Passeport"></div>
+      </div>
+      <details class="plus">
+        <summary>Autres informations (registre)</summary>
+        <div class="fr">
+          <div class="field"><label>Nationalité</label><input type="text" id="f_nationalite" placeholder="Ivoirien(ne)"></div>
+          <div class="field"><label>Date de naissance</label><input type="text" id="f_ddn" placeholder="JJ/MM/AAAA"></div>
+        </div>
+        <div class="fr">
+          <div class="field"><label>Lieu de naissance</label><input type="text" id="f_lieu" placeholder="Ville"></div>
+          <div class="field"><label>Profession</label><input type="text" id="f_prof" placeholder="Emploi"></div>
+        </div>
+        <div class="field"><label>Provenance (ville)</label><input type="text" id="f_prov" placeholder="Ex: Abidjan, Daloa…"></div>
+      </details>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span>🏨</span>Votre séjour<span class="pas">Étape 2</span></div>
+      <div class="fr">
+        <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" onchange="majDepartPrevu()"></div>
+        <div class="field"><label>Durée prévue <span class="rs">*</span></label><select id="f_dur" onchange="majDepartPrevu()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
+        <div id="departPrevuBox"></div>
+      </div>
+      <details class="plus">
+        <summary>Motif et remarques</summary>
+        <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
+        <div class="field"><label>Remarques (allergies, heure d'arrivée prévue…)</label><textarea id="f_obs"></textarea></div>
+      </details>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span>📷</span>Votre photo<span class="pas">Facultatif</span></div>
+      <p class="aide">Elle nous aide à vous reconnaître à l'accueil. Vous pouvez passer cette étape.</p>
+      <div class="pz" id="photoZone">
+        <input type="file" id="photoInput" accept="image/*" capture="user" onchange="handlePhoto(this)">
+        <div id="photoDisplay"><div style="font-size:30px;margin-bottom:6px">🧑</div><div style="font-size:13.5px;color:var(--gris)">Appuyer pour prendre une photo</div></div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="ct">🏨 Votre séjour</div>
-    <div class="fr">
-      <div class="field"><label>Date d'arrivée <span class="rs">*</span></label><input type="date" id="f_arr" onchange="majDepartPrevu()"></div>
-      <div class="field"><label>Durée prévue <span class="rs">*</span></label><select id="f_dur" onchange="majDepartPrevu()"><option value="">—</option><option>1 nuit</option><option>2 nuits</option><option>3 nuits</option><option>1 semaine</option><option>2 semaines</option><option>1 mois</option><option>Longue durée</option></select></div>
-    <div id="departPrevuBox" style="font-size:13.5px;color:#7c3d05;background:#fffbeb;border:1.5px solid #fcd77f;border-radius:10px;padding:11px 13px;font-weight:600;line-height:1.5"></div>
+    <div class="card">
+      <div class="ct"><span>💳</span>Paiement<span class="pas">Facultatif</span></div>
+      <p class="aide">Réglez sur place à l'arrivée, ou versez un dépôt maintenant par Mobile Money pour bloquer la chambre.</p>
+      <div class="field"><label>Mode de paiement</label><select id="f_pay" onchange="toggleQrBox()"><option value="">Je paierai sur place (espèces)</option><option>Mobile Money</option><option>Orange Money</option><option>Wave</option><option>Virement</option></select></div>
+      <div id="payQrBox" class="hidden">
+        <div style="text-align:center;margin:14px 0"><img id="payQrImg" style="max-width:180px;margin:0 auto;border-radius:11px" src=""></div>
+        <div class="pz" id="preuveZone" style="max-width:250px;margin:0 auto">
+          <input type="file" id="preuveInput" accept="image/*" onchange="chargerPreuve(this)">
+          <div id="preuveDisplay"><div style="font-size:30px;margin-bottom:6px">🧾</div><div style="font-size:13px;color:var(--gris)">Ajouter la preuve de paiement <span class="rs">*</span></div></div>
+        </div>
+      </div>
     </div>
-    <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
-    <div class="field"><label>Remarques (allergies, heure d'arrivée prévue…)</label><textarea id="f_obs"></textarea></div>
+
+    <button class="btn btn-p" id="btnEnvoyer" onclick="envoyer()">✅ Envoyer ma demande</button>
+    <p class="sous-btn">Un membre du personnel vous attribuera une chambre à votre arrivée.<br>
+      Aucun paiement n'est prélevé par ce formulaire.</p>
   </div>
 
-  <button class="btn btn-p" id="btnEnvoyer" onclick="envoyer()">✅ Envoyer ma demande</button>
-  <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:14px">Un membre du personnel vous attribuera une chambre à votre arrivée.</p>
-</div>
-
-<div class="page confirm hidden" id="confirmPage">
-  <div class="ic">✅</div>
-  <h2>Demande envoyée !</h2>
-  <p>Merci ! Votre demande a bien été transmise à la réception.<br>Présentez-vous à l'accueil, une chambre vous sera attribuée.</p>
-  <div id="waBox" class="hidden" style="margin-top:26px">
-    <p style="margin-bottom:14px">Pour être sûr que la réception vous voie arriver, prévenez-la aussi sur WhatsApp :</p>
-    <a id="waLink" href="#" target="_blank" rel="noopener" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;font-size:16px;text-decoration:none;padding:15px 26px;border-radius:12px">💬 Prévenir la réception sur WhatsApp</a>
+  <div class="page confirm hidden" id="confirmPage">
+    <div class="ic">✅</div>
+    <h2>C'est enregistré !</h2>
+    <p>Votre fiche est arrivée à la réception. Présentez-vous à l'accueil, votre chambre vous sera attribuée sur place.</p>
+    <div id="waBox" class="hidden" style="margin-top:30px">
+      <p style="margin-bottom:16px">Prévenez aussi la réception sur WhatsApp — c'est le plus sûr pour qu'on vous attende :</p>
+      <a id="waLink" class="b-wa" href="#" target="_blank" rel="noopener">💬 Prévenir la réception</a>
+    </div>
+    <a class="retour" href="./accueil.html">← Revenir à l'accueil</a>
   </div>
+
+  <div class="toast" id="toast"></div>
+
+  <footer>
+    <div class="nom">Résidence meublée Biagné</div>
+    📞 07 16 30 00 00 · 07 08 48 03 59<br>
+    Soubré, Côte d'Ivoire — <a href="./accueil.html">voir la résidence</a>
+  </footer>
+
 </div>
 
-<div class="toast" id="toast"></div>
+<script>
+// Révélation des cartes + jauge de progression
+(function(){
+  var doux = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cartes = document.querySelectorAll('#formPage .card');
+  if (!('IntersectionObserver' in window) || doux) {
+    cartes.forEach(function(c){ c.classList.add('vu'); });
+  } else {
+    var obs = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('vu'); obs.unobserve(e.target); }
+      });
+    }, { threshold: .12 });
+    cartes.forEach(function(c){ obs.observe(c); });
+  }
 
-<footer class="app-footer">
-  <div class="ft-name">Résidence Biagné</div>
-  <div class="ft-contact">📞 +225 07 16 30 00 00 · +225 07 08 48 03 59</div>
-  <div class="ft-credit"><img src="logo-it.png" alt="Biagné Service Informatique"><span>Conçu par Biagné Service Informatique</span></div>
-</footer>
+  // La jauge avance à mesure que les champs obligatoires sont remplis.
+  var jauge = document.getElementById('jauge');
+  var requis = ['f_nom','f_tel','f_arr','f_dur'];
+  function majJauge(){
+    var faits = requis.filter(function(id){
+      var e = document.getElementById(id);
+      return e && e.value.trim() !== '';
+    }).length;
+    jauge.style.width = Math.round(faits / requis.length * 100) + '%';
+  }
+  requis.forEach(function(id){
+    var e = document.getElementById(id);
+    if (e) { e.addEventListener('input', majJauge); e.addEventListener('change', majJauge); }
+  });
+  majJauge();
+})();
+</script>
 
 <script type="module">
 import * as configResidence from './firebase-config.js';
