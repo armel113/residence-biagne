@@ -155,6 +155,84 @@
     .visite .piece img{aspect-ratio:4/3;object-fit:cover}
     .actions{grid-template-columns:repeat(3,1fr);max-width:none}
   }
+  /* ═══ Animations enrichies ═══ */
+
+  /* 1. Le titre s'écrit mot par mot à l'ouverture */
+  .hero h1 .mot{display:inline-block;opacity:0;transform:translateY(22px);
+    animation:monte .75s cubic-bezier(.16,.9,.3,1) forwards}
+  @keyframes monte{to{opacity:1;transform:none}}
+
+  /* 2. Le trait doré se déroule sous le titre */
+  .hero h1::after{content:'';display:block;height:3px;width:0;margin-top:12px;border-radius:2px;
+    background:linear-gradient(90deg,var(--cuivre),transparent);
+    animation:trace 1.1s cubic-bezier(.16,.9,.3,1) .8s forwards}
+  @keyframes trace{to{width:130px}}
+
+  /* 3. Les prix montent en comptant */
+  .compte{display:inline-block}
+
+  /* 4. Les pastilles d'équipement arrivent une par une */
+  .equip div{opacity:0;animation:apparait .5s ease forwards}
+  .equip div:nth-child(1){animation-delay:1.0s}
+  .equip div:nth-child(2){animation-delay:1.12s}
+  .equip div:nth-child(3){animation-delay:1.24s}
+  .equip div:nth-child(4){animation-delay:1.36s}
+  @keyframes apparait{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* 5. Bouton principal : pulsation discrète pour attirer l'œil */
+  .b1{position:relative;overflow:hidden}
+  .b1::before{content:'';position:absolute;inset:0;
+    background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
+    transform:translateX(-130%);animation:balaye 5.5s ease-in-out infinite}
+  @keyframes balaye{0%,70%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+
+  /* 6. Les cartes de pièces basculent légèrement en apparaissant */
+  .piece .cadre{transform-origin:center bottom}
+  .anim{opacity:0;transform:translateY(34px) scale(.97)}
+  .anim.vu{opacity:1;transform:none}
+
+  /* 7. Le bloc tarif : le fond s'éclaire au moment où il apparaît */
+  .tarif{position:relative;overflow:hidden}
+  .tarif::before{content:'';position:absolute;inset:-40%;
+    background:radial-gradient(circle at 50% 50%,rgba(224,123,26,.2),transparent 60%);
+    opacity:0;transition:opacity 1.2s ease}
+  .tarif.vu::before{opacity:1}
+  .tarif > *{position:relative;z-index:1}
+
+  /* ═══ Animations de la page ═══ */
+  .anim{transition:opacity .8s ease,transform .8s cubic-bezier(.16,.9,.3,1)}
+  .piece:nth-child(2) .anim{transition-delay:.1s}
+  .piece:nth-child(3) .anim{transition-delay:.2s}
+
+  .cadre{overflow:hidden;border-radius:12px;position:relative}
+  .cadre img{display:block;transform:scale(1);
+    transition:transform .8s cubic-bezier(.2,.7,.3,1)}
+  .piece:hover .cadre img{transform:scale(1.06)}
+  /* Reflet qui balaie la photo de temps en temps */
+  .cadre::after{content:'';position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.2) 48%,transparent 58%);
+    transform:translateX(-120%);animation:reflet 9s ease-in-out infinite}
+  .piece:nth-child(2) .cadre::after{animation-delay:3s}
+  .piece:nth-child(3) .cadre::after{animation-delay:6s}
+  @keyframes reflet{0%,72%{transform:translateX(-120%)}88%,100%{transform:translateX(120%)}}
+
+  .btn{transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(8,22,38,.24)}
+  .b1:hover{box-shadow:0 12px 30px rgba(224,123,26,.42)}
+  .b2:hover{box-shadow:0 12px 30px rgba(37,211,102,.4)}
+  .equip div{transition:background .3s}
+  .equip div:hover{background:rgba(255,255,255,.07)}
+
+  @media (prefers-reduced-motion:reduce){
+    .anim{opacity:1;transform:none;transition:none}
+    .hero h1 .mot{opacity:1;transform:none;animation:none}
+    .hero h1::after{width:130px;animation:none}
+    .equip div{opacity:1;animation:none}
+    .b1::before{animation:none}
+    .cadre::after{animation:none}
+    .cadre img,.btn{transition:none}
+  }
+
   footer{background:var(--nuit);color:rgba(255,255,255,.62);
     padding:26px 24px;text-align:center;font-size:13.5px}
 </style>
@@ -169,7 +247,7 @@
     <div class="hero-txt">
       <img class="logo-res" src="./logo-residence.jpg" alt="Logo Résidence Biagné">
       <div class="kicker">Soubré · Quartier Maracana</div>
-      <h1>Résidence meublée Biagné</h1>
+      <h1><span class="mot" style="animation-delay:.10s">Résidence</span> <span class="mot" style="animation-delay:.22s">meublée</span> <span class="mot" style="animation-delay:.34s">Biagné</span></h1>
       <p class="sous">Des appartements entièrement meublés, à la nuitée comme au mois.</p>
       <div class="hero-plus">
         <div class="hero-prix">
@@ -191,33 +269,33 @@
     <div>🍳 Cuisine équipée</div>
   </div>
 
-  <section class="sec">
+  <section class="sec anim">
     <h2>L'essentiel</h2>
     <p>Vous n'avez pas une chambre, vous avez un appartement : un salon à vous, une chambre climatisée et une cuisine où vous pouvez vraiment préparer vos repas. Le quartier est calme et central, à quelques minutes des commerces. L'accueil est assuré 24h/24, quelle que soit l'heure de votre arrivée.</p>
   </section>
 
   <section class="visite">
     <div class="piece">
-      <img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision">
+      <div class="cadre anim"><img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision"></div>
       <h3>Le salon</h3>
       <p>Canapés, table basse et télévision connectée. De quoi recevoir ou simplement souffler après la route.</p>
     </div>
     <div class="piece">
-      <img src="./photo-chambre.jpg" alt="Chambre climatisée avec lit double">
+      <div class="cadre anim"><img src="./photo-chambre.jpg" alt="Chambre climatisée avec lit double"></div>
       <h3>La chambre</h3>
       <p>Lit double, climatisation et stores occultants. On dort au frais et dans le noir, même en pleine journée.</p>
     </div>
     <div class="piece">
-      <img src="./photo-cuisine.jpg" alt="Cuisine équipée avec évier, plan de travail et bouilloire">
+      <div class="cadre anim"><img src="./photo-cuisine.jpg" alt="Cuisine équipée avec évier, plan de travail et bouilloire"></div>
       <h3>La cuisine</h3>
       <p>Plan de travail, évier, réfrigérateur et ustensiles. Pour les longs séjours, ça change tout.</p>
     </div>
   </section>
 
-  <section class="tarif">
+  <section class="tarif anim">
     <div class="grille">
-      <div><div class="prix">15 000 F</div><div class="jours">la nuit<br>du lundi au jeudi</div></div>
-      <div><div class="prix prix-we">20 000 F</div><div class="jours">la nuit<br>du vendredi au dimanche</div></div>
+      <div><div class="prix"><span class="compte" data-vers="15000">0</span> F</div><div class="jours">la nuit<br>du lundi au jeudi</div></div>
+      <div><div class="prix prix-we"><span class="compte" data-vers="20000">0</span> F</div><div class="jours">la nuit<br>du vendredi au dimanche</div></div>
     </div>
     <p>Tarif dégressif pour les séjours d'une semaine ou plus.<br>Contactez-nous pour un devis.</p>
   </section>
@@ -242,6 +320,54 @@
   </footer>
 
 </div>
+<script>
+// Les prix montent de 0 jusqu'à leur valeur quand le bloc apparaît.
+function lancerCompteurs(bloc){
+  bloc.querySelectorAll('.compte').forEach(function(el){
+    if (el.dataset.fait) return;
+    el.dataset.fait = '1';
+    var cible = Number(el.dataset.vers) || 0, debut = null, duree = 1100;
+    function pas(t){
+      if (!debut) debut = t;
+      var p = Math.min((t - debut) / duree, 1);
+      // Départ rapide puis ralentissement, plus agréable qu'une montée linéaire
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(cible * e).toLocaleString('fr-FR');
+      if (p < 1) requestAnimationFrame(pas);
+    }
+    requestAnimationFrame(pas);
+  });
+}
+
+// Révélation progressive : chaque bloc apparaît quand il entre à l'écran.
+(function(){
+  var blocs = document.querySelectorAll('.anim');
+  if (!('IntersectionObserver' in window)) {
+    blocs.forEach(function(b){ b.classList.add('vu'); });
+    return;
+  }
+  var obs = new IntersectionObserver(function(entrees){
+    entrees.forEach(function(e){
+      if (e.isIntersecting) {
+        e.target.classList.add('vu');
+        lancerCompteurs(e.target);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: .15 });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    blocs.forEach(function(b){
+      b.classList.add('vu');
+      b.querySelectorAll('.compte').forEach(function(el){
+        el.dataset.fait = '1';
+        el.textContent = Number(el.dataset.vers).toLocaleString('fr-FR');
+      });
+    });
+    return;
+  }
+  blocs.forEach(function(b){ obs.observe(b); });
+})();
+</script>
 <script>
 // La vidéo ne se charge que si la connexion le permet : sur un réseau lent
 // ou en mode économie de données, la photo suffit.
