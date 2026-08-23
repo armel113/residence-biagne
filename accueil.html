@@ -35,6 +35,10 @@
   /* ── Ouverture ── */
   .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
   .hero img{width:100%;height:340px;object-fit:cover;opacity:.5;display:block}
+  .hero video{position:absolute;inset:0;width:100%;height:340px;object-fit:cover;
+    opacity:0;transition:opacity .8s ease}
+  .hero video.on{opacity:.5}
+  @media (prefers-reduced-motion:reduce){.hero video{display:none}}
   .hero-txt{position:absolute;inset:auto 0 0 0;padding:26px 24px 24px;
     background:linear-gradient(transparent,rgba(10,26,44,.92) 55%)}
   .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
@@ -90,7 +94,8 @@
 <div class="wrap">
 
   <header class="hero">
-    <img src="./photo-chambre.jpg" alt="Chambre climatisée de la Résidence Biagné">
+    <img src="./photo-chambre.jpg" alt="Chambre climatisée de la Résidence Biagné" id="heroImg">
+    <video id="heroVid" muted loop playsinline preload="none" poster="./photo-chambre.jpg" aria-hidden="true"></video>
     <div class="hero-txt">
       <div class="kicker">Soubré · Quartier Maracana</div>
       <h1>Résidence meublée Biagné</h1>
@@ -153,5 +158,27 @@
   </footer>
 
 </div>
+<script>
+// La vidéo ne se charge que si la connexion le permet : sur un réseau lent
+// ou en mode économie de données, la photo suffit.
+(function(){
+  var v = document.getElementById('heroVid');
+  if (!v) return;
+  var c = navigator.connection || {};
+  var lent = c.saveData === true || /(^|-)2g$/.test(c.effectiveType || '');
+  if (lent) return;
+  // Deux formats : WebM pour Chrome et Android, MP4 pour iPhone et Safari.
+  [['./video-residence.webm','video/webm'], ['./video-residence.mp4','video/mp4']]
+    .forEach(function(f){
+      var src = document.createElement('source');
+      src.src = f[0]; src.type = f[1];
+      v.appendChild(src);
+    });
+  v.load();
+  v.addEventListener('canplay', function(){
+    v.play().then(function(){ v.classList.add('on'); }).catch(function(){});
+  }, { once: true });
+})();
+</script>
 </body>
 </html>
