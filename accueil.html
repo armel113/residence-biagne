@@ -3,394 +3,441 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Résidence meublée Biagné — Appartements meublés à Soubré</title>
-<meta name="description" content="Appartements entièrement meublés à Soubré : salon, chambre climatisée, cuisine équipée, WiFi illimité. À la nuitée comme au mois. Accueil 24h/24.">
-<meta name="theme-color" content="#1a3a5c">
+<title>Résidence meublée Biagné — Appartements meublés à Soubré dès 15 000 F</title>
+<meta name="description" content="Appartement entier meublé à Soubré : salon, chambre climatisée, cuisine équipée, WiFi illimité. Dès 15 000 F la nuit. Accueil 24h/24, enregistrement en ligne.">
+<meta name="theme-color" content="#0e2338">
 <link rel="icon" href="./icon-192.png">
 <meta property="og:title" content="Résidence meublée Biagné — Soubré">
-<meta property="og:description" content="Appartements entièrement meublés : salon, chambre climatisée, cuisine équipée, WiFi illimité. Accueil 24h/24.">
+<meta property="og:description" content="Un appartement entier, pas une chambre. Salon, chambre climatisée, cuisine équipée. Dès 15 000 F la nuit.">
 <meta property="og:image" content="./photo-chambre.jpg">
 <meta property="og:type" content="website">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
-    --nuit:#12304d;        /* bleu profond de la marque */
-    --nuit-clair:#1f4a75;
-    --cuivre:#e07b1a;      /* orange de l'enseigne */
-    --sable:#f7f4ee;
-    --encre:#16202c;
-    --gris:#5a6a7e;
-    --trait:rgba(18,48,77,.12);
+    --nuit:#0e2338;
+    --nuit2:#16375a;
+    --cuivre:#e08423;
+    --cuivre-clair:#f5a94e;
+    --sable:#faf7f2;
+    --encre:#131c27;
+    --gris:#5d6b7d;
+    --trait:rgba(14,35,56,.1);
+    --ombre:0 18px 50px rgba(14,35,56,.14);
   }
-  html{scroll-behavior:smooth}
-  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-  body{
-    font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
-    background:var(--sable);color:var(--encre);line-height:1.6;
-    font-size:17px;-webkit-font-smoothing:antialiased;
-  }
-  .wrap{max-width:1100px;margin:0 auto;background:#fff;
-    box-shadow:0 0 60px rgba(18,48,77,.08)}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;
+    background:var(--sable);color:var(--encre);line-height:1.62;font-size:17px;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img,video{display:block;max-width:100%}
+  a{color:inherit}
 
-  /* ── Ouverture ── */
-  .hero{position:relative;background:var(--nuit);color:#fff;overflow:hidden}
-  /* Décor du panneau bleu : halo cuivré qui respire et fine trame qui dérive.
-     Uniquement du CSS — aucun fichier supplémentaire à charger. */
-  .deco{position:absolute;inset:0;z-index:0;pointer-events:none;display:none}
-  .deco::before{content:'';position:absolute;inset:-25%;
-    background:radial-gradient(circle at 28% 34%,rgba(224,123,26,.26),transparent 56%);
-    animation:souffle 11s ease-in-out infinite}
-  .deco::after{content:'';position:absolute;inset:0;opacity:.55;
-    background-image:
-      linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
-    background-size:54px 54px;
-    animation:glisse 30s linear infinite}
-  @keyframes souffle{0%,100%{opacity:.5}50%{opacity:1}}
-  @keyframes glisse{to{background-position:54px 54px}}
-  @keyframes leve{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  .logo-res{display:none}
-  @media (prefers-reduced-motion:reduce){
-    .deco::before,.deco::after,.logo-res{animation:none}
-  }
-  .hero img:not(.logo-res){width:100%;height:74vh;min-height:420px;max-height:620px;object-fit:cover;object-position:center 62%;opacity:1;display:block;transition:opacity .8s}
-  .hero.lecture img:not(.logo-res){opacity:0}
-  .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;
-    opacity:0;transition:opacity .8s ease}
-  .hero video.on{opacity:1}
-  @media (prefers-reduced-motion:reduce){.hero video{display:none}}
-  /* Texte en haut : le bas de l'image reste dégagé, c'est là que se
-     trouvent les meubles qu'on veut montrer. */
-  .hero-txt{position:absolute;inset:0 0 auto 0;padding:22px 24px 70px;
-    background:linear-gradient(rgba(8,22,38,.92) 25%,rgba(8,22,38,.6) 62%,transparent)}
-  .hero-txt h1,.hero-txt .sous{text-shadow:0 2px 12px rgba(0,0,0,.55)}
-  .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;
-    font-weight:700;color:var(--cuivre);margin-bottom:8px}
-  .hero h1{font-size:clamp(28px,7vw,42px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
-  .hero .sous{margin-top:9px;font-size:16px;color:rgba(255,255,255,.9);max-width:30ch}
-  .hero-plus{display:none}
+  /* ══════════ BARRE FIXE EN HAUT ══════════ */
+  .barre{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;
+    justify-content:space-between;gap:14px;padding:10px 18px;
+    transform:translateY(-100%);transition:transform .45s cubic-bezier(.16,.9,.3,1),
+      background .45s,box-shadow .45s}
+  .barre.on{transform:none;background:rgba(14,35,56,.94);backdrop-filter:blur(10px);
+    box-shadow:0 6px 26px rgba(0,0,0,.28)}
+  .barre-marque{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;
+    font-size:15.5px;letter-spacing:-.01em;text-decoration:none}
+  .barre-marque img{width:34px;height:34px;object-fit:cover;border-radius:8px;
+    border:1px solid rgba(224,132,35,.45)}
+  .barre-cta{background:var(--cuivre);color:#fff;text-decoration:none;font-weight:800;
+    font-size:14.5px;padding:10px 18px;border-radius:9px;white-space:nowrap;
+    transition:transform .15s,box-shadow .15s}
+  .barre-cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(224,132,35,.45)}
+  @media(max-width:560px){.barre-marque span{display:none}}
 
-  /* ── Bandeau équipements ── */
-  .equip{display:flex;flex-wrap:wrap;gap:0;background:var(--nuit-clair);color:#fff}
-  .equip div{flex:1 1 50%;padding:15px 18px;font-size:14.5px;font-weight:600;
-    border-top:1px solid rgba(255,255,255,.13);border-right:1px solid rgba(255,255,255,.13)}
-  @media(min-width:640px){.equip div{flex:1 1 25%}}
+  /* ══════════ OUVERTURE PLEIN ÉCRAN ══════════ */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;
+    overflow:hidden;background:var(--nuit)}
+  .hero-media{position:absolute;inset:0;z-index:0}
+  .hero-media img,.hero-media video{width:100%;height:100%;object-fit:cover;
+    object-position:center 55%}
+  .hero-media img{transition:opacity 1s ease}
+  .hero-media video{position:absolute;inset:0;opacity:0;transition:opacity 1s ease}
+  .hero-media video.on{opacity:1}
+  .hero-media.lecture img{opacity:0}
+  /* Voile : léger en haut pour voir la pièce, sombre en bas pour le texte */
+  .voile{position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,rgba(14,35,56,.62) 0%,rgba(14,35,56,.15) 32%,
+      rgba(10,26,42,.72) 72%,rgba(8,20,34,.96) 100%)}
+  .grain{position:absolute;inset:0;z-index:1;opacity:.5;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:62px 62px;animation:derive 34s linear infinite}
+  @keyframes derive{to{background-position:62px 62px}}
 
-  .sec{padding:44px 24px}
-  .sec h2{font-size:13px;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--cuivre);font-weight:800;margin-bottom:18px}
-  .sec p{color:var(--gris);max-width:60ch}
-
-  /* ── La visite : une pièce, une photo ── */
-  .piece{border-top:1px solid var(--trait);padding:30px 24px}
-  .piece:first-of-type{border-top:none}
-  .piece img{width:100%;border-radius:12px;display:block;background:var(--sable)}
-  .piece h3{font-size:22px;font-weight:800;margin:18px 0 6px;letter-spacing:-.01em}
-  .piece p{color:var(--gris);font-size:16px}
-
-  /* ── Tarif ── */
-  .tarif{background:var(--nuit);color:#fff;padding:40px 24px;text-align:center}
-  .prix{font-size:clamp(38px,10vw,54px);font-weight:800;letter-spacing:-.03em;line-height:1}
-  .prix span{font-size:19px;font-weight:600;opacity:.75;letter-spacing:0}
-  .grille{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
-  .grille .prix{font-size:clamp(26px,7vw,40px)}
-  .prix-we{color:var(--cuivre)}
-  .jours{font-size:14px;color:rgba(255,255,255,.82);margin-top:8px;line-height:1.45;font-weight:600}
-  .tarif p{color:rgba(255,255,255,.82);margin-top:14px;font-size:15.5px}
-
-  /* ── Actions ── */
-  .actions{padding:34px 24px 12px;display:grid;gap:12px}
-  .btn{display:block;text-align:center;text-decoration:none;font-weight:800;
-    font-size:17px;padding:17px 20px;border-radius:12px;transition:transform .12s}
-  .btn:active{transform:scale(.985)}
-  .btn:focus-visible{outline:3px solid var(--cuivre);outline-offset:3px}
-  .b1{background:var(--cuivre);color:#fff;box-shadow:0 6px 18px rgba(224,123,26,.3)}
-  .b2{background:#25D366;color:#fff}
-  .b3{background:#fff;color:var(--nuit);border:2px solid var(--nuit)}
-  .note{padding:0 24px 34px;font-size:14px;color:var(--gris);text-align:center}
-
-  .infos{border-top:1px solid var(--trait);padding:30px 24px;font-size:16px}
-  .infos div{display:flex;gap:12px;padding:9px 0;align-items:flex-start}
-  .infos b{min-width:96px;color:var(--nuit);font-weight:700}
-  .infos a{color:var(--nuit);font-weight:600}
-
-  @media (min-width:900px){
-    /* Sur grand écran, une bande large couperait presque toute la vidéo
-       verticale : on la met à droite dans son format d'origine, le texte
-       occupe la gauche. */
-    /* Hauteur fixe : le texte à gauche, la vidéo verticale à droite.
-       Plus simple et plus sûr qu'une grille dont la hauteur dépend du contenu. */
-    .hero{display:block;position:relative;height:640px}
-    .hero img:not(.logo-res),.hero video{position:absolute;top:0;right:0;bottom:0;left:auto;
-      width:400px;height:640px;min-height:0;max-height:none;object-position:center 58%}
-    .hero-txt{position:absolute;top:0;left:0;bottom:0;right:400px;display:flex;
-      flex-direction:column;justify-content:center;background:none;padding:40px 44px;
-      overflow:hidden}
-    .hero h1{font-size:44px}
-    .hero .sous{font-size:18px;max-width:26ch}
-    .deco{display:block}
-    .hero img.logo-res{display:block;position:static;height:auto;width:98px;border-radius:14px;margin-bottom:20px;
-      border:1px solid rgba(224,123,26,.45);box-shadow:0 8px 26px rgba(0,0,0,.5);
-      animation:leve 7s ease-in-out infinite}
-    .hero-txt{z-index:2}
-    .hero-actions .btn{box-shadow:0 6px 20px rgba(0,0,0,.3)}
-    .hero-plus{display:block;margin-top:32px}
-    .hero-prix{display:flex;gap:34px;flex-wrap:wrap;margin-bottom:26px}
-    .hero-prix strong{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em;color:#fff}
-    .hero-prix .we{color:var(--cuivre)}
-    .hero-prix span{display:block;font-size:13.5px;color:rgba(255,255,255,.78);
-      font-weight:600;margin-top:4px;max-width:20ch;line-height:1.4}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-    .hero-actions .btn{padding:14px 22px;font-size:15.5px}
-    .sec,.piece,.infos,.actions{padding-left:40px;padding-right:40px}
-    /* Le texte d'intro centré : à 1100px, aligné à gauche il déséquilibre */
-    .sec{text-align:center;padding-top:56px;padding-bottom:48px}
-    .sec p{margin:0 auto;font-size:18px}
-    .infos{max-width:620px;margin:0 auto}
-    .tarif{padding:52px 40px}
-    /* Les trois pièces côte à côte plutôt qu'empilées */
-    .visite{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-    .visite .piece{border-top:none;border-left:1px solid var(--trait);padding:32px 24px}
-    .visite .piece:first-child{border-left:none}
-    .visite .piece img{aspect-ratio:4/3;object-fit:cover}
-    .actions{grid-template-columns:repeat(3,1fr);max-width:none}
-  }
-  /* ═══ Animations enrichies ═══ */
-
-  /* 1. Le titre s'écrit mot par mot à l'ouverture */
-  .hero h1 .mot{display:inline-block;opacity:0;transform:translateY(22px);
-    animation:monte .75s cubic-bezier(.16,.9,.3,1) forwards}
+  .hero-contenu{position:relative;z-index:2;width:100%;max-width:1180px;margin:0 auto;
+    padding:0 24px 44px;color:#fff}
+  .logo-h{width:78px;border-radius:14px;margin-bottom:20px;
+    border:1px solid rgba(224,132,35,.5);box-shadow:0 10px 30px rgba(0,0,0,.5);
+    animation:leve 7s ease-in-out infinite}
+  @keyframes leve{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .lieu{font-size:12.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:800;
+    color:var(--cuivre-clair);margin-bottom:10px}
+  .hero h1{font-size:clamp(32px,7.6vw,62px);line-height:1.04;font-weight:800;
+    letter-spacing:-.035em;text-shadow:0 4px 30px rgba(0,0,0,.5);max-width:15ch}
+  .hero h1 .mot{display:inline-block;opacity:0;transform:translateY(26px);
+    animation:monte .8s cubic-bezier(.16,.9,.3,1) forwards}
   @keyframes monte{to{opacity:1;transform:none}}
+  .accroche{margin-top:16px;font-size:clamp(16.5px,2.2vw,20px);color:rgba(255,255,255,.94);
+    max-width:36ch;text-shadow:0 2px 16px rgba(0,0,0,.5);
+    opacity:0;animation:monte .8s cubic-bezier(.16,.9,.3,1) .5s forwards}
+  .accroche b{color:var(--cuivre-clair);font-weight:800}
 
-  /* 2. Le trait doré se déroule sous le titre */
-  .hero h1::after{content:'';display:block;height:3px;width:0;margin-top:12px;border-radius:2px;
-    background:linear-gradient(90deg,var(--cuivre),transparent);
-    animation:trace 1.1s cubic-bezier(.16,.9,.3,1) .8s forwards}
-  @keyframes trace{to{width:130px}}
+  /* Carte de réservation posée sur l'image */
+  .carte{margin-top:26px;background:rgba(255,255,255,.97);color:var(--encre);
+    border-radius:16px;padding:20px 22px;max-width:560px;box-shadow:var(--ombre);
+    opacity:0;transform:translateY(24px);
+    animation:monte .8s cubic-bezier(.16,.9,.3,1) .75s forwards}
+  .carte-prix{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
+  .carte-prix > div{flex:1 1 150px}
+  .montant{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1;
+    font-variant-numeric:tabular-nums}
+  .montant.we{color:var(--cuivre)}
+  .jours{font-size:13px;color:var(--gris);font-weight:700;margin-top:6px;line-height:1.35}
+  .carte-actions{display:grid;gap:10px}
+  @media(min-width:460px){.carte-actions{grid-template-columns:1fr auto}}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+    font-weight:800;font-size:16px;padding:15px 22px;border-radius:11px;border:0;cursor:pointer;
+    transition:transform .16s cubic-bezier(.2,.7,.3,1),box-shadow .16s;white-space:nowrap}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:focus-visible{outline:3px solid var(--cuivre);outline-offset:3px}
+  .b-or{background:var(--cuivre);color:#fff;position:relative;overflow:hidden;
+    box-shadow:0 8px 24px rgba(224,132,35,.34)}
+  .b-or::after{content:'';position:absolute;inset:0;
+    background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.4) 50%,transparent 60%);
+    transform:translateX(-130%);animation:balaye 5s ease-in-out infinite}
+  @keyframes balaye{0%,72%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+  .b-wa{background:#25D366;color:#fff;box-shadow:0 8px 24px rgba(37,211,102,.3)}
+  .b-clair{background:#fff;color:var(--nuit);border:2px solid var(--nuit)}
 
-  /* 3. Les prix montent en comptant */
-  .compte{display:inline-block}
+  .fleche{position:absolute;left:50%;bottom:12px;z-index:2;transform:translateX(-50%);
+    color:rgba(255,255,255,.65);font-size:24px;animation:sautille 2.4s ease-in-out infinite}
+  @keyframes sautille{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,8px)}}
 
-  /* 4. Les pastilles d'équipement arrivent une par une */
-  .equip div{opacity:0;animation:apparait .5s ease forwards}
-  .equip div:nth-child(1){animation-delay:1.0s}
-  .equip div:nth-child(2){animation-delay:1.12s}
-  .equip div:nth-child(3){animation-delay:1.24s}
-  .equip div:nth-child(4){animation-delay:1.36s}
-  @keyframes apparait{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  /* ══════════ BANDEAU DE CONFIANCE ══════════ */
+  .atouts{background:var(--nuit2);color:#fff;display:grid;grid-template-columns:1fr 1fr;
+    border-top:3px solid var(--cuivre)}
+  @media(min-width:760px){.atouts{grid-template-columns:repeat(4,1fr)}}
+  .atouts div{padding:20px 18px;font-size:15px;font-weight:700;display:flex;align-items:center;
+    gap:10px;border-right:1px solid rgba(255,255,255,.12);
+    border-bottom:1px solid rgba(255,255,255,.12);
+    transition:background .3s;opacity:0;animation:apparait .55s ease forwards}
+  .atouts div:hover{background:rgba(255,255,255,.07)}
+  .atouts div:nth-child(1){animation-delay:.05s}
+  .atouts div:nth-child(2){animation-delay:.15s}
+  .atouts div:nth-child(3){animation-delay:.25s}
+  .atouts div:nth-child(4){animation-delay:.35s}
+  @keyframes apparait{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .atouts em{font-style:normal;font-size:21px}
 
-  /* 5. Bouton principal : pulsation discrète pour attirer l'œil */
-  .b1{position:relative;overflow:hidden}
-  .b1::before{content:'';position:absolute;inset:0;
-    background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);
-    transform:translateX(-130%);animation:balaye 5.5s ease-in-out infinite}
-  @keyframes balaye{0%,70%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+  /* ══════════ SECTIONS ══════════ */
+  .zone{max-width:1180px;margin:0 auto;padding:74px 24px}
+  .oeil{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;font-weight:800;
+    color:var(--cuivre);margin-bottom:10px}
+  .titre{font-size:clamp(26px,4.4vw,40px);font-weight:800;letter-spacing:-.03em;
+    line-height:1.14;margin-bottom:16px}
+  .chapo{color:var(--gris);font-size:clamp(16.5px,1.9vw,19px);max-width:60ch}
 
-  /* 6. Les cartes de pièces basculent légèrement en apparaissant */
-  .piece .cadre{transform-origin:center bottom}
-  .anim{opacity:0;transform:translateY(34px) scale(.97)}
-  .anim.vu{opacity:1;transform:none}
+  .argument{background:#fff;border-radius:20px;padding:clamp(28px,4vw,48px);
+    box-shadow:var(--ombre);text-align:center;position:relative;overflow:hidden}
+  .argument::before{content:'';position:absolute;inset:auto auto -40% -20%;width:60%;height:80%;
+    background:radial-gradient(circle,rgba(224,132,35,.12),transparent 65%)}
+  .argument > *{position:relative;z-index:1}
+  .argument .titre{max-width:22ch;margin:0 auto 16px}
+  .argument .chapo{margin:0 auto}
 
-  /* 7. Le bloc tarif : le fond s'éclaire au moment où il apparaît */
-  .tarif{position:relative;overflow:hidden}
-  .tarif::before{content:'';position:absolute;inset:-40%;
-    background:radial-gradient(circle at 50% 50%,rgba(224,123,26,.2),transparent 60%);
-    opacity:0;transition:opacity 1.2s ease}
-  .tarif.vu::before{opacity:1}
-  .tarif > *{position:relative;z-index:1}
-
-  /* ═══ Animations de la page ═══ */
-  .anim{transition:opacity .8s ease,transform .8s cubic-bezier(.16,.9,.3,1)}
-  .piece:nth-child(2) .anim{transition-delay:.1s}
-  .piece:nth-child(3) .anim{transition-delay:.2s}
-
-  .cadre{overflow:hidden;border-radius:12px;position:relative}
-  .cadre img{display:block;transform:scale(1);
-    transition:transform .8s cubic-bezier(.2,.7,.3,1)}
-  .piece:hover .cadre img{transform:scale(1.06)}
-  /* Reflet qui balaie la photo de temps en temps */
+  /* Pièces */
+  .pieces{display:grid;gap:18px;margin-top:34px}
+  @media(min-width:820px){.pieces{grid-template-columns:repeat(3,1fr);gap:22px}}
+  .piece{background:#fff;border-radius:18px;overflow:hidden;box-shadow:var(--ombre);
+    transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .4s,opacity .85s ease}
+  .piece:hover{transform:translateY(-6px);box-shadow:0 26px 60px rgba(14,35,56,.2)}
+  .cadre{position:relative;overflow:hidden;aspect-ratio:4/3;background:#e6e9ee}
+  .cadre img{width:100%;height:100%;object-fit:cover;
+    transform:scale(1.01);transition:transform .9s cubic-bezier(.2,.7,.3,1)}
+  .piece:hover .cadre img{transform:scale(1.09)}
   .cadre::after{content:'';position:absolute;inset:0;pointer-events:none;
-    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.2) 48%,transparent 58%);
-    transform:translateX(-120%);animation:reflet 9s ease-in-out infinite}
-  .piece:nth-child(2) .cadre::after{animation-delay:3s}
-  .piece:nth-child(3) .cadre::after{animation-delay:6s}
-  @keyframes reflet{0%,72%{transform:translateX(-120%)}88%,100%{transform:translateX(120%)}}
+    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.24) 48%,transparent 58%);
+    transform:translateX(-130%);animation:balaye 8s ease-in-out infinite}
+  .piece:nth-child(2) .cadre::after{animation-delay:2.6s}
+  .piece:nth-child(3) .cadre::after{animation-delay:5.2s}
+  .etiquette{position:absolute;left:14px;bottom:14px;z-index:2;background:rgba(14,35,56,.9);
+    color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    padding:7px 13px;border-radius:8px}
+  .piece-txt{padding:20px 22px 24px}
+  .piece-txt h3{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
+  .piece-txt p{color:var(--gris);font-size:15.5px}
 
-  .btn{transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s}
-  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(8,22,38,.24)}
-  .b1:hover{box-shadow:0 12px 30px rgba(224,123,26,.42)}
-  .b2:hover{box-shadow:0 12px 30px rgba(37,211,102,.4)}
-  .equip div{transition:background .3s}
-  .equip div:hover{background:rgba(255,255,255,.07)}
+  /* Tarifs */
+  .tarifs{background:var(--nuit);color:#fff;position:relative;overflow:hidden}
+  .tarifs::before{content:'';position:absolute;inset:-30%;
+    background:radial-gradient(circle at 30% 40%,rgba(224,132,35,.2),transparent 58%);
+    opacity:0;transition:opacity 1.3s ease}
+  .tarifs.vu::before{opacity:1}
+  .tarifs .zone{position:relative;z-index:1;text-align:center}
+  .tarifs .titre{color:#fff}
+  .grille-prix{display:grid;gap:16px;margin:30px auto 0;max-width:760px}
+  @media(min-width:620px){.grille-prix{grid-template-columns:1fr 1fr}}
+  .prix-carte{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+    border-radius:16px;padding:26px 22px;transition:transform .3s,background .3s}
+  .prix-carte:hover{transform:translateY(-4px);background:rgba(255,255,255,.11)}
+  .prix-carte.mise{border-color:rgba(224,132,35,.6);background:rgba(224,132,35,.1)}
+  .prix-carte .montant{color:#fff;font-size:clamp(32px,6vw,44px)}
+  .prix-carte.mise .montant{color:var(--cuivre-clair)}
+  .prix-carte .jours{color:rgba(255,255,255,.78);font-size:14.5px}
+  .note-prix{margin-top:24px;color:rgba(255,255,255,.8);font-size:15.5px}
+
+  /* Contact */
+  .infos{display:grid;gap:0;max-width:620px;margin:0 auto;font-size:16.5px}
+  .infos div{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--trait);
+    align-items:flex-start}
+  .infos b{min-width:110px;color:var(--nuit);font-weight:800}
+  .infos a{font-weight:700;color:var(--nuit)}
+  .final{display:grid;gap:12px;max-width:520px;margin:34px auto 0}
+
+  footer{background:var(--nuit);color:rgba(255,255,255,.6);padding:32px 24px 96px;
+    text-align:center;font-size:13.5px;line-height:1.7}
+  footer a{color:rgba(255,255,255,.85)}
+
+  /* ══════════ BARRE D'ACTION MOBILE ══════════ */
+  .quai{position:fixed;left:0;right:0;bottom:0;z-index:70;display:grid;
+    grid-template-columns:1fr 1fr;background:rgba(255,255,255,.97);
+    box-shadow:0 -6px 26px rgba(14,35,56,.16);
+    transform:translateY(110%);transition:transform .45s cubic-bezier(.16,.9,.3,1)}
+  .quai.on{transform:none}
+  .quai a{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 10px;
+    text-decoration:none;font-weight:800;font-size:15.5px}
+  .quai .q1{background:var(--cuivre);color:#fff}
+  .quai .q2{background:#25D366;color:#fff}
+  @media(min-width:820px){.quai{display:none}footer{padding-bottom:32px}}
+
+  /* Révélation au défilement */
+  .anim{opacity:0;transform:translateY(30px) scale(.985);
+    transition:opacity .85s ease,transform .85s cubic-bezier(.16,.9,.3,1)}
+  .anim.vu{opacity:1;transform:none}
+  .pieces .piece:nth-child(2){transition-delay:.12s}
+  .pieces .piece:nth-child(3){transition-delay:.24s}
 
   @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
     .anim{opacity:1;transform:none;transition:none}
-    .hero h1 .mot{opacity:1;transform:none;animation:none}
-    .hero h1::after{width:130px;animation:none}
-    .equip div{opacity:1;animation:none}
-    .b1::before{animation:none}
-    .cadre::after{animation:none}
-    .cadre img,.btn{transition:none}
+    .hero h1 .mot,.accroche,.carte,.atouts div{opacity:1;transform:none;animation:none}
+    .grain,.b-or::after,.cadre::after,.fleche,.logo-h{animation:none}
+    .piece,.cadre img,.btn,.prix-carte{transition:none}
   }
-
-  footer{background:var(--nuit);color:rgba(255,255,255,.62);
-    padding:26px 24px;text-align:center;font-size:13.5px}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header class="hero">
-    <div class="deco" aria-hidden="true"></div>
+<div class="barre" id="barre">
+  <a class="barre-marque" href="#haut">
+    <img src="./logo-residence.jpg" alt="">
+    <span>Résidence Biagné</span>
+  </a>
+  <a class="barre-cta" href="./checkin.html">Réserver ma chambre</a>
+</div>
+
+<header class="hero" id="haut">
+  <div class="hero-media" id="media">
     <img src="./photo-chambre.jpg" alt="Chambre climatisée de la Résidence Biagné" id="heroImg">
     <video id="heroVid" muted loop playsinline preload="none" poster="./photo-chambre.jpg" aria-hidden="true"></video>
-    <div class="hero-txt">
-      <img class="logo-res" src="./logo-residence.jpg" alt="Logo Résidence Biagné">
-      <div class="kicker">Soubré · Quartier Maracana</div>
-      <h1><span class="mot" style="animation-delay:.10s">Résidence</span> <span class="mot" style="animation-delay:.22s">meublée</span> <span class="mot" style="animation-delay:.34s">Biagné</span></h1>
-      <p class="sous">Des appartements entièrement meublés, à la nuitée comme au mois.</p>
-      <div class="hero-plus">
-        <div class="hero-prix">
-          <div><strong>15 000 F</strong><span>la nuit, du lundi au jeudi</span></div>
-          <div><strong class="we">20 000 F</strong><span>la nuit, du vendredi au dimanche</span></div>
+  </div>
+  <div class="voile"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="hero-contenu">
+    <img class="logo-h" src="./logo-residence.jpg" alt="Logo Résidence Biagné">
+    <div class="lieu">Soubré · Quartier Maracana</div>
+    <h1><span class="mot" style="animation-delay:.08s">Un</span>
+      <span class="mot" style="animation-delay:.18s">appartement</span>
+      <span class="mot" style="animation-delay:.28s">entier,</span>
+      <span class="mot" style="animation-delay:.38s">pas</span>
+      <span class="mot" style="animation-delay:.46s">une</span>
+      <span class="mot" style="animation-delay:.54s">chambre.</span></h1>
+    <p class="accroche">Salon, chambre climatisée et cuisine équipée. <b>Dès 15 000 F la nuit</b>, accueil 24h/24.</p>
+
+    <div class="carte">
+      <div class="carte-prix">
+        <div>
+          <div class="montant"><span class="compte" data-vers="15000">0</span> F</div>
+          <div class="jours">la nuit · du lundi au jeudi</div>
         </div>
-        <div class="hero-actions">
-          <a class="btn b1" href="#reserver">📝 M'enregistrer en ligne</a>
-          <a class="btn b2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <div>
+          <div class="montant we"><span class="compte" data-vers="20000">0</span> F</div>
+          <div class="jours">la nuit · du vendredi au dimanche</div>
         </div>
       </div>
+      <div class="carte-actions">
+        <a class="btn b-or" href="./checkin.html">📝 Réserver ma chambre</a>
+        <a class="btn b-wa" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 WhatsApp</a>
+      </div>
     </div>
-  </header>
-
-  <div class="equip">
-    <div>❄️ Climatisation</div>
-    <div>📶 WiFi illimité</div>
-    <div>📺 TV connectée</div>
-    <div>🍳 Cuisine équipée</div>
   </div>
+  <div class="fleche" aria-hidden="true">⌄</div>
+</header>
 
-  <section class="sec anim">
-    <h2>L'essentiel</h2>
-    <p>Vous n'avez pas une chambre, vous avez un appartement : un salon à vous, une chambre climatisée et une cuisine où vous pouvez vraiment préparer vos repas. Le quartier est calme et central, à quelques minutes des commerces. L'accueil est assuré 24h/24, quelle que soit l'heure de votre arrivée.</p>
-  </section>
+<div class="atouts">
+  <div><em>❄️</em> Climatisation</div>
+  <div><em>📶</em> WiFi illimité</div>
+  <div><em>🍳</em> Cuisine équipée</div>
+  <div><em>🕐</em> Accueil 24h/24</div>
+</div>
 
-  <section class="visite">
-    <div class="piece">
-      <div class="cadre anim"><img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision"></div>
-      <h3>Le salon</h3>
-      <p>Canapés, table basse et télévision connectée. De quoi recevoir ou simplement souffler après la route.</p>
-    </div>
-    <div class="piece">
-      <div class="cadre anim"><img src="./photo-chambre.jpg" alt="Chambre climatisée avec lit double"></div>
-      <h3>La chambre</h3>
-      <p>Lit double, climatisation et stores occultants. On dort au frais et dans le noir, même en pleine journée.</p>
-    </div>
-    <div class="piece">
-      <div class="cadre anim"><img src="./photo-cuisine.jpg" alt="Cuisine équipée avec évier, plan de travail et bouilloire"></div>
-      <h3>La cuisine</h3>
-      <p>Plan de travail, évier, réfrigérateur et ustensiles. Pour les longs séjours, ça change tout.</p>
-    </div>
-  </section>
-
-  <section class="tarif anim">
-    <div class="grille">
-      <div><div class="prix"><span class="compte" data-vers="15000">0</span> F</div><div class="jours">la nuit<br>du lundi au jeudi</div></div>
-      <div><div class="prix prix-we"><span class="compte" data-vers="20000">0</span> F</div><div class="jours">la nuit<br>du vendredi au dimanche</div></div>
-    </div>
-    <p>Tarif dégressif pour les séjours d'une semaine ou plus.<br>Contactez-nous pour un devis.</p>
-  </section>
-
-  <div class="actions" id="reserver">
-    <a class="btn b1" href="./checkin.html">📝 M'enregistrer en ligne</a>
-    <a class="btn b2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 Écrire sur WhatsApp</a>
-    <a class="btn b3" href="tel:+2250716300000">📞 Appeler la réception</a>
+<section class="zone">
+  <div class="argument anim">
+    <div class="oeil">Ce qui change tout</div>
+    <div class="titre">Vous êtes chez vous, pas dans une chambre d'hôtel</div>
+    <p class="chapo">Un salon à vous pour recevoir ou souffler après la route. Une chambre climatisée avec des stores occultants. Une cuisine où vous préparez vraiment vos repas — pas seulement un thé. Le quartier est calme, à quelques minutes des commerces, et quelqu'un vous accueille quelle que soit l'heure de votre arrivée.</p>
   </div>
-  <p class="note">L'enregistrement en ligne vous fait gagner du temps à l'arrivée : remplissez votre fiche depuis chez vous, la chambre vous est attribuée sur place.</p>
+</section>
 
-  <section class="infos">
+<section class="zone" style="padding-top:0">
+  <div class="oeil anim">La visite</div>
+  <div class="titre anim">Trois pièces, un vrai logement</div>
+  <div class="pieces">
+    <article class="piece anim">
+      <div class="cadre">
+        <span class="etiquette">Le salon</span>
+        <img src="./photo-salon.jpg" alt="Salon meublé avec canapés et télévision" loading="lazy">
+      </div>
+      <div class="piece-txt">
+        <h3>De quoi recevoir</h3>
+        <p>Canapés, table basse et télévision connectée. L'endroit où l'on se pose en rentrant.</p>
+      </div>
+    </article>
+    <article class="piece anim">
+      <div class="cadre">
+        <span class="etiquette">La chambre</span>
+        <img src="./photo-chambre.jpg" alt="Chambre climatisée avec lit double" loading="lazy">
+      </div>
+      <div class="piece-txt">
+        <h3>On dort au frais</h3>
+        <p>Lit double, climatisation et stores occultants. Le noir complet, même en pleine journée.</p>
+      </div>
+    </article>
+    <article class="piece anim">
+      <div class="cadre">
+        <span class="etiquette">La cuisine</span>
+        <img src="./photo-cuisine.jpg" alt="Cuisine équipée avec évier et plan de travail" loading="lazy">
+      </div>
+      <div class="piece-txt">
+        <h3>Pour les longs séjours</h3>
+        <p>Plan de travail, évier et ustensiles. Ce détail change tout au bout de trois jours.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="tarifs anim" id="tarifs">
+  <div class="zone">
+    <div class="oeil">Nos tarifs</div>
+    <div class="titre">Clairs, sans surprise à l'arrivée</div>
+    <div class="grille-prix">
+      <div class="prix-carte">
+        <div class="montant"><span class="compte" data-vers="15000">0</span> F</div>
+        <div class="jours">la nuit · du lundi au jeudi</div>
+      </div>
+      <div class="prix-carte mise">
+        <div class="montant"><span class="compte" data-vers="20000">0</span> F</div>
+        <div class="jours">la nuit · du vendredi au dimanche</div>
+      </div>
+    </div>
+    <p class="note-prix">Tarif dégressif à partir d'une semaine — appelez-nous pour un devis.</p>
+  </div>
+</section>
+
+<section class="zone">
+  <div class="oeil anim" style="text-align:center">Nous joindre</div>
+  <div class="titre anim" style="text-align:center">Une chambre ce soir ? Appelez.</div>
+  <div class="infos anim">
     <div><b>Adresse</b><span>202, Soubré — quartier Maracana</span></div>
     <div><b>Horaires</b><span>Accueil 24h/24, 7j/7</span></div>
     <div><b>Téléphone</b><a href="tel:+2250716300000">07 16 30 00 00</a></div>
-    <div><b>Itinéraire</b><a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.7801416,-6.5950848&amp;destination_place_id=ChIJ-nqhKrgxvA8RgVpnIP6-9XM" target="_blank" rel="noopener">Voir sur Google Maps</a></div>
-  </section>
+    <div><b>Itinéraire</b><a href="https://www.google.com/maps/dir/?api=1&amp;destination=5.7801416,-6.5950848&amp;destination_place_id=ChIJ-nqhKrgxvA8RgVpnIP6-9XM" target="_blank" rel="noopener">Ouvrir dans Google Maps</a></div>
+  </div>
+  <div class="final anim">
+    <a class="btn b-or" href="./checkin.html">📝 M'enregistrer en ligne</a>
+    <a class="btn b-wa" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 Écrire sur WhatsApp</a>
+    <a class="btn b-clair" href="tel:+2250716300000">📞 07 16 30 00 00</a>
+  </div>
+</section>
 
-  <footer>
-    Résidence meublée Biagné — Soubré, Côte d'Ivoire<br>
-    Conçu par <a href="https://armel113.github.io/bsip/" style="color:rgba(255,255,255,.8)">Biagné Service Informatique</a>
-  </footer>
+<footer>
+  Résidence meublée Biagné — Soubré, Côte d'Ivoire<br>
+  Conçu par <a href="https://armel113.github.io/bsip/">Biagné Service Informatique</a>
+</footer>
 
-</div>
+<nav class="quai" id="quai" aria-label="Actions rapides">
+  <a class="q1" href="./checkin.html">📝 Réserver</a>
+  <a class="q2" href="https://wa.me/2250716300000" target="_blank" rel="noopener">💬 WhatsApp</a>
+</nav>
+
 <script>
-// Les prix montent de 0 jusqu'à leur valeur quand le bloc apparaît.
-function lancerCompteurs(bloc){
-  bloc.querySelectorAll('.compte').forEach(function(el){
-    if (el.dataset.fait) return;
-    el.dataset.fait = '1';
-    var cible = Number(el.dataset.vers) || 0, debut = null, duree = 1100;
-    function pas(t){
-      if (!debut) debut = t;
-      var p = Math.min((t - debut) / duree, 1);
-      // Départ rapide puis ralentissement, plus agréable qu'une montée linéaire
-      var e = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(cible * e).toLocaleString('fr-FR');
-      if (p < 1) requestAnimationFrame(pas);
-    }
-    requestAnimationFrame(pas);
-  });
-}
-
-// Révélation progressive : chaque bloc apparaît quand il entre à l'écran.
 (function(){
-  var blocs = document.querySelectorAll('.anim');
-  if (!('IntersectionObserver' in window)) {
-    blocs.forEach(function(b){ b.classList.add('vu'); });
-    return;
-  }
-  var obs = new IntersectionObserver(function(entrees){
-    entrees.forEach(function(e){
-      if (e.isIntersecting) {
-        e.target.classList.add('vu');
-        lancerCompteurs(e.target);
-        obs.unobserve(e.target);
+  var doux = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Les prix montent de 0 jusqu'à leur valeur ──
+  function compter(bloc){
+    if (!bloc) return;
+    bloc.querySelectorAll('.compte').forEach(function(el){
+      if (el.dataset.fait) return;
+      el.dataset.fait = '1';
+      var cible = Number(el.dataset.vers) || 0;
+      if (doux) { el.textContent = cible.toLocaleString('fr-FR'); return; }
+      var debut = null, duree = 1200;
+      function pas(t){
+        if (!debut) debut = t;
+        var p = Math.min((t - debut) / duree, 1);
+        el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3))).toLocaleString('fr-FR');
+        if (p < 1) requestAnimationFrame(pas);
       }
+      requestAnimationFrame(pas);
     });
-  }, { threshold: .15 });
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    blocs.forEach(function(b){
-      b.classList.add('vu');
-      b.querySelectorAll('.compte').forEach(function(el){
-        el.dataset.fait = '1';
-        el.textContent = Number(el.dataset.vers).toLocaleString('fr-FR');
-      });
-    });
-    return;
   }
-  blocs.forEach(function(b){ obs.observe(b); });
-})();
-</script>
-<script>
-// La vidéo ne se charge que si la connexion le permet : sur un réseau lent
-// ou en mode économie de données, la photo suffit.
-(function(){
-  var v = document.getElementById('heroVid');
-  if (!v) return;
+  setTimeout(function(){ compter(document.querySelector('.carte')); }, 900);
+
+  // ── Révélation au défilement ──
+  var blocs = document.querySelectorAll('.anim');
+  if (!('IntersectionObserver' in window) || doux) {
+    blocs.forEach(function(b){ b.classList.add('vu'); compter(b); });
+  } else {
+    var obs = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('vu'); compter(e.target); obs.unobserve(e.target); }
+      });
+    }, { threshold: .14 });
+    blocs.forEach(function(b){ obs.observe(b); });
+  }
+
+  // ── Barre du haut et barre d'action du bas ──
+  var barre = document.getElementById('barre'), quai = document.getElementById('quai');
+  function auDefilement(){
+    var passe = window.scrollY > window.innerHeight * .7;
+    barre.classList.toggle('on', passe);
+    quai.classList.toggle('on', passe);
+  }
+  window.addEventListener('scroll', auDefilement, { passive: true });
+  auDefilement();
+
+  // ── Vidéo de fond : seulement si la connexion suit ──
+  var v = document.getElementById('heroVid'), media = document.getElementById('media');
   var c = navigator.connection || {};
-  var lent = c.saveData === true || /(^|-)2g$/.test(c.effectiveType || '');
-  if (lent) return;
-  // Deux formats : WebM pour Chrome et Android, MP4 pour iPhone et Safari.
-  [['./video-residence.webm','video/webm'], ['./video-residence.mp4','video/mp4']]
-    .forEach(function(f){
-      var src = document.createElement('source');
-      src.src = f[0]; src.type = f[1];
-      v.appendChild(src);
-    });
-  v.load();
-  v.addEventListener('canplay', function(){
-    v.play().then(function(){
-      v.classList.add('on');
-      document.querySelector('.hero').classList.add('lecture');
-    }).catch(function(){});
-  }, { once: true });
+  if (!(c.saveData === true || /(^|-)2g$/.test(c.effectiveType || ''))) {
+    [['./video-residence.webm','video/webm'], ['./video-residence.mp4','video/mp4']]
+      .forEach(function(f){
+        var src = document.createElement('source');
+        src.src = f[0]; src.type = f[1];
+        v.appendChild(src);
+      });
+    v.load();
+    v.addEventListener('canplay', function(){
+      v.play().then(function(){ v.classList.add('on'); media.classList.add('lecture'); })
+              .catch(function(){});
+    }, { once: true });
+  }
 })();
 </script>
 </body>
