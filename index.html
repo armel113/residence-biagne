@@ -515,7 +515,11 @@ details.more>summary:hover{opacity:.75}
   <div class="card">
     <div class="ct"><span>💵</span>Tarifs et charges</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6">Le prix d'une nuit sert à calculer automatiquement le tarif au moment de l'enregistrement. Les deux autres montants sont ceux des boutons rapides de l'écran Dépenses.</p>
-    <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="cfg_prixnuit" inputmode="numeric" placeholder="15000"></div>
+    <div class="fr">
+      <div class="field"><label>Prix d'une nuit (FCFA)</label><input type="number" id="cfg_prixnuit" inputmode="numeric" placeholder="15000"></div>
+      <div class="field"><label>Prix nuit week-end (FCFA)</label><input type="number" id="cfg_prixweekend" inputmode="numeric" placeholder="20000"></div>
+    </div>
+    <div style="font-size:12.5px;color:var(--muted);margin:-6px 0 12px;line-height:1.5">Le tarif week-end s'applique aux nuits du <strong>vendredi, samedi et dimanche</strong>. Le calcul se fait nuit par nuit.</div>
     <div class="field">
       <label>Numéro WhatsApp de la réception</label>
       <input type="tel" id="cfg_whatsapp" inputmode="tel" placeholder="2250716300000">
@@ -560,9 +564,17 @@ details.more>summary:hover{opacity:.75}
     <div class="field"><label>Rôle</label><select id="nu_role"><option value="gerant">Gérant</option><option value="admin">Admin</option></select></div>
     <button class="btn btn-p" onclick="creerCompte()">➕ Créer le compte</button>
   </div>
+  <div class="card" style="border:2px solid var(--ok)">
+    <div class="ct" style="color:var(--ok)"><span>💾</span>Sauvegarde des données</div>
+    <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:10px">Firebase ne conserve <strong>aucune copie</strong> de vos données. Ce fichier est votre seule protection. Faites-en un chaque semaine et gardez-le sur votre ordinateur.</p>
+    <div id="infoSauvegarde" style="font-size:13px;color:var(--muted);margin-bottom:12px"></div>
+    <button class="btn btn-p" onclick="sauvegarder()">💾 Télécharger une sauvegarde</button>
+    <button class="btn btn-s" style="margin-top:10px" onclick="choisirRestauration()">♻️ Restaurer depuis une sauvegarde</button>
+    <input type="file" id="fichierRestauration" accept=".json,application/json" style="display:none" onchange="restaurer(this)">
+  </div>
   <div class="card" style="border:2px solid var(--err)">
     <div class="ct" style="color:var(--err)"><span>⚠️</span>Zone dangereuse</div>
-    <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:12px">Efface <strong>toutes</strong> les fiches clients et les dépenses liées à leurs séjours. Les dépenses générales sont conservées. <strong>Aucun retour en arrière n'est possible.</strong> Pensez à exporter les CSV avant.</p>
+    <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:12px">Efface <strong>toutes</strong> les fiches clients de la base, y compris celles qui ne sont pas affichées à l'écran, et les dépenses liées à leurs séjours. <strong>Aucun retour en arrière n'est possible.</strong> Une sauvegarde sera téléchargée automatiquement avant l'effacement.</p>
     <div class="field"><label>Pour confirmer, tapez EFFACER en majuscules</label><input type="text" id="cfg_effacer" placeholder="EFFACER" autocomplete="off"></div>
     <button class="btn btn-d" style="width:100%" onclick="effacer()">🗑️ Effacer toutes les données clients</button>
   </div>
@@ -640,7 +652,7 @@ let unsubClients = null, unsubUsers = null, unsubConfig = null, unsubConfigPubli
 let qrPaiementUrl = '', qrPaiementStagedB64 = null;
 let listeChambres = [];
 let montantCanal = 5000, montantInternet = 15000;
-let prixNuit = 15000;
+let prixNuit = 15000, prixWeekend = 20000;
 let whatsappReception = '';
 let periode = 'mois';
 const PLAFOND_CLIENTS = 300;
@@ -714,6 +726,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById('userNom').textContent = currentUser.nom;
     document.getElementById('userRole').textContent = currentUser.role === 'admin' ? '👑 Admin' : '🧑‍💼 Gérant';
     applyRoleUI();
+    majInfoSauvegarde();
     if (!listeChambres.length) { listeChambres = chambresParDefaut(); remplirChambres(); }
     startListeners();
     document.getElementById('f_arr').value = new Date().toISOString().split('T')[0];
@@ -817,6 +830,8 @@ function remplirChambres(){
 function majChargesUI(){
   const pn = document.getElementById('cfg_prixnuit');
   if (pn && document.activeElement !== pn) pn.value = prixNuit;
+  const pw = document.getElementById('cfg_prixweekend');
+  if (pw && document.activeElement !== pw) pw.value = prixWeekend;
   const wa = document.getElementById('cfg_whatsapp');
   if (wa && document.activeElement !== wa) wa.value = whatsappReception;
   const fp = document.getElementById('f_prixnuit');
@@ -833,11 +848,12 @@ window.saveCharges = async function(){
   const wa = document.getElementById('cfg_whatsapp').value.replace(/[^0-9]/g, '');
   if (wa && (wa.length < 8 || wa.length > 15)) { showToast('⚠️ Numéro WhatsApp invalide', 'er'); return; }
   const n = Number(document.getElementById('cfg_prixnuit').value);
+  const w = Number(document.getElementById('cfg_prixweekend').value);
   const c = Number(document.getElementById('cfg_canal').value);
   const i = Number(document.getElementById('cfg_internet').value);
-  if (!(n > 0) || !(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
+  if (!(n > 0) || !(w > 0) || !(c > 0) || !(i > 0)) { showToast('⚠️ Montants invalides', 'er'); return; }
   try {
-    await setDoc(doc(db, 'config', 'settings'), { prixNuit: n, montantCanal: c, montantInternet: i }, { merge: true });
+    await setDoc(doc(db, 'config', 'settings'), { prixNuit: n, prixWeekend: w, montantCanal: c, montantInternet: i }, { merge: true });
     // Le numéro va dans la config publique : c'est la page client qui le lit.
     await setDoc(doc(db, 'config', 'public'), { whatsappReception: wa }, { merge: true });
     showToast('✅ Enregistré', 'ok');
@@ -883,6 +899,7 @@ function startListeners(){
     anthropicKey = d.anthropicApiKey || '';
     listeChambres = Array.isArray(d.chambres) && d.chambres.length ? d.chambres : chambresParDefaut();
     prixNuit = Number(d.prixNuit) > 0 ? Number(d.prixNuit) : 15000;
+    prixWeekend = Number(d.prixWeekend) > 0 ? Number(d.prixWeekend) : 20000;
     montantCanal = Number(d.montantCanal) > 0 ? Number(d.montantCanal) : 5000;
     montantInternet = Number(d.montantInternet) > 0 ? Number(d.montantInternet) : 15000;
     remplirChambres(); majChargesUI();
@@ -1193,6 +1210,23 @@ window.tarifSaisiAlaMain = function(){
   if (h) h.innerHTML = '✏️ Tarif saisi à la main — <a href="#" onclick="recalculerTarif();return false" style="color:var(--blue2)">revenir au calcul automatique</a>';
 };
 window.recalculerTarif = function(){ tarifManuel = false; majCIE(); };
+// Une nuit est « week-end » si elle commence un vendredi, un samedi
+// ou un dimanche (0 = dimanche, 5 = vendredi, 6 = samedi).
+function estWeekend(date){
+  const j = date.getDay();
+  return j === 5 || j === 6 || j === 0;
+}
+// Détaille un séjour : combien de nuits en semaine, combien en week-end.
+function detailNuits(arrivee, nuits){
+  let semaine = 0, weekend = 0;
+  if (!arrivee) return { semaine: nuits, weekend: 0 };
+  for (let i = 0; i < nuits; i++) {
+    const d = new Date(arrivee); d.setDate(d.getDate() + i);
+    if (estWeekend(d)) weekend++; else semaine++;
+  }
+  return { semaine, weekend };
+}
+
 function majTarif(nuits){
   const champPrix = document.getElementById('f_prixnuit');
   const champTarif = document.getElementById('f_tarif');
@@ -1200,12 +1234,17 @@ function majTarif(nuits){
   if (!champPrix || !champTarif) return;
   if (!champPrix.value) champPrix.value = prixNuit;
   const pn = Number(champPrix.value) || 0;
+  const pw = prixWeekend > 0 ? prixWeekend : pn;
   if (tarifManuel) return;
-  const total = pn * nuits;
+  const d = detailNuits(v('f_arr'), nuits);
+  const total = pn * d.semaine + pw * d.weekend;
   champTarif.value = total > 0 ? total : '';
-  if (hint) hint.textContent = total > 0
-    ? `= ${pn.toLocaleString('fr-FR')} F × ${nuits} nuit(s) = ${total.toLocaleString('fr-FR')} FCFA`
-    : '';
+  if (!hint) return;
+  if (total <= 0) { hint.textContent = ''; return; }
+  const morceaux = [];
+  if (d.semaine) morceaux.push(`${d.semaine} nuit(s) × ${pn.toLocaleString('fr-FR')} F`);
+  if (d.weekend) morceaux.push(`${d.weekend} nuit(s) week-end × ${pw.toLocaleString('fr-FR')} F`);
+  hint.innerHTML = `= ${morceaux.join(' + ')} = <strong>${total.toLocaleString('fr-FR')} FCFA</strong>`;
 }
 
 window.majCIE = function(){
@@ -1249,7 +1288,9 @@ window.enregistrerClient = async function(){
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
       ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: v('f_adr'), prov: v('f_prov'),
       chambre: ch, tch: v('f_tch'), arrivee: arr, depart: dep, duree: v('f_dur'),
-      tarif: v('f_tarif') || '0', prixNuit: v('f_prixnuit') || String(prixNuit), nuits: String(calcJours(arr, dep, dur)),
+      tarif: v('f_tarif') || '0', prixNuit: v('f_prixnuit') || String(prixNuit),
+      prixWeekend: String(prixWeekend), nuits: String(calcJours(arr, dep, dur)),
+      nuitsWeekend: String(detailNuits(arr, calcJours(arr, dep, dur)).weekend),
       motif: v('f_motif'), pay: v('f_pay'), spay: v('f_spay'),
       obs: v('f_obs'), statut: 'Actif',
       createdBy: currentUser.uid, createdByNom: currentUser.nom,
@@ -1696,6 +1737,92 @@ function stats(){
   cc.innerHTML = a.map(c => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)"><div><span class="chtag">🏨 ${esc(c.chambre)}</span><div style="font-size:14px;font-weight:600;margin-top:4px">${esc(c.nom)}</div></div><div style="font-size:12px;color:var(--muted);text-align:right">Depuis ${esc(c.arrivee)}<br>${Number(c.tarif).toLocaleString()} FCFA</div></div>`).join('');
 }
 
+// ───────────────────────── SAUVEGARDE ─────────────────────────
+// Le plan gratuit de Firebase ne fait AUCUNE sauvegarde automatique.
+// Ces fonctions sont le seul filet de sécurité contre une suppression.
+
+async function collecterTout(){
+  const [c, d] = await Promise.all([
+    getDocs(collection(db, 'clients')),
+    getDocs(collection(db, 'depenses'))
+  ]);
+  return {
+    application: 'Residence Biagne',
+    version: 1,
+    date: new Date().toISOString(),
+    clients: c.docs.map(x => ({ id: x.id, ...x.data() })),
+    depenses: d.docs.map(x => ({ id: x.id, ...x.data() }))
+  };
+}
+
+function telechargerSauvegarde(donnees){
+  const blob = new Blob([JSON.stringify(donnees)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `sauvegarde_residence_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  try { localStorage.setItem('derniereSauvegarde', new Date().toISOString()); } catch (e) {}
+}
+
+window.sauvegarder = async function(){
+  if (currentUser.role !== 'admin') return;
+  showToast('⏳ Préparation de la sauvegarde…', 'ok');
+  try {
+    const d = await collecterTout();
+    if (!d.clients.length && !d.depenses.length) { showToast('Rien à sauvegarder', 'er'); return; }
+    telechargerSauvegarde(d);
+    showToast(`💾 ${d.clients.length} fiche(s) et ${d.depenses.length} dépense(s) sauvegardées`, 'ok');
+    majInfoSauvegarde();
+  } catch (e) { showToast('❌ Sauvegarde impossible', 'er'); }
+};
+
+window.choisirRestauration = function(){
+  document.getElementById('fichierRestauration').click();
+};
+
+window.restaurer = async function(input){
+  if (currentUser.role !== 'admin') return;
+  const f = input.files && input.files[0];
+  input.value = '';
+  if (!f) return;
+  let d;
+  try {
+    d = JSON.parse(await f.text());
+    if (!Array.isArray(d.clients)) throw new Error('format');
+  } catch (e) { showToast('❌ Fichier de sauvegarde illisible', 'er'); return; }
+
+  const nb = d.clients.length + (d.depenses ? d.depenses.length : 0);
+  if (!confirm(`Restaurer ${d.clients.length} fiche(s) client et ${(d.depenses || []).length} dépense(s) ?\n\nSauvegarde du ${(d.date || '').split('T')[0]}.\n\nLes fiches déjà présentes portant le même identifiant seront remplacées. Les autres sont conservées.`)) return;
+
+  showToast('⏳ Restauration en cours…', 'ok');
+  let ok = 0, rates = 0;
+  const ecrire = async (nomCollection, liste) => {
+    for (const item of (liste || [])) {
+      const { id, ...donnees } = item;
+      try { await setDoc(doc(db, nomCollection, id), donnees); ok++; }
+      catch (e) { rates++; }
+    }
+  };
+  await ecrire('clients', d.clients);
+  await ecrire('depenses', d.depenses);
+  showToast(rates ? `⚠️ ${ok} restauré(s), ${rates} en échec` : `✅ ${ok} élément(s) restauré(s)`, rates ? 'er' : 'ok');
+};
+
+function majInfoSauvegarde(){
+  const el = document.getElementById('infoSauvegarde'); if (!el) return;
+  let d = null;
+  try { d = localStorage.getItem('derniereSauvegarde'); } catch (e) {}
+  if (!d) {
+    el.innerHTML = '<span style="color:var(--err);font-weight:700">⚠️ Aucune sauvegarde effectuée depuis cet appareil.</span>';
+    return;
+  }
+  const jours = Math.floor((Date.now() - new Date(d)) / 86400000);
+  const texte = jours === 0 ? "aujourd'hui" : jours === 1 ? 'hier' : `il y a ${jours} jours`;
+  el.innerHTML = jours > 7
+    ? `<span style="color:var(--err);font-weight:700">⚠️ Dernière sauvegarde ${texte}. Faites-en une nouvelle.</span>`
+    : `Dernière sauvegarde depuis cet appareil : ${texte}.`;
+}
+
 // ───────────────────────── CSV / RESET ─────────────────────────
 // Une cellule qui commence par = + - @ serait exécutée comme une formule
 // à l'ouverture dans Excel. On la neutralise.
@@ -1715,8 +1842,8 @@ window.exportCSV = async function(){
     toutes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (e) { toutes = clientsCache; }
   if (!toutes.length) { showToast('Aucune donnée', 'er'); return; }
-  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Durée', 'Nuits', 'Prix/nuit', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
-  const rows = toutes.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.duree, c.nuits, c.prixNuit, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
+  const cols = ['ID', 'Nom', 'Sexe', 'Téléphone', 'Nationalité', 'DDN', 'Lieu Naiss.', 'Profession', 'Adresse', 'Provenance', 'N° Pièce', 'Chambre', 'Arrivée', 'Départ', 'Durée', 'Nuits', 'dont week-end', 'Prix/nuit', 'Prix week-end', 'Tarif', 'Paiement', 'Statut', 'Observations', 'Enregistré par'];
+  const rows = toutes.map(c => [c.id, c.nom, c.sexe, c.tel, c.nationalite, c.ddn, c.lieu, c.prof, c.adr, c.prov, c.piece, c.chambre, c.arrivee, c.depart, c.duree, c.nuits, c.nuitsWeekend, c.prixNuit, c.prixWeekend, c.tarif, c.spay, c.statut, c.obs, c.createdByNom].map(csvCell).join(','));
   const blob = new Blob(['\uFEFF' + [cols.join(','), ...rows].join('\n')], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `clients_rb_${new Date().toISOString().split('T')[0]}.csv`; a.click();
   showToast(`📥 ${toutes.length} fiche(s) exportée(s) !`, 'ok');
@@ -1725,6 +1852,21 @@ window.effacer = async function(){
   if (currentUser.role !== 'admin') return;
   const saisie = (document.getElementById('cfg_effacer')?.value || '').trim();
   if (saisie !== 'EFFACER') { showToast('⚠️ Tapez EFFACER dans la case pour confirmer', 'er'); return; }
+  try {
+    // Sauvegarde OBLIGATOIRE avant toute suppression : c'est la seule
+    // chose qui permettra de revenir en arrière en cas d'erreur.
+    showToast('⏳ Sauvegarde de sécurité avant effacement…', 'ok');
+    const secours = await collecterTout();
+    if (secours.clients.length || secours.depenses.length) {
+      telechargerSauvegarde(secours);
+      if (!confirm(`Un fichier de sauvegarde vient d'être téléchargé (${secours.clients.length} fiche(s), ${secours.depenses.length} dépense(s)).\n\nVÉRIFIEZ qu'il est bien dans vos téléchargements AVANT de continuer.\n\nContinuer et tout effacer ?`)) {
+        showToast('Effacement annulé', 'ok'); return;
+      }
+    }
+  } catch (e) {
+    showToast('❌ Sauvegarde impossible — effacement annulé par sécurité', 'er');
+    return;
+  }
   if (!confirm('⚠️ DERNIÈRE CONFIRMATION\n\nEffacer TOUTES les fiches clients et les dépenses liées à leurs séjours ?\nCette action est irréversible.')) return;
   try {
     const snapC = await getDocs(collection(db, 'clients'));
