@@ -29,4 +29,4 @@ export const firebaseConfig = {
 // Tant que cette valeur reste vide, l'application fonctionne
 // normalement, simplement sans cette protection.
 // ─────────────────────────────────────────────────────────────
-export const appCheckSiteKey = "";
+export const appCheckSiteKey = "6LdvhJYtAAAAAGWULB03bUewWwSBRgxjv9bStLZJ";
