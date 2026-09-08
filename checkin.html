@@ -107,6 +107,20 @@
   .pz input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
   .pz img{max-width:150px;margin:0 auto;border-radius:11px}
 
+  /* Zones scan CNI (recto/verso) */
+  .scan-sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ss{position:relative;border:2px dashed var(--trait);border-radius:14px;
+    padding:16px 8px;text-align:center;cursor:pointer;background:#fcfcfd;
+    transition:border-color .25s,background .25s}
+  .ss:hover{border-color:var(--cuivre);background:#fffaf2}
+  .ss input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .ss .si{font-size:26px;margin-bottom:6px}
+  .ss .sl{font-size:11px;font-weight:800;color:var(--encre);text-transform:uppercase;letter-spacing:.5px}
+  .ss .st{font-size:11px;color:var(--gris);margin-top:4px}
+  .ss.loaded{border-color:var(--cuivre);background:#fffaf2}
+  .ss.loaded .st{color:var(--cuivre)}
+  .ss img{width:100%;height:56px;object-fit:cover;border-radius:8px;margin-bottom:6px}
+
   /* Encadré départ prévu */
   #departPrevuBox:empty{display:none}
   #departPrevuBox{grid-column:1/-1;font-size:14px;color:#7c3d05;background:#fffbeb;
@@ -191,7 +205,9 @@
     <p class="intro">
       <b>Pourquoi ce formulaire ?</b> Il remplace la paperasse à la réception : vous arrivez,
       on vous remet la clé. Les champs marqués <span class="rs">*</span> suffisent — le reste
-      peut être complété sur place.
+      peut être complété sur place. Vous pouvez aussi vous en servir pour <b>réserver à
+      l'avance</b> : choisissez simplement votre date d'arrivée future, et l'équipe validera
+      votre demande avant votre venue.
     </p>
 
     <div class="card">
@@ -228,6 +244,21 @@
         <div class="field"><label>Motif du séjour</label><select id="f_motif"><option value="">—</option><option>Tourisme / Loisirs</option><option>Affaires / Travail</option><option>Famille</option><option>Étude / Formation</option><option>Autre</option></select></div>
         <div class="field"><label>Remarques (allergies, heure d'arrivée prévue…)</label><textarea id="f_obs"></textarea></div>
       </details>
+    </div>
+
+    <div class="card">
+      <div class="ct"><span>🪪</span>Votre pièce d'identité<span class="pas">Recommandé</span></div>
+      <p class="aide">Photographiez le recto et le verso de votre CNI ou passeport — ça évite de la ressaisir à l'accueil. Vous pouvez aussi passer cette étape et présenter votre pièce à l'arrivée.</p>
+      <div class="scan-sides">
+        <div class="ss" id="side-recto">
+          <input type="file" accept="image/*" capture="environment" onchange="chargerFace(this,'recto')">
+          <div id="recto-preview"><div class="si">🖼️</div><div class="sl">Recto</div><div class="st">Photographier</div></div>
+        </div>
+        <div class="ss" id="side-verso">
+          <input type="file" accept="image/*" capture="environment" onchange="chargerFace(this,'verso')">
+          <div id="verso-preview"><div class="si">🔄</div><div class="sl">Verso</div><div class="st">Photographier</div></div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -334,6 +365,7 @@ if (appCheckSiteKey) {
 
 const db = getFirestore(app);
 let photoB64 = null, preuvePaiementB64 = null, qrPaiementUrl = '', waNumero = '';
+let rectoB64 = null, versoB64 = null;
 
 getDoc(doc(db, 'config', 'public')).then(snap => {
   const d = snap.exists() ? snap.data() : {};
@@ -401,6 +433,17 @@ window.handlePhoto = async function(inp){
     document.getElementById('photoDisplay').innerHTML = `<img class="pp" src="${photoB64}"><div style="font-size:13px;color:var(--ok);font-weight:600">✓ Photo ajoutée</div>`;
   } catch (e) { showToast('❌ Erreur photo', 'er'); }
 };
+window.chargerFace = async function(inp, face){
+  const f = inp.files[0]; if (!f) return;
+  try {
+    const b64 = await compressImage(f, 900, 0.6);
+    if (face === 'recto') rectoB64 = b64; else versoB64 = b64;
+    const zone = document.getElementById('side-' + face);
+    const preview = document.getElementById(face + '-preview');
+    zone.classList.add('loaded');
+    preview.innerHTML = `<img src="${b64}"><div class="sl">${face === 'recto' ? 'Recto' : 'Verso'}</div><div class="st">✓ Ajoutée</div>`;
+  } catch (e) { showToast('❌ Erreur image', 'er'); }
+};
 
 function v(id){ const e = document.getElementById(id); return e ? e.value.trim() : ''; }
 function showToast(msg, type=''){
@@ -420,7 +463,7 @@ window.envoyer = async function(){
   try {
     // La durée conditionne le tarif et la date de départ : on l'exige.
     await addDoc(collection(db, 'clients'), {
-      photo: photoB64, cni_recto: null, cni_verso: null,
+      photo: photoB64, cni_recto: rectoB64, cni_verso: versoB64,
       nom, tel, sexe: v('f_sexe'), nationalite: v('f_nationalite'), piece: v('f_piece'),
       ddn: v('f_ddn'), lieu: v('f_lieu'), prof: v('f_prof'), adr: '', prov: v('f_prov'),
       chambre: '', tch: '', arrivee: arr, depart: '', duree: v('f_dur'),
