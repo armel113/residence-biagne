@@ -386,15 +386,26 @@
       if (el.dataset.fait) return;
       el.dataset.fait = '1';
       var cible = Number(el.dataset.vers) || 0;
-      if (doux) { el.textContent = cible.toLocaleString('fr-FR'); return; }
-      var debut = null, duree = 1200;
+      var texteFinal = cible.toLocaleString('fr-FR');
+      if (doux) { el.textContent = texteFinal; return; }
+      var debut = null, duree = 1200, fini = false;
+      function finir(){
+        if (fini) return;
+        fini = true;
+        el.textContent = texteFinal;
+      }
       function pas(t){
+        if (fini) return;
         if (!debut) debut = t;
         var p = Math.min((t - debut) / duree, 1);
         el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3))).toLocaleString('fr-FR');
-        if (p < 1) requestAnimationFrame(pas);
+        if (p < 1) requestAnimationFrame(pas); else finir();
       }
       requestAnimationFrame(pas);
+      // Filet de sécurité : si l'animation est interrompue (onglet en arrière-plan,
+      // navigateur intégré WhatsApp qui précharge la page, appareil lent...), le
+      // bon montant final s'affiche quand même, au lieu de rester bloqué en cours de route.
+      setTimeout(finir, duree + 400);
     });
   }
   setTimeout(function(){ compter(document.querySelector('.carte')); }, 900);
